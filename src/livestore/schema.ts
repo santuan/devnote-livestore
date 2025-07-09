@@ -20,7 +20,7 @@ export const tables = {
       newTodoText: Schema.String,
       newTodoContent: Schema.String,
       filter: Schema.Literal('all', 'active', 'completed'),
-      showMenu: Schema.Boolean,
+      showDocuments: Schema.Boolean,
       editable: Schema.Boolean,
     }),
     default: {
@@ -29,7 +29,7 @@ export const tables = {
         newTodoText: '',
         newTodoContent: '',
         filter: 'all',
-        showMenu: true,
+        showDocuments: true,
         editable: true,
       },
     },
