@@ -158,14 +158,12 @@ onBeforeUnmount(() => {
       editable ? 'outline outline-primary' : '!outline-0',
     ]"
   >
-    <div class="absolute left-0 right-0 top-0 bg-secondary flex justify-start p-1 z-40">
+    <div class="absolute left-0 right-0 top-0 h-8 bg-background border-b border-secondary flex justify-start p-1 z-40">
       <button
-        :class="{ 'is-active': editor.isActive('codeBlock') }" class="interactive gap-1 min-w-20!"
+        :class="{ 'bg-primary text-primary-foreground': editor.isActive('codeBlock') }" class="interactive font-mono border border-primary  text-xs px-3 "
         value="Codeblock" @click="editor.chain().focus().toggleCodeBlock().run()"
       >
-        <p class="text-xs">
-          Code
-        </p>
+        Add Code Snippet
       </button>
     </div>
     <ScrollAreaRoot

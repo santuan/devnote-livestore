@@ -32,7 +32,25 @@ body {
 }  */
 
 html {
-  overflow: hidden
+  overflow: hidden;
+}
+
+@media (width >=550px) {
+  /*
+  body p,
+  body label,
+  body input, 
+  body div,
+  */
+  body label,
+  body input,
+  body textarea,
+  body .sr-only,
+  button {
+    user-select: none !important;
+    user-drag: none !important;
+    app-region: no-drag !important;
+  }
 }
 
 
