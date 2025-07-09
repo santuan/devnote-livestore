@@ -163,7 +163,7 @@ onBeforeUnmount(() => {
         :class="{ 'bg-primary text-primary-foreground': editor.isActive('codeBlock') }" class="interactive font-mono border border-primary  text-xs px-3 "
         value="Codeblock" @click="editor.chain().focus().toggleCodeBlock().run()"
       >
-        Add Code Snippet
+        {{ t('toolbar.codeBlock') }}
       </button>
     </div>
     <ScrollAreaRoot

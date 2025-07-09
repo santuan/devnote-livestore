@@ -33,6 +33,7 @@ body {
 
 html {
   overflow: hidden;
+  @apply text-sm
 }
 
 @media (width >=550px) {

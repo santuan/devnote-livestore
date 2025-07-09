@@ -4,13 +4,16 @@ import { breakpointsTailwind, useBreakpoints } from '@vueuse/core'
 import { Circle, CircleOff } from 'lucide-vue-next'
 import { SplitterGroup, SplitterPanel, SplitterResizeHandle } from 'reka-ui'
 import { computed, onMounted, provide, ref, shallowRef, watch, watchEffect } from 'vue'
+import { useI18n } from 'vue-i18n'
 import { useClientDocument, useQuery, useStore } from 'vue-livestore'
 import Editor from '../components/Tiptap/EditorTipTap.vue'
 import { events, tables } from '../livestore/schema'
 import ButtonDeleteDocument from './ButtonDeleteDocument.vue'
+import DropdownLanguage from './DropdownLanguage.vue'
 import Toc from './Tiptap/toc/toc.vue'
 import ToggleTheme from './ToggleTheme.vue'
 
+const { t } = useI18n()
 const editable_id = ref('')
 const editor_content = ref()
 const editor_toc = ref([])
@@ -156,7 +159,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="text-foreground">
+  <div class="font-mono text-foreground">
     <SplitterGroup id="splitter-group-1" direction="horizontal" auto-save-id="app-desktop" @layout="layout = $event">
       <SplitterPanel
         id="splitter-group-1-panel-1" ref="sidebar_splitter_ref" :min-size="10" :max-size="50" collapsible
@@ -190,7 +193,7 @@ onMounted(() => {
                 :disabled="isEditing" class="disabled:bg-secondary disabled:pointer-events-none disabled:text-secondary-foreground/20 h-10 px-1 bg-primary text-primary-foreground w-full"
                 @click="newTodo"
               >
-                {{ isEditing ? 'Creating doc' : 'New doc' }}
+                {{ isEditing ? t('sidebar.creatingNewDocument') : t('sidebar.newDocument') }}
               </button>
             </div>
             <div class="flex flex-col @sm:flex-row gap-2 mb-1 p-1 justify-between items-center">
@@ -282,7 +285,7 @@ onMounted(() => {
           </div>
           <div class="flex bg-secondary justify-start text-sm items-start p-1 gap-2 flex-col ">
             <div class="flex gap-2 items-center justify-between w-full">
-              <span>Theme:</span>
+              <span>{{ t('settings.theme') }}</span>
               <ToggleTheme />
             </div>
             <div class="flex gap-2 items-center justify-between w-full">
@@ -294,12 +297,14 @@ onMounted(() => {
               </button>
             </div>
             <div class="flex gap-2 items-center justify-between w-full">
-              <span>
-                Editable
-              </span>
+              <span>{{ t('sidebar.contentEditable') }}</span>
               <button class="px-2 py-1 border bg-background" @click="toggle_editable">
                 {{ editable }}
               </button>
+            </div>
+            <div class="flex gap-2 items-center justify-between w-full">
+              <span>{{ t('settings.language') }}</span>
+              <DropdownLanguage />
             </div>
           </div>
           <div class="w-full p-1">
