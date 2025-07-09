@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { queryDb } from '@livestore/livestore'
 import { breakpointsTailwind, useBreakpoints } from '@vueuse/core'
-import { Bug, Circle, CircleOff } from 'lucide-vue-next'
+import { Circle, CircleOff } from 'lucide-vue-next'
 import { SplitterGroup, SplitterPanel, SplitterResizeHandle } from 'reka-ui'
 import { computed, onMounted, provide, ref, shallowRef, watch, watchEffect } from 'vue'
 import { useClientDocument, useQuery, useStore } from 'vue-livestore'
@@ -15,7 +15,6 @@ const editable_id = ref('')
 const editor_content = ref()
 const editor_toc = ref([])
 const sidebar_splitter_ref = ref()
-const right_panel_ref = ref()
 const resize = ref(0)
 const breakpoints = useBreakpoints(breakpointsTailwind)
 const largerThanLg = breakpoints.greater('lg')
@@ -31,15 +30,6 @@ const resizeTo = computed(() => {
   }
   else {
     return 50
-  }
-})
-
-const rightPanelResizeTo = computed(() => {
-  if (largerThanLg.value === true) {
-    return 20
-  }
-  else {
-    return 25
   }
 })
 
@@ -82,18 +72,6 @@ provide('editable_id', editable_id)
 function toggle_editable() {
   editor_content.value?.setEditable(!editable.value)
   editable.value = editor_content.value?.options?.editable
-}
-
-function toggleRightPanel() {
-  if (!right_panel_ref.value)
-    return
-
-  if (right_panel_ref.value.isCollapsed) {
-    right_panel_ref.value.resize(rightPanelResizeTo.value)
-  }
-  else {
-    right_panel_ref.value.collapse()
-  }
 }
 
 const visibleTodos$ = queryDb(
@@ -282,7 +260,7 @@ onMounted(() => {
             @keyup.enter="createTodo"
           >
           <Editor :key="newTodoText" v-model="newTodoContent" :editor="editor_content" />
-          <button v-show="isEditing" class="bg-primary font-mono h-12 text-primary-foreground py-2" @click="createTodo">
+          <button v-show="isEditing" class="bg-primary h-12 text-primary-foreground py-2" @click="createTodo">
             Add Todo
           </button>
         </div>
@@ -291,10 +269,7 @@ onMounted(() => {
         id="splitter-group-1-resize-handle-2"
         class="w-1 bg-secondary  data-[state=hover]:bg-primary"
       />
-      <SplitterPanel id="splitter-group-1-panel-3" ref="right_panel_ref" class="min-w-10" :min-size="9" collapsible :max-size="25" :collapsed-size="0">
-        <button class="fixed z-[80] right-0 bottom-0 flex items-center justify-center gap-2 p-1 size-10 ring-1 ring-primary" @click="toggleRightPanel">
-          <Bug class="size-4" />
-        </button>
+      <SplitterPanel id="splitter-group-1-panel-3" class="min-w-10" :min-size="9" collapsible :max-size="25" :collapsed-size="0">
         <div
           v-show="layout[2] !== 0"
           class="w-full max-h-screen  font-mono min-h-screen bg-background text-foreground overflow-x-hidden overflow-y-auto"
@@ -305,33 +280,25 @@ onMounted(() => {
             <strong class="font-black">id:</strong>
             <span> {{ `${editable_id.substring(0, 30)}…` }}</span>
           </div>
-          <div class="flex bg-secondary justify-start text-sm items-start p-1 gap-5 flex-col ">
+          <div class="flex bg-secondary justify-start text-sm items-start p-1 gap-2 flex-col ">
             <div class="flex gap-2 items-center justify-between w-full">
               <span>Theme:</span>
               <ToggleTheme />
             </div>
             <div class="flex gap-2 items-center justify-between w-full">
               <span>
-                Editable
-              </span>
-              <button class="px-2 py-1 border  text-xs bg-background" @click="toggle_editable">
-                {{ editable }}
-              </button>
-            </div>
-            <div class="flex gap-2 items-center justify-between w-full">
-              <span>
                 Show documents
               </span>
-              <button class="px-2 py-1 border  text-xs bg-background" @click="showDocuments = !showDocuments">
+              <button class="px-2 py-1 border bg-background" @click="showDocuments = !showDocuments">
                 {{ showDocuments }}
               </button>
             </div>
             <div class="flex gap-2 items-center justify-between w-full">
               <span>
-                Secondary sidebar
+                Editable
               </span>
-              <button class="px-2 py-1 border text-xs bg-background" @click="toggleRightPanel">
-                {{ right_panel_ref.isExpanded }}
+              <button class="px-2 py-1 border bg-background" @click="toggle_editable">
+                {{ editable }}
               </button>
             </div>
           </div>
