@@ -9,8 +9,9 @@ export const tables = {
       text: State.SQLite.text({ default: '' }),
       content: State.SQLite.text({ default: '' }),
       completed: State.SQLite.boolean({ default: false }),
-      deletedAt: State.SQLite.integer({ nullable: true, schema: Schema.DateFromNumber })
-    }
+      deletedAt: State.SQLite.integer({ nullable: true, schema: Schema.DateFromNumber }),
+      modified: State.SQLite.integer({ nullable: true, schema: Schema.DateFromNumber }),
+    },
   }),
   // Client documents can be used for client-only state (for example form inputs)
   uiState: State.SQLite.clientDocument({
@@ -18,22 +19,30 @@ export const tables = {
     schema: Schema.Struct({
       newTodoText: Schema.String,
       newTodoContent: Schema.String,
-      filter: Schema.Literal('all', 'active', 'completed')
+      filter: Schema.Literal('all', 'active', 'completed'),
+      showMenu: Schema.Boolean,
+      editable: Schema.Boolean,
     }),
     default: {
       id: SessionIdSymbol,
       value: {
         newTodoText: '',
         newTodoContent: '',
-        filter: 'all'
-      }
-    }
-  })
+        filter: 'all',
+        showMenu: true,
+        editable: true,
+      },
+    },
+  }),
 }
 
 export const events = {
   todoCreated: Events.synced({
     name: 'v1.TodoCreated',
+    schema: Schema.Struct({ id: Schema.String, text: Schema.String, content: Schema.String }),
+  }),
+  todoUpdated: Events.synced({
+    name: 'v1.TodoUpdated',
     schema: Schema.Struct({ id: Schema.String, text: Schema.String, content: Schema.String }),
   }),
   todoCompleted: Events.synced({
@@ -52,12 +61,13 @@ export const events = {
     name: 'v1.TodoClearedCompleted',
     schema: Schema.Struct({ deletedAt: Schema.Date }),
   }),
-  uiStateSet: tables.uiState.set
+  uiStateSet: tables.uiState.set,
 }
 
 // Materializers are used to map events to state
 const materializers = State.SQLite.materializers(events, {
   'v1.TodoCreated': ({ id, text, content }) => tables.todos.insert({ id, text, content, completed: false }),
+  'v1.TodoUpdated': ({ id, text, content }) => tables.todos.update({ text, content }).where({ id }),
   'v1.TodoCompleted': ({ id }) => tables.todos.update({ completed: true }).where({ id }),
   'v1.TodoUncompelted': ({ id }) => tables.todos.update({ completed: false }).where({ id }),
   'v1.TodoDeleted': ({ id, deletedAt }) => tables.todos.update({ deletedAt }).where({ id }),

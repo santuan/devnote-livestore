@@ -1,24 +1,15 @@
-import { globalIgnores } from 'eslint/config'
-import { defineConfigWithVueTs, vueTsConfigs } from '@vue/eslint-config-typescript'
-import pluginVue from 'eslint-plugin-vue'
-import pluginOxlint from 'eslint-plugin-oxlint'
-import skipFormatting from '@vue/eslint-config-prettier/skip-formatting'
+import antfu from '@antfu/eslint-config'
 
-// To allow more languages other than `ts` in `.vue` files, uncomment the following lines:
-// import { configureVueProject } from '@vue/eslint-config-typescript'
-// configureVueProject({ scriptLangs: ['ts', 'tsx'] })
-// More info at https://github.com/vuejs/eslint-config-typescript/#advanced-setup
-
-export default defineConfigWithVueTs(
-  {
-    name: 'app/files-to-lint',
-    files: ['**/*.{ts,mts,tsx,vue}'],
+export default antfu({
+  stylistic: true,
+  vue: {
+    a11y: false,
   },
-
-  globalIgnores(['**/dist/**', '**/dist-ssr/**', '**/coverage/**']),
-
-  pluginVue.configs['flat/essential'],
-  vueTsConfigs.recommended,
-  ...pluginOxlint.configs['flat/recommended'],
-  skipFormatting,
-)
+  typescript: true,
+  rules: {
+    'vue-a11y/media-has-caption': 'off',
+    'vue/no-useless-v-bind': ['off', {
+      ignoreStringEscape: true,
+    }],
+  },
+})
