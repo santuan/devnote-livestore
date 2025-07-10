@@ -20,16 +20,16 @@ export default defineComponent({
     },
     getHeadingClass(level: number) {
       const classes = {
-        1: 'pl-1 pr-3 font-mono text-sm font-bold text-foreground',
-        2: 'pl-1 pr-3 font-mono text-sm text-foreground',
-        3: 'pl-2 pr-3 font-mono text-sm text-foreground',
-        4: 'pl-3 pr-3 font-mono text-sm text-foreground',
-        5: 'pl-4 pr-3 font-mono text-sm text-muted-foreground',
-        6: 'pl-5 pr-3 font-mono text-sm text-muted-foreground',
+        1: 'pl-1 pr-3 font-mono text-xs font-bold text-foreground',
+        2: 'pl-1 pr-3 font-mono text-xs text-foreground',
+        3: 'pl-2 pr-3 font-mono text-xs text-foreground',
+        4: 'pl-3 pr-3 font-mono text-xs text-foreground',
+        5: 'pl-4 pr-3 font-mono text-xs text-muted-foreground',
+        6: 'pl-5 pr-3 font-mono text-xs text-muted-foreground',
       }
       return (
         classes[level as keyof typeof classes]
-        || 'font-mono text-sm text-muted-foreground'
+        || 'font-mono text-xs text-muted-foreground'
       )
     },
   },
