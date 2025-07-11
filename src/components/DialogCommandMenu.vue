@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import type { Ref } from 'vue'
 import { queryDb } from '@livestore/livestore'
+import { useMagicKeys, whenever } from '@vueuse/core'
 import { Pin, Search, X } from 'lucide-vue-next'
 import {
   ComboboxContent,
@@ -50,6 +51,14 @@ function select_document(id: any) {
     show_commandbar.value = false
   }
 }
+
+const keys = useMagicKeys()
+const magic_command_menu = keys['ctrl+alt+o']
+
+whenever(magic_command_menu, (n) => {
+  if (n)
+    show_commandbar.value = true
+})
 </script>
 
 <template>
