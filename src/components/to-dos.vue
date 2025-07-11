@@ -240,7 +240,7 @@ onMounted(() => {
             <div class="flex p-1">
               <button
                 :disabled="isEditing"
-                class="disabled:bg-secondary disabled:pointer-events-none disabled:text-secondary-foreground/20 h-10 px-1 bg-primary text-primary-foreground w-full"
+                class="disabled:bg-secondary text-xs disabled:pointer-events-none disabled:text-secondary-foreground/20 h-8 px-1 bg-primary text-primary-foreground w-full"
                 @click="newTodo"
               >
                 {{ isEditing ? t('sidebar.creatingNewDocument') : t('sidebar.newDocument') }}
@@ -439,12 +439,16 @@ onMounted(() => {
               </div>
             </div>
           </div>
-          <template v-if="contentAnalysis.headings.length > 0">
-            <button class="flex pl-1 pr-2 w-full h-12 bg-secondary/20 text-left items-center justify-between  gap-2" @click="showOnlyHeadings = !showOnlyHeadings">
-              <span class="text-sm font-semibold text-primary">
+          <div class="w-full">
+            <button
+              class="flex pl-1 pr-2 w-full h-12 bg-secondary/20 text-left items-center justify-between gap-2"
+              :class="contentAnalysis.headings.length > 0 ? '' : 'pointer-events-none'"
+              @click="showOnlyHeadings = !showOnlyHeadings"
+            >
+              <span class="text-sm" :class="contentAnalysis.headings.length > 0 ? 'text-primary' : 'opacity-50'">
                 {{ t("leva.headings") }}
               </span>
-              <span class="flex items-center justify-center size-5">
+              <span v-show="contentAnalysis.headings.length > 0" class="flex items-center justify-center size-5">
                 <ChevronsUpDown class="text-foreground size-3" />
               </span>
             </button>
@@ -454,7 +458,7 @@ onMounted(() => {
             >
               <Toc :editor="editor_content" :items="editor_toc" />
             </div>
-          </template>
+          </div>
         </div>
       </SplitterPanel>
     </SplitterGroup>

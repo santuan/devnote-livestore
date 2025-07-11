@@ -4,6 +4,7 @@ import { useStorage } from '@vueuse/core'
 import {
   DropdownMenuContent,
   DropdownMenuItem,
+  DropdownMenuPortal,
   DropdownMenuRoot,
   DropdownMenuTrigger,
 } from 'reka-ui'
@@ -31,53 +32,55 @@ function setLocale(lang: any) {
         <span class="sr-only"> {{ t('settings.languageDescription') }}</span>
       </Tooltip>
     </DropdownMenuTrigger>
-    <DropdownMenuContent
-      side="left"
-      align="start"
-      class="z-10 grid w-32 text-xs bg-secondary border border-primary"
-    >
-      <DropdownMenuItem
-        class="p-2 hover:bg-secondary-foreground/10 outline-hidden focus:ring-1 focus:ring-primary focus:bg-primary/20 focus:ring-inset"
-        @click="setLocale('de')"
+    <DropdownMenuPortal>
+      <DropdownMenuContent
+        side="left"
+        align="start"
+        class="z-10 grid w-32 text-xs bg-secondary border text-foreground font-mono border-primary"
       >
-        Deutsch
-      </DropdownMenuItem>
-      <DropdownMenuItem
-        class="p-2 hover:bg-secondary-foreground/10 outline-hidden focus:ring-1 focus:ring-primary focus:bg-primary/20 focus:ring-inset"
-        @click="setLocale('en')"
-      >
-        English
-      </DropdownMenuItem>
-      <DropdownMenuItem
-        class="p-2 hover:bg-secondary-foreground/10 outline-hidden focus:ring-1 focus:ring-primary focus:bg-primary/20 focus:ring-inset"
-        @click="setLocale('es')"
-      >
-        Español
-      </DropdownMenuItem>
-      <DropdownMenuItem
-        class="p-2 hover:bg-secondary-foreground/10 outline-hidden focus:ring-1 focus:ring-primary focus:bg-primary/20 focus:ring-inset"
-        @click="setLocale('fr')"
-      >
-        Français
-      </DropdownMenuItem>
-      <DropdownMenuItem
-        class="p-2 hover:bg-secondary-foreground/10 outline-hidden focus:ring-1 focus:ring-primary focus:bg-primary/20 focus:ring-inset"
-        @click="setLocale('ja')"
-      >
-        日本語
-      </DropdownMenuItem>
-      <DropdownMenuItem
-        class="p-2 hover:bg-secondary-foreground/10 outline-hidden focus:ring-1 focus:ring-primary focus:bg-primary/20 focus:ring-inset"
-        @click="setLocale('ru')"
-      >
-        Русский
-      </DropdownMenuItem>
-      <DropdownMenuItem
-        class="p-2 hover:bg-secondary-foreground/10 outline-hidden focus:ring-1 focus:ring-primary focus:bg-primary/20 focus:ring-inset"
-        @click="setLocale('zh')"
-      >
-        简体中文
-      </DropdownMenuItem>
-    </DropdownMenuContent>
+        <DropdownMenuItem
+          class="p-2 hover:bg-secondary-foreground/10 outline-hidden focus:ring-1 focus:ring-primary focus:bg-primary/20 focus:ring-inset"
+          @click="setLocale('de')"
+        >
+          Deutsch
+        </DropdownMenuItem>
+        <DropdownMenuItem
+          class="p-2 hover:bg-secondary-foreground/10 outline-hidden focus:ring-1 focus:ring-primary focus:bg-primary/20 focus:ring-inset"
+          @click="setLocale('en')"
+        >
+          English
+        </DropdownMenuItem>
+        <DropdownMenuItem
+          class="p-2 hover:bg-secondary-foreground/10 outline-hidden focus:ring-1 focus:ring-primary focus:bg-primary/20 focus:ring-inset"
+          @click="setLocale('es')"
+        >
+          Español
+        </DropdownMenuItem>
+        <DropdownMenuItem
+          class="p-2 hover:bg-secondary-foreground/10 outline-hidden focus:ring-1 focus:ring-primary focus:bg-primary/20 focus:ring-inset"
+          @click="setLocale('fr')"
+        >
+          Français
+        </DropdownMenuItem>
+        <DropdownMenuItem
+          class="p-2 hover:bg-secondary-foreground/10 outline-hidden focus:ring-1 focus:ring-primary focus:bg-primary/20 focus:ring-inset"
+          @click="setLocale('ja')"
+        >
+          日本語
+        </DropdownMenuItem>
+        <DropdownMenuItem
+          class="p-2 hover:bg-secondary-foreground/10 outline-hidden focus:ring-1 focus:ring-primary focus:bg-primary/20 focus:ring-inset"
+          @click="setLocale('ru')"
+        >
+          Русский
+        </DropdownMenuItem>
+        <DropdownMenuItem
+          class="p-2 hover:bg-secondary-foreground/10 outline-hidden focus:ring-1 focus:ring-primary focus:bg-primary/20 focus:ring-inset"
+          @click="setLocale('zh')"
+        >
+          简体中文
+        </DropdownMenuItem>
+      </DropdownMenuContent>
+    </DropdownMenuPortal>
   </DropdownMenuRoot>
 </template>

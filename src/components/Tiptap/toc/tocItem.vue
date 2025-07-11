@@ -51,7 +51,7 @@ export default defineComponent({
       :data-item-index="item.itemIndex"
       @click.prevent="onItemClick"
     >
-      <span class="truncate w-52">
+      <span class="line-clamp-1 w-full text-left text-xs">
         {{ item.textContent }}
       </span>
       <span class="opacity-30">H{{ item.originalLevel }}</span>
