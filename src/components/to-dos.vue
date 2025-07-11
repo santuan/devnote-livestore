@@ -336,9 +336,9 @@ onMounted(() => {
           v-show="layout[2] !== 0"
           class="w-full max-h-screen  font-mono min-h-screen bg-background text-foreground overflow-x-hidden overflow-y-auto"
         >
-          <div class="p-1 sticky flex-wrap top-0 bg-secondary flex justify-between items-center text-sm gap-1  ">
-            <strong class="font-black">id:</strong>
-            <span> {{ `${editable_id.substring(0, 30)}…` }}</span>
+          <div class="p-1 flex-wrap bg-secondary flex justify-between items-center text-sm gap-1  ">
+            <strong class="font-bold">ID:</strong>
+            <span class=""> {{ `${editable_id.substring(0, 10)}` }}</span>
           </div>
           <div class="flex bg-secondary justify-start text-sm items-start p-1 gap-2 flex-col ">
             <div class="flex gap-2 items-center justify-between w-full">
@@ -382,7 +382,7 @@ onMounted(() => {
             </button>
             <div
               v-if="showContentAnalysis"
-              class="flex px-1 flex-col @md:grid @md:grid-cols-2 mt-1 gap-2 text-xs pb-3 pt-2"
+              class="flex px-1 flex-col @xs:grid @xs:grid-cols-2 mt-1 gap-2 text-xs pb-3 pt-2"
             >
               <div>
                 <span class="opacity-50">{{ t("leva.codeBlocks") }}:</span>
@@ -390,7 +390,7 @@ onMounted(() => {
                   {{ contentAnalysis.codeBlocks }}
                 </span>
               </div>
-              <div class="flex @md:justify-end items-center">
+              <div class="flex @xs:justify-end items-center">
                 <span class="opacity-50">{{ t("leva.headings") }}:</span>
                 <span class="ml-1 font-mono font-bold">
                   {{ contentAnalysis.totalHeadings }}
@@ -402,7 +402,7 @@ onMounted(() => {
                   {{ contentAnalysis.wordCount }}
                 </span>
               </div>
-              <div class="flex @md:justify-end items-center">
+              <div class="flex @xs:justify-end items-center">
                 <span class="opacity-50">{{ t("leva.task") }}:</span>
                 <span
                   v-if="contentAnalysis.taskListCount !== 0" class="ml-1 font-mono font-bold"
