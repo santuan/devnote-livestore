@@ -110,6 +110,7 @@ function resetStore() {
   newTodoText.value = ''
   newTodoContent.value = ''
   editable_id.value = ''
+  editable.value = true
 }
 
 function newTodo() {
@@ -246,7 +247,7 @@ function toggle_documents() {
           <DialogCommandMenu />
         </div>
         <div
-          v-show="!sidebar_splitter_ref?.isCollapsed" class="w-full"
+          v-show="!sidebar_splitter_ref?.isCollapsed" class="w-full duration-300 transition-opacity"
           :class="[
             showDocuments ? 'relative z-[71]' : '',
             focusMode ? 'opacity-0 pointer-events-none' : '',
@@ -322,9 +323,13 @@ function toggle_documents() {
       <SplitterPanel id="splitter-group-1-panel-2" :min-size="40" :class="editable ? 'bg-secondary/20' : ''">
         <div class="new-todo relative px-2 flex flex-col gap-2 h-screen">
           <input
+            v-if="editable"
             v-model="newTodoText" type="text" class="border border-primary px-2 py-2 w-full"
             @keyup.enter="createTodo"
           >
+          <h1 v-else class="text-3xl mt-3 font-serif font-semibold px-5">
+            {{ newTodoText }}
+          </h1>
           <Editor :key="newTodoText" v-model="newTodoContent" :editor="editor_content" />
           <button v-show="isEditing" class="bg-primary h-12 text-primary-foreground py-2" @click="createTodo">
             {{ t("editor.save") }}
@@ -348,7 +353,7 @@ function toggle_documents() {
         </button>
         <div
           v-show="layout[2] !== 0"
-          class="w-full max-h-screen px-1 font-mono min-h-screen bg-background text-foreground overflow-x-hidden overflow-y-auto"
+          class="w-full max-h-screen px-1 font-mono min-h-screen duration-300 transition-opacity bg-background text-foreground overflow-x-hidden overflow-y-auto"
           :class="focusMode ? 'opacity-0 pointer-events-none' : ''"
         >
           <div class="p-1 flex-wrap flex justify-between items-center text-sm gap-1  ">
