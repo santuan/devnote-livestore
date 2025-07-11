@@ -233,7 +233,7 @@ onMounted(() => {
             />
           </svg>
         </button>
-        <div :class="sidebar_splitter_ref?.isCollapsed ? 'fixed top-10' : 'absolute right-0 top-0 m-px'">
+        <div :class="sidebar_splitter_ref?.isCollapsed ? 'fixed top-10' : 'absolute z-[80] right-0 top-0 m-px'">
           <DialogCommandMenu />
         </div>
         <div
