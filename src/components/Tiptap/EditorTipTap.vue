@@ -158,7 +158,7 @@ onBeforeUnmount(() => {
       editable ? 'outline outline-primary' : '!outline-0',
     ]"
   >
-    <div class="absolute left-0 right-0 top-0 h-8 bg-background border-b border-secondary flex justify-start p-1 z-40">
+    <div v-if="editable" class="absolute left-0 right-0 top-0 h-8 bg-background border-b border-secondary flex justify-start p-1 z-40">
       <button
         :class="{ 'bg-primary text-primary-foreground': editor.isActive('codeBlock') }" class="interactive font-mono border border-primary  text-xs px-3 "
         value="Codeblock" @click="editor.chain().focus().toggleCodeBlock().run()"
@@ -167,8 +167,9 @@ onBeforeUnmount(() => {
       </button>
     </div>
     <ScrollAreaRoot
-      class="ScrollAreaEditor pt-6 group" :class="[
+      class="ScrollAreaEditor  group" :class="[
         toolbar ? 'with-toolbar' : '',
+        editable ? 'pt-6' : '',
       ]" style="--scrollbar-size: 10px"
     >
       <ScrollAreaViewport

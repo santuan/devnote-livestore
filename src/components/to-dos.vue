@@ -10,6 +10,7 @@ import { useClientDocument, useQuery, useStore } from 'vue-livestore'
 import Editor from '../components/Tiptap/EditorTipTap.vue'
 import { events, tables } from '../livestore/schema'
 import ButtonDeleteDocument from './ButtonDeleteDocument.vue'
+import DialogCommandMenu from './DialogCommandMenu.vue'
 import DropdownLanguage from './DropdownLanguage.vue'
 import Toc from './Tiptap/toc/toc.vue'
 import ToggleTheme from './ToggleTheme.vue'
@@ -212,7 +213,7 @@ onMounted(() => {
   <div class="font-mono text-foreground">
     <SplitterGroup id="splitter-group-1" direction="horizontal" auto-save-id="app-desktop" @layout="layout = $event">
       <SplitterPanel
-        id="splitter-group-1-panel-1" ref="sidebar_splitter_ref" :min-size="10" :max-size="50" collapsible
+        id="splitter-group-1-panel-1" ref="sidebar_splitter_ref" :min-size="15" :max-size="50" collapsible
         :collapsed-size="5" class="min-w-10 items-start justify-start h-screen" :class="[
           showDocuments
             ? 'fixed md:relative min-w-80 md:min-w-auto flex z-[71]'
@@ -232,6 +233,9 @@ onMounted(() => {
             />
           </svg>
         </button>
+        <div :class="sidebar_splitter_ref?.isCollapsed ? 'fixed top-10' : 'absolute right-0 top-0 m-px'">
+          <DialogCommandMenu />
+        </div>
         <div
           v-show="!sidebar_splitter_ref?.isCollapsed" class="w-full"
           :class="[showDocuments ? 'relative z-[71]' : '']"
@@ -247,37 +251,35 @@ onMounted(() => {
               </button>
             </div>
             <div class="flex flex-col @sm:flex-row gap-2 mb-1 p-1 justify-between items-center">
-              <div class="w-full flex justify-start items-center gap-2 font-bold">
-                <NumberFlow class="text-xs" :value="todos.length" />
-                <h1 class="text-primary">
-                  Documents {{ filter }}
+              <div class="w-full flex justify-center mt-1 @sm:justify-start items-center gap-2 font-bold">
+                <h1 class="text-xs text-primary">
+                  Documents
                 </h1>
               </div>
-              <div class="flex gap-1">
+              <div class="flex items-center gap-1">
+                <NumberFlow class="text-xs mr-2" :value="todos.length" />
                 <button
-                  class="px-1 border border-primary"
+                  class="px-2 font-bold h-8 border flex justify-center items-center gap-1 text-xs border-primary"
                   :class="filter === 'all' ? 'bg-primary text-primary-foreground' : ''" @click="filter = 'all'"
                 >
                   All
                 </button>
                 <button
-                  class="px-1 border flex justify-center items-center gap-1 text-xs border-primary"
+                  class="px-2 font-bold h-8 border flex justify-center items-center gap-1 text-xs border-primary"
                   :class="filter === 'active' ? 'bg-primary text-primary-foreground' : ''" @click="filter = 'active'"
                 >
                   <Circle class="size-4" />
-                  <span v-show="filter === 'active'">Active</span>
                 </button>
                 <button
-                  class="px-1 border flex justify-center items-center gap-1 text-xs border-primary"
+                  class="px-2 font-bold h-8 border flex justify-center items-center gap-1 text-xs border-primary"
                   :class="filter === 'completed' ? 'bg-primary text-primary-foreground' : ''"
                   @click="filter = 'completed'"
                 >
                   <CircleOff class="size-4" />
-                  <span v-show="filter === 'completed'">Completed</span>
                 </button>
               </div>
             </div>
-            <div class="max-h-[calc(100vh-3.75rem)] overflow-x-hidden overflow-y-auto">
+            <div class="max-h-[calc(100vh-3.75rem)] border-t border-secondary overflow-x-hidden overflow-y-auto">
               <div v-for="todo in todos" :key="todo.id" class="border-b border-gray-800  w-full flex justify-between">
                 <div class="view-mode w-full flex gap-1 flex-col sm:flex-row">
                   <button
@@ -299,20 +301,13 @@ onMounted(() => {
               </div>
             </div>
           </div>
-          <transition>
-            <div
-              v-show="resize < 10" v-if="!sidebar_splitter_ref?.isCollapsed"
-              class="absolute top-0 right-0 z-[200] transition-opacity h-screen w-5 duration-1000 bg-gradient-to-r from-transparent bottom-0 to-background"
-              :class="resize === 10 ? 'to-primary opacity-20' : 'opacity-100'"
-            />
-          </transition>
         </div>
       </SplitterPanel>
       <SplitterResizeHandle
         id="splitter-group-1-resize-handle-1"
-        class="w-1 bg-secondary  data-[state=hover]:bg-primary"
+        class="w-0.5 bg-secondary data-[state=hover]:bg-primary"
       />
-      <SplitterPanel id="splitter-group-1-panel-2" :min-size="40">
+      <SplitterPanel id="splitter-group-1-panel-2" :min-size="40" :class="editable ? 'bg-secondary/20' : ''">
         <div class="new-todo relative px-2 flex flex-col gap-2 h-screen">
           <input
             v-model="newTodoText" type="text" class="border border-primary px-2 py-2 w-full"
@@ -346,7 +341,7 @@ onMounted(() => {
               <ToggleTheme />
             </div>
             <div class="flex gap-2 items-center justify-between w-full">
-              <span>{{ t('commandBar.documents') }}</span>
+              <span>{{ t('commandBar.focusSidebar') }}</span>
               <button
                 class="px-2 py-1 border bg-background"
                 :class="showDocuments ? 'bg-primary text-primary-foreground border-primary' : ''"
