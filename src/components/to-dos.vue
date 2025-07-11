@@ -208,6 +208,13 @@ const contentAnalysis = computed(() => {
 onMounted(() => {
   resetStore()
 })
+
+function toggle_documents() {
+  showDocuments.value = !showDocuments.value
+  if (focusMode.value) {
+    focusMode.value = false
+  }
+}
 </script>
 
 <template>
@@ -226,7 +233,7 @@ onMounted(() => {
       >
         <button
           class="fixed z-[80] left-0 top-0 flex items-center justify-center gap-2 p-1 w-8 max-h-8 focus-visible:ring-1 focus-within:ring-1 focus-within:ring-primary focus-visible:ring-primary"
-          @click="showDocuments = !showDocuments"
+          @click="toggle_documents"
         >
           <svg id="a" xmlns="http://www.w3.org/2000/svg" class="outline-hidden w-6 size-7" viewBox="0 0 384 311.02">
             <path
@@ -320,7 +327,7 @@ onMounted(() => {
           >
           <Editor :key="newTodoText" v-model="newTodoContent" :editor="editor_content" />
           <button v-show="isEditing" class="bg-primary h-12 text-primary-foreground py-2" @click="createTodo">
-            Add Todo
+            {{ t("editor.save") }}
           </button>
         </div>
       </SplitterPanel>
@@ -373,12 +380,12 @@ onMounted(() => {
               </button>
             </div>
             <div class="flex gap-2 items-center justify-between w-full">
-              <span>focusMode</span>
+              <span>{{ t('settings.perspective') }}</span>
               <button
                 class="px-2 py-1 border bg-background"
                 :class="focusMode ? 'bg-primary text-primary-foreground border-primary' : ''" @click="focusMode = !focusMode"
               >
-                {{ focusMode }}
+                focus
               </button>
             </div>
 
