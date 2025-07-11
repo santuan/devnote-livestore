@@ -288,12 +288,12 @@ onMounted(() => {
                       {{ todo.text.length === 0 ? '---' : todo.text }}
                     </span>
                   </button>
-                  <div class="flex gap-1 items-center justify-end">
-                    <button class="px-3 border border-secondary h-8" @click="toggleCompleted(todo.id)">
+                  <div class="flex gap-1 items-center bg-secondary gap-x-px pl-px justify-end">
+                    <button class="px-3 bg-background border-secondary h-8" @click="toggleCompleted(todo.id)">
                       <Circle v-if="!todo.completed" class="size-4" />
                       <CircleOff v-else class="size-4" />
                     </button>
-                    <ButtonDeleteDocument :id="todo.id" :title="todo.text" class="px-3  border border-secondary py-1" />
+                    <ButtonDeleteDocument :id="todo.id" :title="todo.text" />
                   </div>
                 </div>
               </div>

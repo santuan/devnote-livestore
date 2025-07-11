@@ -43,7 +43,7 @@ const { t } = useI18n()
 
 <template>
   <AlertDialogRoot v-model:open="show_delete_document_modal">
-    <AlertDialogTrigger class="px-3 border border-secondary h-8">
+    <AlertDialogTrigger class="px-3 bg-background h-8">
       <Trash2 class="size-4 pointer-events-none" />
       <span class="select-none! sr-only">{{ t("editor.delete") }}</span>
     </AlertDialogTrigger>
