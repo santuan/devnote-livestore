@@ -2,7 +2,7 @@
 import { queryDb } from '@livestore/livestore'
 import NumberFlow from '@number-flow/vue'
 import { breakpointsTailwind, useBreakpoints } from '@vueuse/core'
-import { ChevronsUpDown, Circle, CircleOff } from 'lucide-vue-next'
+import { ChevronsUpDown, Circle, CircleOff, X } from 'lucide-vue-next'
 import { SplitterGroup, SplitterPanel, SplitterResizeHandle } from 'reka-ui'
 import { computed, onMounted, provide, shallowRef, watch, watchEffect } from 'vue'
 import { useI18n } from 'vue-i18n'
@@ -19,6 +19,7 @@ const { t } = useI18n()
 const editable_id = shallowRef('')
 const showContentAnalysis = shallowRef(true)
 const showOnlyHeadings = shallowRef(true)
+const focusMode = shallowRef(false)
 const editor_content = shallowRef()
 const editor_toc = shallowRef([])
 const sidebar_splitter_ref = shallowRef()
@@ -220,6 +221,7 @@ onMounted(() => {
             : 'hidden lg:flex',
           sidebar_splitter_ref?.isCollapsed ? 'max-w-10!' : '',
           resize === 10 ? ' border-r-2! border-primary!' : '',
+
         ]" @resize="resize = $event"
       >
         <button
@@ -233,12 +235,15 @@ onMounted(() => {
             />
           </svg>
         </button>
-        <div :class="sidebar_splitter_ref?.isCollapsed ? 'fixed top-10' : 'absolute z-[80] right-0 top-0 m-px'">
+        <div :class="sidebar_splitter_ref?.isCollapsed ? 'fixed bottom-0 left-0' : 'fixed z-[80] left-0 bottom-0 m-px'">
           <DialogCommandMenu />
         </div>
         <div
           v-show="!sidebar_splitter_ref?.isCollapsed" class="w-full"
-          :class="[showDocuments ? 'relative z-[71]' : '']"
+          :class="[
+            showDocuments ? 'relative z-[71]' : '',
+            focusMode ? 'opacity-0 pointer-events-none' : '',
+          ]"
         >
           <div class="w-full @container pt-8">
             <div class="flex p-1">
@@ -324,18 +329,26 @@ onMounted(() => {
         class="w-1 bg-secondary  data-[state=hover]:bg-primary"
       />
       <SplitterPanel
-        id="splitter-group-1-panel-3" class="min-w-10  @container" :min-size="9" collapsible :max-size="40"
+        id="splitter-group-1-panel-3" class="min-w-10  @container" :min-size="15" collapsible :max-size="40"
         :collapsed-size="0"
       >
+        <button
+          v-if="focusMode"
+          class="fixed top-0 right-0 size-8 flex justify-center items-center"
+          @click="focusMode = !focusMode"
+        >
+          <X class="size-4" />
+        </button>
         <div
           v-show="layout[2] !== 0"
-          class="w-full max-h-screen  font-mono min-h-screen bg-background text-foreground overflow-x-hidden overflow-y-auto"
+          class="w-full max-h-screen px-1 font-mono min-h-screen bg-background text-foreground overflow-x-hidden overflow-y-auto"
+          :class="focusMode ? 'opacity-0 pointer-events-none' : ''"
         >
-          <div class="p-1 flex-wrap bg-secondary flex justify-between items-center text-sm gap-1  ">
+          <div class="p-1 flex-wrap flex justify-between items-center text-sm gap-1  ">
             <strong class="font-bold">ID:</strong>
             <span class=""> {{ `${editable_id.substring(0, 10)}` }}</span>
           </div>
-          <div class="flex bg-secondary justify-start text-sm items-start p-1 gap-2 flex-col ">
+          <div class="flex bg-primary/5 text-xs justify-start items-start p-1 gap-2 flex-col ">
             <div class="flex gap-2 items-center justify-between w-full">
               <span>{{ t('settings.theme') }}</span>
               <ToggleTheme />
@@ -360,6 +373,16 @@ onMounted(() => {
               </button>
             </div>
             <div class="flex gap-2 items-center justify-between w-full">
+              <span>focusMode</span>
+              <button
+                class="px-2 py-1 border bg-background"
+                :class="focusMode ? 'bg-primary text-primary-foreground border-primary' : ''" @click="focusMode = !focusMode"
+              >
+                {{ focusMode }}
+              </button>
+            </div>
+
+            <div class="flex gap-2 items-center justify-between w-full">
               <span>{{ t('settings.language') }}</span>
               <DropdownLanguage />
             </div>
@@ -377,27 +400,27 @@ onMounted(() => {
             </button>
             <div
               v-if="showContentAnalysis"
-              class="flex px-1 flex-col @xs:grid @xs:grid-cols-2 mt-1 gap-2 text-xs pb-3 pt-2"
+              class="flex px-1 flex-col @xs:grid @xs:grid-cols-2 @md:grid-cols-4 mt-1 gap-2 text-xs pb-3 pt-2"
             >
-              <div>
+              <div class="flex flex-col ">
                 <span class="opacity-50">{{ t("leva.codeBlocks") }}:</span>
                 <span class="ml-1 font-mono font-bold">
                   {{ contentAnalysis.codeBlocks }}
                 </span>
               </div>
-              <div class="flex @xs:justify-end items-center">
+              <div class="flex flex-col ">
                 <span class="opacity-50">{{ t("leva.headings") }}:</span>
                 <span class="ml-1 font-mono font-bold">
                   {{ contentAnalysis.totalHeadings }}
                 </span>
               </div>
-              <div>
+              <div class="flex flex-col ">
                 <span class="opacity-50">{{ t("leva.words") }}:</span>
                 <span class="ml-1 font-mono font-bold">
                   {{ contentAnalysis.wordCount }}
                 </span>
               </div>
-              <div class="flex @xs:justify-end items-center">
+              <div class="flex flex-col ">
                 <span class="opacity-50">{{ t("leva.task") }}:</span>
                 <span
                   v-if="contentAnalysis.taskListCount !== 0" class="ml-1 font-mono font-bold"
@@ -409,8 +432,8 @@ onMounted(() => {
                 </span>
                 <span v-else>---</span>
               </div>
-              <div v-if="editor_content" class="mt-0.5 col-span-2 ">
-                <div class="flex items-center justify-between mb-1">
+              <div v-if="editor_content" class="mt-0.5 col-span-2 @md:col-span-4 ">
+                <div class="flex flex-col @sm:flex-row items-center justify-between mb-1">
                   <span class="text-xs opacity-50">{{ t("leva.character") }}</span>
                   <span class="font-mono text-xs">
                     {{ contentAnalysis.characterCount }}

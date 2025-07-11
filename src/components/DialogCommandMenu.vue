@@ -2,7 +2,7 @@
 import type { Ref } from 'vue'
 import { queryDb } from '@livestore/livestore'
 import { useMagicKeys, whenever } from '@vueuse/core'
-import { Pin, Search, X } from 'lucide-vue-next'
+import { Circle, CircleOff, Search, X } from 'lucide-vue-next'
 import {
   ComboboxContent,
   ComboboxEmpty,
@@ -105,7 +105,8 @@ whenever(magic_command_menu, (n) => {
                 @select="select_document(item.id)"
               >
                 <span>{{ item.text || item.id }}</span>
-                <Pin v-if="item.completed" class="size-4 fill-current  text-primary" />
+                <Circle v-if="!item.completed" class="size-4 stroke-current  text-primary" />
+                <CircleOff v-else class="size-4 stroke-current  text-primary" />
               </ComboboxItem>
             </ComboboxGroup>
           </ComboboxContent>
