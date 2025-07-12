@@ -54,7 +54,6 @@ function select_document(id: any) {
 
 const keys = useMagicKeys()
 const magic_command_menu = keys['ctrl+alt+o']
-
 whenever(magic_command_menu, (n) => {
   if (n)
     show_commandbar.value = true

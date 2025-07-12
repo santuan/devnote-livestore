@@ -66,7 +66,7 @@ export default Node.create<IframeOptions>({
   },
 
   addNodeView() {
-    return ({ editor, node, getPos }) => {
+    return ({ editor, node }) => {
       const container = document.createElement('div')
       container.className = 'iframeContainer'
 
