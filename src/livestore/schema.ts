@@ -2,8 +2,8 @@ import { Events, makeSchema, Schema, SessionIdSymbol, State } from '@livestore/l
 
 // State is modelled as SQLite tables
 export const tables = {
-  todos: State.SQLite.table({
-    name: 'todos',
+  documents: State.SQLite.table({
+    name: 'documents',
     columns: {
       id: State.SQLite.text({ primaryKey: true }),
       text: State.SQLite.text({ default: '' }),
@@ -17,8 +17,8 @@ export const tables = {
   uiState: State.SQLite.clientDocument({
     name: 'uiState',
     schema: Schema.Struct({
-      newTodoText: Schema.String,
-      newTodoContent: Schema.String,
+      newDocumentTitle: Schema.String,
+      newDocumentContent: Schema.String,
       filter: Schema.Literal('all', 'active', 'completed'),
       showDocuments: Schema.Boolean,
       editable: Schema.Boolean,
@@ -26,8 +26,8 @@ export const tables = {
     default: {
       id: SessionIdSymbol,
       value: {
-        newTodoText: '',
-        newTodoContent: '',
+        newDocumentTitle: '',
+        newDocumentContent: '',
         filter: 'all',
         showDocuments: true,
         editable: true,
@@ -37,28 +37,28 @@ export const tables = {
 }
 
 export const events = {
-  todoCreated: Events.synced({
-    name: 'v1.TodoCreated',
+  documentCreated: Events.synced({
+    name: 'v1.DocumentCreated',
     schema: Schema.Struct({ id: Schema.String, text: Schema.String, content: Schema.String }),
   }),
-  todoUpdated: Events.synced({
-    name: 'v1.TodoUpdated',
+  documentUpdated: Events.synced({
+    name: 'v1.DocumentUpdated',
     schema: Schema.Struct({ id: Schema.String, text: Schema.String, content: Schema.String }),
   }),
-  todoCompleted: Events.synced({
-    name: 'v1.TodoCompleted',
+  documentCompleted: Events.synced({
+    name: 'v1.DocumentCompleted',
     schema: Schema.Struct({ id: Schema.String }),
   }),
-  todoUncompleted: Events.synced({
-    name: 'v1.TodoUncompelted',
+  documentUncompleted: Events.synced({
+    name: 'v1.DocumentUncompleted',
     schema: Schema.Struct({ id: Schema.String }),
   }),
-  todoDeleted: Events.synced({
-    name: 'v1.TodoDeleted',
+  documentDeleted: Events.synced({
+    name: 'v1.DocumentDeleted',
     schema: Schema.Struct({ id: Schema.String, deletedAt: Schema.Date }),
   }),
-  todoClearedCompleted: Events.synced({
-    name: 'v1.TodoClearedCompleted',
+  documentClearedCompleted: Events.synced({
+    name: 'v1.DocumentClearedCompleted',
     schema: Schema.Struct({ deletedAt: Schema.Date }),
   }),
   uiStateSet: tables.uiState.set,
@@ -66,12 +66,12 @@ export const events = {
 
 // Materializers are used to map events to state
 const materializers = State.SQLite.materializers(events, {
-  'v1.TodoCreated': ({ id, text, content }) => tables.todos.insert({ id, text, content, completed: false }),
-  'v1.TodoUpdated': ({ id, text, content }) => tables.todos.update({ text, content }).where({ id }),
-  'v1.TodoCompleted': ({ id }) => tables.todos.update({ completed: true }).where({ id }),
-  'v1.TodoUncompelted': ({ id }) => tables.todos.update({ completed: false }).where({ id }),
-  'v1.TodoDeleted': ({ id, deletedAt }) => tables.todos.update({ deletedAt }).where({ id }),
-  'v1.TodoClearedCompleted': ({ deletedAt }) => tables.todos.update({ deletedAt }).where({ completed: true }),
+  'v1.DocumentCreated': ({ id, text, content }) => tables.documents.insert({ id, text, content, completed: false }),
+  'v1.DocumentUpdated': ({ id, text, content }) => tables.documents.update({ text, content }).where({ id }),
+  'v1.DocumentCompleted': ({ id }) => tables.documents.update({ completed: true }).where({ id }),
+  'v1.DocumentUncompleted': ({ id }) => tables.documents.update({ completed: false }).where({ id }),
+  'v1.DocumentDeleted': ({ id, deletedAt }) => tables.documents.update({ deletedAt }).where({ id }),
+  'v1.DocumentClearedCompleted': ({ deletedAt }) => tables.documents.update({ deletedAt }).where({ completed: true }),
 })
 
 const state = State.SQLite.makeState({ tables, materializers })

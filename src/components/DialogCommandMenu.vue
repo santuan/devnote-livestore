@@ -26,11 +26,11 @@ import { useClientDocument, useQuery } from 'vue-livestore'
 import Tooltip from '@/components/Tooltip.vue'
 import { tables } from '@/livestore/schema'
 
-const { newTodoText, newTodoContent } = useClientDocument(tables.uiState)
+const { newDocumentTitle, newDocumentContent } = useClientDocument(tables.uiState)
 
-const visibleTodos$ = queryDb(tables.todos.where({
+const visibleDocuments$ = queryDb(tables.documents.where({
   deletedAt: null,
-}), { label: 'visibleTodos' })
+}), { label: 'visibleDocuments' })
 
 const { t } = useI18n()
 const show_commandbar = ref(false)
@@ -40,13 +40,13 @@ function close() {
 }
 
 const editable_id = inject('editable_id') as Ref<string | null>
-const todos = useQuery(visibleTodos$)
+const documents = useQuery(visibleDocuments$)
 
 function select_document(id: any) {
-  const foundTodo = todos.value.find(todo => todo.id === id)
+  const foundTodo = documents.value.find(todo => todo.id === id)
   if (foundTodo) {
-    newTodoText.value = foundTodo.text
-    newTodoContent.value = foundTodo.content
+    newDocumentTitle.value = foundTodo.text
+    newDocumentContent.value = foundTodo.content
     editable_id.value = id
     show_commandbar.value = false
   }
@@ -64,7 +64,7 @@ whenever(magic_command_menu, (n) => {
   <DialogRoot v-model:open="show_commandbar">
     <Tooltip :name="t('commandBar.title')" side="bottom" shortcut="ctrl + alt + o">
       <DialogTrigger
-        class="flex items-center justify-center border interactive border-secondary hover:bg-secondary/80 bg-background size-8"
+        class="fixed z-[80] left-0 bottom-0 m-px flex items-center justify-center border interactive border-secondary hover:bg-secondary/80 bg-background size-8"
       >
         <Search class="size-4" />
         <span class="sr-only">{{ t("commandBar.title") }}</span>
@@ -93,12 +93,12 @@ whenever(magic_command_menu, (n) => {
             <ComboboxEmpty class="text-center text-muted-foreground p-4">
               {{ t("sidebar.noResults") }}
             </ComboboxEmpty>
-            <ComboboxGroup v-if="todos?.length !== 0">
+            <ComboboxGroup v-if="documents?.length !== 0">
               <ComboboxLabel class="px-4 text-muted-foreground font-semibold mt-3 mb-3 font-mono">
                 {{ t("commandBar.documents") }}
               </ComboboxLabel>
               <ComboboxItem
-                v-for="item in todos" :key="item.id" :value="item.text || item.id || ''"
+                v-for="item in documents" :key="item.id" :value="item.text || item.id || ''"
                 class="cursor-default font-mono text-xs px-4 py-2 rounded-md text-foreground data-highlighted:bg-muted inline-flex justify-between w-full items-center gap-4"
                 :class="item.id === editable_id ? 'text-primary underline underline-offset-2 font-extrabold' : ''"
                 @select="select_document(item.id)"

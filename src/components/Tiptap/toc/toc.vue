@@ -1,7 +1,8 @@
 <script lang="ts">
+import type { Document } from '@/livestore/document'
 import { TextSelection } from '@tiptap/pm/state'
-import { defineComponent } from 'vue'
 
+import { defineComponent } from 'vue'
 import ToCItem from './tocItem.vue'
 
 export default defineComponent({
@@ -10,7 +11,7 @@ export default defineComponent({
   },
   props: {
     items: {
-      type: Array as () => Record<string, any>[],
+      type: Array as () => Document[],
       default: () => [],
     },
     editor: {

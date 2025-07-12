@@ -23,18 +23,18 @@ const props = defineProps<{
 }>()
 
 const { store } = useStore()
-const { newTodoText, newTodoContent } = useClientDocument(tables.uiState)
+const { newDocumentTitle, newDocumentContent } = useClientDocument(tables.uiState)
 const editable_id = inject('editable_id') as Ref<string | null>
 
 const show_delete_document_modal = ref(false)
 
 function deleteTodo(id: string) {
-  store.commit(events.todoDeleted({
+  store.commit(events.documentDeleted({
     id,
     deletedAt: new Date(),
   }))
-  newTodoText.value = ''
-  newTodoContent.value = ''
+  newDocumentTitle.value = ''
+  newDocumentContent.value = ''
   editable_id.value = ''
 }
 
