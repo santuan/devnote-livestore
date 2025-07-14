@@ -20,12 +20,12 @@ const editable_id = inject('editable_id') as Ref<string | null>
 
 <template>
   <div
-    class="border-b border-gray-800 w-full flex justify-between"
+    class="border-b border-gray-800 w-full flex justify-between group"
   >
     <div class="view-mode w-full flex gap-1 flex-col sm:flex-row">
       <button
         class="w-full px-3"
-        :class="props.data.id === editable_id ? 'text-primary font-bold' : ''"
+        :class="props.data.id === editable_id ? 'text-primary font-bold underline underline-offset-2' : ''"
         @click="emit('edit', props.data.id)"
       >
         <span class="line-clamp-1 w-full text-left text-sm overflow-y-hidden">
@@ -35,6 +35,9 @@ const editable_id = inject('editable_id') as Ref<string | null>
       <div
         class="flex gap-1 props.datas-center bg-secondary gap-x-px pl-px justify-end"
       >
+        <div class="group-hover:inline-flex group-focus-within:inline-flex hidden">
+          <ButtonDeleteDocument :id="props.data.id" :title="props.data.text" />
+        </div>
         <button
           class="px-3 bg-background border-secondary h-8"
           @click="emit('toggle', props.data.id)"
@@ -42,7 +45,6 @@ const editable_id = inject('editable_id') as Ref<string | null>
           <Circle v-if="!props.data.completed" class="size-4" />
           <CircleOff v-else class="size-4" />
         </button>
-        <ButtonDeleteDocument :id="props.data.id" :title="props.data.text" />
       </div>
     </div>
   </div>

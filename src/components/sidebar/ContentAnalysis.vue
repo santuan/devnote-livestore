@@ -123,7 +123,7 @@ const contentAnalysis = computed(() => {
         class="mt-0.5 col-span-2 @md:col-span-4"
       >
         <div
-          class="flex flex-col @sm:flex-row items-center justify-between mb-1"
+          class="flex flex-col @xs:flex-row items-center justify-between mb-1"
         >
           <span class="text-xs opacity-50">{{
             t("leva.character")

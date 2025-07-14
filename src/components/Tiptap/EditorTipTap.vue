@@ -1,41 +1,34 @@
 <script setup lang="ts">
 import type { Ref } from 'vue'
 import Blockquote from '@tiptap/extension-blockquote'
+
 import Bold from '@tiptap/extension-bold'
-import BulletList from '@tiptap/extension-bullet-list'
-import CharacterCount from '@tiptap/extension-character-count'
 import Code from '@tiptap/extension-code'
-import { Color } from '@tiptap/extension-color'
 import Document from '@tiptap/extension-document'
-import Gapcursor from '@tiptap/extension-gapcursor'
 import HardBreak from '@tiptap/extension-hard-break'
 import Heading from '@tiptap/extension-heading'
 import History from '@tiptap/extension-history'
 import HorizontalRule from '@tiptap/extension-horizontal-rule'
 import Italic from '@tiptap/extension-italic'
 import Link from '@tiptap/extension-link'
-import ListItem from '@tiptap/extension-list-item'
+import { BulletList, ListItem, OrderedList, TaskItem, TaskList } from '@tiptap/extension-list'
 import Mathematics from '@tiptap/extension-mathematics'
-import OrderedList from '@tiptap/extension-ordered-list'
 import Paragraph from '@tiptap/extension-paragraph'
-import Placeholder from '@tiptap/extension-placeholder'
 import Strike from '@tiptap/extension-strike'
-import Table from '@tiptap/extension-table'
-import TableCell from '@tiptap/extension-table-cell'
-import TableHeader from '@tiptap/extension-table-header'
+import { Table, TableCell, TableHeader, TableRow } from '@tiptap/extension-table'
 import {
   getHierarchicalIndexes,
   TableOfContents,
 } from '@tiptap/extension-table-of-contents'
-import TableRow from '@tiptap/extension-table-row'
-import TaskItem from '@tiptap/extension-task-item'
-import TaskList from '@tiptap/extension-task-list'
 import Text from '@tiptap/extension-text'
 import TextAlign from '@tiptap/extension-text-align'
-import TextStyle from '@tiptap/extension-text-style'
+import { TextStyleKit } from '@tiptap/extension-text-style'
 import Typography from '@tiptap/extension-typography'
+
 import Underline from '@tiptap/extension-underline'
 import Youtube from '@tiptap/extension-youtube'
+import { CharacterCount, Gapcursor, Placeholder } from '@tiptap/extensions'
+
 import { Editor, EditorContent, VueNodeViewRenderer } from '@tiptap/vue-3'
 import {
   ScrollAreaRoot,
@@ -102,12 +95,27 @@ onMounted(() => {
       WebFrame,
       // Custom extensions
       CharacterCount.configure({ limit: 50000 }),
-      Color.configure({ types: [TextStyle.name, ListItem.name] }),
       Placeholder.configure({ placeholder: t('editor.placeholder') }),
       Table.configure({ resizable: false, allowTableNodeSelection: true }),
       TaskItem.configure({ nested: false }),
       TextAlign.configure({ types: ['heading', 'paragraph'] }),
-      TextStyle.configure(),
+      TextStyleKit.configure({
+        backgroundColor: {
+          types: ['textStyle'],
+        },
+        color: {
+          types: ['textStyle'],
+        },
+        fontFamily: {
+          types: ['textStyle'],
+        },
+        fontSize: {
+          types: ['textStyle'],
+        },
+        lineHeight: {
+          types: ['textStyle'],
+        },
+      }),
       Youtube.configure({ controls: true, ccLanguage: 'es', nocookie: true }),
       TableOfContents.configure({
         getIndex: getHierarchicalIndexes,

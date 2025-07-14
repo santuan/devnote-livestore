@@ -8,7 +8,7 @@ import {
   useStorage,
   whenever,
 } from '@vueuse/core'
-import { X } from 'lucide-vue-next'
+import { ChevronsUpDown, Eye, PanelRightOpen, Plus, X } from 'lucide-vue-next'
 import { SplitterGroup, SplitterPanel, SplitterResizeHandle } from 'reka-ui'
 import {
   computed,
@@ -20,7 +20,6 @@ import {
 } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useClientDocument, useQuery, useStore } from 'vue-livestore'
-import Tooltip from '@/components/Tooltip.vue'
 import { useToggleColorTheme } from '@/composables/useToggleColorTheme'
 import Editor from '../components/Tiptap/EditorTipTap.vue'
 import { events, tables } from '../livestore/schema'
@@ -36,11 +35,14 @@ const colorTheme = useStorage('theme', 'theme-foreground')
 
 const { t } = useI18n()
 const editable_id = shallowRef('')
-
+const input_title = shallowRef<HTMLElement | null>(null)
+const focus_logo = shallowRef<HTMLElement | null>(null)
 const focusMode = shallowRef(false)
+const showSettings = shallowRef(true)
 const editor_content = shallowRef()
 const editor_toc = shallowRef([])
-const sidebar_splitter_ref = shallowRef()
+const sidebar_documents_splitter_ref = shallowRef()
+const sidebar_secondary_splitter_ref = shallowRef()
 const resize = shallowRef(0)
 const breakpoints = useBreakpoints(breakpointsTailwind)
 const largerThanLg = breakpoints.greater('lg')
@@ -154,11 +156,11 @@ watch(
   () => showDocuments.value,
   (showSidebar) => {
     if (!showSidebar) {
-      sidebar_splitter_ref.value?.collapse()
+      sidebar_documents_splitter_ref.value?.collapse()
     }
     else {
-      if (sidebar_splitter_ref.value.isCollapsed) {
-        sidebar_splitter_ref.value.resize(resizeTo.value)
+      if (sidebar_documents_splitter_ref.value.isCollapsed) {
+        sidebar_documents_splitter_ref.value.resize(resizeTo.value)
       }
     }
   },
@@ -182,8 +184,27 @@ watch(
   { immediate: true },
 )
 
-function disabledFocusMode() {
-  focusMode.value = !focusMode.value
+function focusModeOff() {
+  focusMode.value = false
+  if (sidebar_secondary_splitter_ref.value.isCollapsed) {
+    sidebar_secondary_splitter_ref.value.expand()
+  }
+}
+
+function focusModeOn() {
+  focusMode.value = true
+}
+
+function collapseSecondarySidebar() {
+  if (!sidebar_secondary_splitter_ref.value)
+    return
+  sidebar_secondary_splitter_ref.value.collapse()
+}
+
+function expandSecondarySidebar() {
+  if (!sidebar_secondary_splitter_ref.value)
+    return
+  sidebar_secondary_splitter_ref.value.expand()
 }
 
 const keys = useMagicKeys()
@@ -191,7 +212,7 @@ const keys = useMagicKeys()
 const magic_disabled_focus_mode = keys['ctrl+alt+shift+f']
 whenever(magic_disabled_focus_mode, (n) => {
   if (n === true) {
-    disabledFocusMode()
+    focusMode.value = !focusMode.value
   }
 })
 
@@ -206,6 +227,49 @@ const magic_toggle_editable = keys['ctrl+alt+shift+p']
 whenever(magic_toggle_editable, (n) => {
   if (n === true) {
     toggle_editable()
+  }
+})
+
+const magic_reset_store = keys['ctrl+alt+shift+n']
+whenever(magic_reset_store, (n) => {
+  if (n === true) {
+    resetStore()
+  }
+})
+
+const magic_input_title = keys['ctrl+alt+shift+t']
+whenever(magic_input_title, (n) => {
+  if (n === true) {
+    if (input_title.value instanceof HTMLElement) {
+      input_title.value.focus()
+    }
+  }
+})
+
+const magic_focus_editor = keys['ctrl+alt+shift+u']
+whenever(magic_focus_editor, (n) => {
+  if (n === true) {
+    editor_content.value.commands.focus()
+  }
+})
+
+const magic_focus_logo = keys['ctrl+alt+shift+ArrowLeft']
+whenever(magic_focus_logo, (n) => {
+  if (n === true) {
+    if (focus_logo.value instanceof HTMLElement) {
+      focus_logo.value.focus()
+    }
+  }
+})
+const magic_collapse_secondary_sidebar = keys['ctrl+alt+shift+ArrowRight']
+whenever(magic_collapse_secondary_sidebar, (n) => {
+  if (n === true) {
+    if (sidebar_secondary_splitter_ref.value.isCollapsed) {
+      expandSecondarySidebar()
+    }
+    else {
+      collapseSecondarySidebar()
+    }
   }
 })
 
@@ -225,58 +289,45 @@ onMounted(() => {
     >
       <SplitterPanel
         id="splitter-group-1-panel-1"
-        ref="sidebar_splitter_ref"
+        ref="sidebar_documents_splitter_ref"
         :min-size="15"
-        :max-size="50"
         collapsible
         :collapsed-size="5"
-        class="min-w-10 items-start justify-start h-screen"
+        class="min-w-8 items-start justify-start h-screen"
         :class="[
           showDocuments
             ? 'fixed md:relative min-w-80 md:min-w-auto flex z-[71]'
             : 'hidden lg:flex',
-          sidebar_splitter_ref?.isCollapsed ? 'max-w-10!' : '',
+          sidebar_documents_splitter_ref?.isCollapsed ? 'max-w-8!' : '',
           resize === 10 ? ' border-r-2! border-primary!' : '',
         ]"
         @resize="resize = $event"
       >
         <button
           v-show="!focusMode"
+          ref="focus_logo"
           class="fixed z-[80] left-0 top-0 flex items-center justify-center gap-2 p-1 w-8 max-h-8 focus-visible:ring-1 focus-within:ring-1 focus-within:ring-primary focus-visible:ring-primary"
           @click="toggle_documents"
         >
           <Logo />
         </button>
-        <DialogCommandMenu />
+
         <div
-          v-show="!sidebar_splitter_ref?.isCollapsed"
+          v-show="!sidebar_documents_splitter_ref?.isCollapsed"
           class="w-full duration-300 transition-opacity"
           :class="[
             showDocuments ? 'relative z-[71]' : '',
             focusMode ? 'opacity-0 pointer-events-none' : '',
           ]"
         >
-          <div class="w-full @container pt-8">
-            <div class="flex p-1">
-              <button
-                :disabled="isEditing"
-                class="disabled:bg-secondary text-xs disabled:pointer-events-none disabled:text-secondary-foreground/20 h-8 px-1 bg-primary text-primary-foreground w-full"
-                @click="resetStore()"
-              >
-                {{
-                  isEditing
-                    ? t("sidebar.creatingNewDocument")
-                    : t("sidebar.newDocument")
-                }}
-              </button>
-            </div>
+          <div class="w-full @container ">
             <div
-              class="flex flex-col @xs:flex-row gap-2 mb-1 p-1 justify-between items-center"
+              class="flex mb-3 gap-2 justify-end items-center"
             >
-              <h1 class="text-xs text-primary">
-                Documents
-              </h1>
               <div class="flex items-center gap-1">
+                <h1 class="text-xs hidden  @xs:flex pl-12 text-primary">
+                  documents
+                </h1>
                 <NumberFlow class="text-xs mr-2" :value="documents.length" />
                 <Filters />
               </div>
@@ -294,6 +345,18 @@ onMounted(() => {
             </div>
           </div>
         </div>
+        <div v-show="!focusMode">
+          <DialogCommandMenu />
+        </div>
+        <div class="fixed bottom-0 right-0">
+          <button
+            :disabled="isEditing"
+            class="disabled:bg-secondary text-xs disabled:pointer-events-none disabled:text-secondary-foreground/20 h-8 w-8 bg-primary text-primary-foreground flex justify-center items-center"
+            @click="resetStore()"
+          >
+            <Plus class="size-4" />
+          </button>
+        </div>
       </SplitterPanel>
       <SplitterResizeHandle
         id="splitter-group-1-resize-handle-1"
@@ -301,12 +364,14 @@ onMounted(() => {
       />
       <SplitterPanel
         id="splitter-group-1-panel-2"
-        :min-size="40"
+        class="min-w-1"
+        :min-size="20"
         :class="editable ? 'bg-secondary/20' : ''"
       >
-        <div class="new-todo relative px-2 flex flex-col gap-2 h-screen">
+        <div class="new-todo  relative px-2 flex flex-col gap-2 h-screen">
           <input
             v-if="editable"
+            ref="input_title"
             v-model="newDocumentTitle"
             type="text"
             class="border border-primary px-2 py-2 w-full"
@@ -331,44 +396,59 @@ onMounted(() => {
       </SplitterPanel>
       <SplitterResizeHandle
         id="splitter-group-1-resize-handle-2"
-        class="w-1 bg-secondary data-[state=hover]:bg-primary"
+        class="w-0.5 bg-secondary data-[state=hover]:bg-primary"
       />
       <SplitterPanel
         id="splitter-group-1-panel-3"
-        class="min-w-10 @container"
+        ref="sidebar_secondary_splitter_ref"
+        class="min-w-8 @container"
         :min-size="15"
         collapsible
-        :max-size="40"
         :collapsed-size="0"
       >
-        <div class="fixed top-0 right-0 size-8">
-          <Tooltip
-            name="Toggle Focus"
-            side="bottom"
-            shortcut="ctrl + shift + alt + F"
-            :align="'center'"
-          >
-            <button
-              v-if="focusMode"
-              class="size-8 flex justify-center items-center"
-              @click="disabledFocusMode()"
-            >
-              <X class="size-4 pointer-events-none" />
-            </button>
-          </Tooltip>
-        </div>
+        <button
+          v-if="focusMode"
+          class="size-8 fixed top-0 right-0  z-10 flex justify-center items-center"
+          @click="focusModeOff()"
+        >
+          <Eye class="size-4 pointer-events-none" />
+        </button>
+        <button v-if="!focusMode" v-show="layout[2] === 0" class="size-8 fixed right-0 top-0  flex justify-center items-center" @click="expandSecondarySidebar()">
+          <PanelRightOpen class="size-5 pointer-events-none" />
+        </button>
         <div
           v-show="layout[2] !== 0"
-          class="w-full max-h-screen px-1 font-mono min-h-screen duration-300 transition-opacity bg-background text-foreground overflow-x-hidden overflow-y-auto"
+          class="w-full max-h-screen px-1 font-mono min-h-screen z-10 duration-300 transition-opacity bg-background text-foreground overflow-x-hidden overflow-y-auto"
           :class="focusMode ? 'opacity-0 pointer-events-none' : ''"
         >
           <div
-            class="p-1 flex-wrap flex justify-between items-center text-sm gap-1"
+            class="py -1 flex justify-between items-center text-sm gap-1"
           >
-            <strong class="font-bold">ID:</strong>
-            <span class=""> {{ `${editable_id.substring(0, 10)}` }}</span>
+            <div class="flex justify-start items-center">
+              <strong class="font-bold mr-1">ID:</strong>
+              <span class="line-clamp-1 text-muted-foreground"> {{ `${editable_id.substring(0, 30)}` }}</span>
+            </div>
+            <div>
+              <button class="size-8 flex justify-center items-center" @click="collapseSecondarySidebar()">
+                <X class="size-4 pointer-events-none" />
+              </button>
+            </div>
+          </div>
+          <div class="text-sm">
+            <button
+              class="flex pl-1 pr-2 w-full h-12 bg-secondary/20 text-left items-center justify-between gap-2"
+              @click="showSettings = !showSettings"
+            >
+              <span class="text-sm font-semibold text-primary">
+                {{ t("leva.settings") }}
+              </span>
+              <span class="flex items-center justify-center size-5">
+                <ChevronsUpDown class="text-foreground size-3" />
+              </span>
+            </button>
           </div>
           <div
+            v-show="showSettings"
             class="flex bg-primary/5 text-xs justify-start items-start p-1 gap-2 flex-col"
           >
             <div class="flex gap-2 items-center justify-between w-full">
@@ -412,7 +492,7 @@ onMounted(() => {
                     ? 'bg-primary text-primary-foreground border-primary'
                     : ''
                 "
-                @click="focusMode = !focusMode"
+                @click="focusModeOn()"
               >
                 focus
               </button>
