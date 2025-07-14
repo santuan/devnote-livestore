@@ -4,7 +4,7 @@ import type { Document } from '@/livestore/document'
 
 import { Circle, CircleOff } from 'lucide-vue-next'
 import { inject } from 'vue'
-import ButtonDeleteDocument from '../ButtonDeleteDocument.vue'
+import ButtonDeleteDocument from '../Shared/ButtonDeleteDocument.vue'
 
 const props = defineProps<{
   data: Document
@@ -20,9 +20,9 @@ const editable_id = inject('editable_id') as Ref<string | null>
 
 <template>
   <div
-    class="border-b border-gray-800 w-full flex justify-between group"
+    class="border-b border-secondary w-full flex justify-between group"
   >
-    <div class="view-mode w-full flex gap-1 flex-col sm:flex-row">
+    <div class="view-mode w-full flex  flex-col sm:flex-row">
       <button
         class="w-full px-3"
         :class="props.data.id === editable_id ? 'text-primary font-bold underline underline-offset-2' : ''"
@@ -33,9 +33,9 @@ const editable_id = inject('editable_id') as Ref<string | null>
         </span>
       </button>
       <div
-        class="flex gap-1 props.datas-center bg-secondary gap-x-px pl-px justify-end"
+        class="flex gap-1 bg-secondary gap-x-px pl-px justify-end"
       >
-        <div class="group-hover:inline-flex group-focus-within:inline-flex hidden">
+        <div class="group-hover:inline-flex group-focus-within:inline-flex hidden" :class="props.data.id === editable_id ? 'inline-flex' : ''">
           <ButtonDeleteDocument :id="props.data.id" :title="props.data.text" />
         </div>
         <button

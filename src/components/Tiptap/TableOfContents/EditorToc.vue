@@ -1,9 +1,8 @@
 <script lang="ts">
 import type { Document } from '@/livestore/document'
 import { TextSelection } from '@tiptap/pm/state'
-
 import { defineComponent } from 'vue'
-import ToCItem from './tocItem.vue'
+import ToCItem from './EditorTocItem.vue'
 
 export default defineComponent({
   components: {
@@ -51,12 +50,14 @@ export default defineComponent({
 <template>
   <template v-if="items.length === 0" />
   <template v-else>
-    <ToCItem
-      v-for="(item, i) in items"
-      :key="item.id"
-      :item="item"
-      :index="i + 1"
-      @item-click="onItemClick"
-    />
+    <div class="py-2">
+      <ToCItem
+        v-for="(item, i) in items"
+        :key="item.id"
+        :item="item"
+        :index="i + 1"
+        @item-click="onItemClick"
+      />
+    </div>
   </template>
 </template>

@@ -23,13 +23,14 @@ import { useClientDocument, useQuery, useStore } from 'vue-livestore'
 import { useToggleColorTheme } from '@/composables/useToggleColorTheme'
 import Editor from '../components/Tiptap/EditorTipTap.vue'
 import { events, tables } from '../livestore/schema'
-import DialogCommandMenu from './DialogCommandMenu.vue'
-import DropdownLanguage from './DropdownLanguage.vue'
-import Logo from './Logo.vue'
-import ContentAnalysis from './sidebar/ContentAnalysis.vue'
-import DocumentItem from './sidebar/DocumentItem.vue'
-import Filters from './sidebar/Filters.vue'
-import ToggleTheme from './ToggleTheme.vue'
+import ButtonDeleteAllDocument from './Shared/ButtonDeleteAllDocument.vue'
+import DialogCommandMenu from './Shared/DialogCommandMenu.vue'
+import Logo from './Shared/Logo.vue'
+import DocumentItem from './Sidebar/DocumentItem.vue'
+import Filters from './Sidebar/Filters.vue'
+import ContentAnalysis from './SidebarSecondary/ContentAnalysis.vue'
+import DropdownLanguage from './SidebarSecondary/DropdownLanguage.vue'
+import ToggleTheme from './SidebarSecondary/ToggleTheme.vue'
 
 const colorTheme = useStorage('theme', 'theme-foreground')
 
@@ -39,6 +40,8 @@ const input_title = shallowRef<HTMLElement | null>(null)
 const focus_logo = shallowRef<HTMLElement | null>(null)
 const focusMode = shallowRef(false)
 const showSettings = shallowRef(true)
+const showDBSettings = shallowRef(false)
+
 const editor_content = shallowRef()
 const editor_toc = shallowRef([])
 const sidebar_documents_splitter_ref = shallowRef()
@@ -256,8 +259,17 @@ whenever(magic_focus_editor, (n) => {
 const magic_focus_logo = keys['ctrl+alt+shift+ArrowLeft']
 whenever(magic_focus_logo, (n) => {
   if (n === true) {
-    if (focus_logo.value instanceof HTMLElement) {
-      focus_logo.value.focus()
+    if (sidebar_documents_splitter_ref.value.isCollapsed) {
+      sidebar_documents_splitter_ref.value.expand()
+      if (focus_logo.value instanceof HTMLElement) {
+        focus_logo.value.focus()
+      }
+    }
+    else {
+      sidebar_documents_splitter_ref.value.collapse()
+      if (focus_logo.value instanceof HTMLElement) {
+        focus_logo.value.focus()
+      }
     }
   }
 })
@@ -291,6 +303,7 @@ onMounted(() => {
         id="splitter-group-1-panel-1"
         ref="sidebar_documents_splitter_ref"
         :min-size="15"
+        :max-size="30"
         collapsible
         :collapsed-size="5"
         class="min-w-8 items-start justify-start h-screen"
@@ -320,15 +333,13 @@ onMounted(() => {
             focusMode ? 'opacity-0 pointer-events-none' : '',
           ]"
         >
-          <div class="w-full @container ">
-            <div
-              class="flex mb-3 gap-2 justify-end items-center"
-            >
+          <div class="w-full @container">
+            <div class="flex mb-3 gap-2 justify-end items-center">
               <div class="flex items-center gap-1">
-                <h1 class="text-xs hidden  @xs:flex pl-12 text-primary">
+                <NumberFlow class="text-xs mr-1" :value="documents.length" />
+                <h1 class="text-xs hidden mr-2 @xs:flex text-primary">
                   documents
                 </h1>
-                <NumberFlow class="text-xs mr-2" :value="documents.length" />
                 <Filters />
               </div>
             </div>
@@ -348,15 +359,6 @@ onMounted(() => {
         <div v-show="!focusMode">
           <DialogCommandMenu />
         </div>
-        <div class="fixed bottom-0 right-0">
-          <button
-            :disabled="isEditing"
-            class="disabled:bg-secondary text-xs disabled:pointer-events-none disabled:text-secondary-foreground/20 h-8 w-8 bg-primary text-primary-foreground flex justify-center items-center"
-            @click="resetStore()"
-          >
-            <Plus class="size-4" />
-          </button>
-        </div>
       </SplitterPanel>
       <SplitterResizeHandle
         id="splitter-group-1-resize-handle-1"
@@ -368,18 +370,29 @@ onMounted(() => {
         :min-size="20"
         :class="editable ? 'bg-secondary/20' : ''"
       >
-        <div class="new-todo  relative px-2 flex flex-col gap-2 h-screen">
+        <div class="new-todo relative px-2 flex flex-col gap-2 h-screen">
           <input
             v-if="editable"
             ref="input_title"
             v-model="newDocumentTitle"
+            :placeholder="t('editor.untitled')"
             type="text"
-            class="border border-primary px-2 py-2 w-full"
+            class="border border-primary rounded-none! outline-0 px-2 py-1 w-full"
             @keyup.enter="createDocument"
           >
+
           <h1 v-else class="text-3xl mt-3 font-serif font-semibold px-5">
             {{ newDocumentTitle }}
           </h1>
+          <div class="absolute top-0 right-0 mr-2 mt-px">
+            <button
+              :disabled="isEditing"
+              class="disabled:bg-secondary disabled:border-secondary hover:bg-primary/80 border-primary border text-xs disabled:pointer-events-none disabled:text-secondary-foreground/20 h-8 w-8 bg-primary text-primary-foreground flex justify-center items-center"
+              @click="resetStore()"
+            >
+              <Plus class="size-4" />
+            </button>
+          </div>
           <Editor
             :key="newDocumentTitle"
             v-model="newDocumentContent"
@@ -403,17 +416,23 @@ onMounted(() => {
         ref="sidebar_secondary_splitter_ref"
         class="min-w-8 @container"
         :min-size="15"
+        :max-size="30"
         collapsible
         :collapsed-size="0"
       >
         <button
           v-if="focusMode"
-          class="size-8 fixed top-0 right-0  z-10 flex justify-center items-center"
+          class="size-8 fixed top-0 right-0 z-10 flex justify-center items-center"
           @click="focusModeOff()"
         >
           <Eye class="size-4 pointer-events-none" />
         </button>
-        <button v-if="!focusMode" v-show="layout[2] === 0" class="size-8 fixed right-0 top-0  flex justify-center items-center" @click="expandSecondarySidebar()">
+        <button
+          v-if="!focusMode"
+          v-show="layout[2] === 0"
+          class="size-8 fixed right-0 top-0 flex justify-center items-center"
+          @click="expandSecondarySidebar()"
+        >
           <PanelRightOpen class="size-5 pointer-events-none" />
         </button>
         <div
@@ -421,22 +440,24 @@ onMounted(() => {
           class="w-full max-h-screen px-1 font-mono min-h-screen z-10 duration-300 transition-opacity bg-background text-foreground overflow-x-hidden overflow-y-auto"
           :class="focusMode ? 'opacity-0 pointer-events-none' : ''"
         >
-          <div
-            class="py -1 flex justify-between items-center text-sm gap-1"
-          >
+          <div class="py -1 flex justify-between items-center text-sm gap-1">
             <div class="flex justify-start items-center">
               <strong class="font-bold mr-1">ID:</strong>
-              <span class="line-clamp-1 text-muted-foreground"> {{ `${editable_id.substring(0, 30)}` }}</span>
+              <span class="line-clamp-1 text-muted-foreground">
+                {{ `${editable_id.substring(0, 30)}` }}</span>
             </div>
             <div>
-              <button class="size-8 flex justify-center items-center" @click="collapseSecondarySidebar()">
+              <button
+                class="size-8 flex justify-center items-center"
+                @click="collapseSecondarySidebar()"
+              >
                 <X class="size-4 pointer-events-none" />
               </button>
             </div>
           </div>
           <div class="text-sm">
             <button
-              class="flex pl-1 pr-2 w-full h-12 bg-secondary/20 text-left items-center justify-between gap-2"
+              class="flex pl-1 pr-2 w-full h-10 bg-secondary/20 text-left items-center justify-between gap-2"
               @click="showSettings = !showSettings"
             >
               <span class="text-sm font-semibold text-primary">
@@ -449,12 +470,8 @@ onMounted(() => {
           </div>
           <div
             v-show="showSettings"
-            class="flex bg-primary/5 text-xs justify-start items-start p-1 gap-2 flex-col"
+            class="flex bg-primary/5 divide-y divide-muted text-xs justify-start items-start p-1 gap-2 flex-col"
           >
-            <div class="flex gap-2 items-center justify-between w-full">
-              <span>{{ t("settings.theme") }}</span>
-              <ToggleTheme />
-            </div>
             <div class="flex gap-2 items-center justify-between w-full">
               <span>{{ t("commandBar.focusSidebar") }}</span>
               <button
@@ -497,13 +514,38 @@ onMounted(() => {
                 focus
               </button>
             </div>
-
             <div class="flex gap-2 items-center justify-between w-full">
               <span>{{ t("settings.language") }}</span>
               <DropdownLanguage />
             </div>
+            <div class="flex gap-2 items-center justify-between w-full">
+              <span>{{ t("settings.theme") }}</span>
+              <ToggleTheme />
+            </div>
           </div>
           <ContentAnalysis />
+          <div class="text-sm">
+            <button
+              class="flex pl-1 pr-2 w-full h-10 bg-secondary/20 text-left items-center justify-between gap-2"
+              @click="showDBSettings = !showDBSettings"
+            >
+              <span class="text-sm font-semibold text-primary">
+                {{ t("settings.database") }}
+              </span>
+              <span class="flex items-center justify-center size-5">
+                <ChevronsUpDown class="text-foreground size-3" />
+              </span>
+            </button>
+          </div>
+          <div
+            v-show="showDBSettings"
+            class="flex bg-primary/5 divide-y divide-muted text-xs justify-start items-start p-1 gap-2 flex-col"
+          >
+            <div class="flex gap-2 items-center justify-between w-full">
+              <span>{{ t("editor.deleteAll") }}</span>
+              <ButtonDeleteAllDocument />
+            </div>
+          </div>
         </div>
       </SplitterPanel>
     </SplitterGroup>

@@ -9,6 +9,7 @@
     "CtrlEnterCreate": "ctrl enter para crear",
     "save": "Crear documento",
     "delete": "Eliminar documento",
+    "deleteAll": "Eliminar todos",
     "deleteConfirm": "Esta acción no tiene vuelta atrás",
     "copyToClipboard": "Copiar código"
   },

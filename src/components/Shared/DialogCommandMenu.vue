@@ -23,7 +23,7 @@ import {
 import { inject, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useClientDocument, useQuery } from 'vue-livestore'
-import Tooltip from '@/components/Tooltip.vue'
+import Tooltip from '@/components/Shared/Tooltip.vue'
 import { tables } from '@/livestore/schema'
 
 const { newDocumentTitle, newDocumentContent } = useClientDocument(tables.uiState)
@@ -90,7 +90,7 @@ whenever(magic_command_menu, (n) => {
             class="border-t border-muted-foreground/30 p-2 overflow-y-auto h-64 sm:h-96"
             @escape-key-down="show_commandbar = false"
           >
-            <ComboboxEmpty class="text-center text-muted-foreground p-4">
+            <ComboboxEmpty class="text-center text-muted-foreground p-4 font-mono">
               {{ t("sidebar.noResults") }}
             </ComboboxEmpty>
             <ComboboxGroup v-if="documents?.length !== 0">

@@ -61,6 +61,10 @@ export const events = {
     name: 'v1.DocumentClearedCompleted',
     schema: Schema.Struct({ deletedAt: Schema.Date }),
   }),
+  documentDeletedAll: Events.synced({
+    name: 'v1.DocumentDeletedAll',
+    schema: Schema.Struct({ deletedAt: Schema.Date }),
+  }),
   uiStateSet: tables.uiState.set,
 }
 
@@ -72,6 +76,7 @@ const materializers = State.SQLite.materializers(events, {
   'v1.DocumentUncompleted': ({ id }) => tables.documents.update({ completed: false }).where({ id }),
   'v1.DocumentDeleted': ({ id, deletedAt }) => tables.documents.update({ deletedAt }).where({ id }),
   'v1.DocumentClearedCompleted': ({ deletedAt }) => tables.documents.update({ deletedAt }).where({ completed: true }),
+  'v1.DocumentDeletedAll': ({ deletedAt }) => tables.documents.update({ deletedAt }).where({}),
 })
 
 const state = State.SQLite.makeState({ tables, materializers })

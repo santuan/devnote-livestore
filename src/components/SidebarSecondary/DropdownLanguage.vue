@@ -9,7 +9,7 @@ import {
   DropdownMenuTrigger,
 } from 'reka-ui'
 import { useI18n } from 'vue-i18n'
-import Tooltip from '@/components/Tooltip.vue'
+import Tooltip from '@/components/Shared/Tooltip.vue'
 
 const { t, locale } = useI18n()
 const storedLocale = useStorage('locale', 'es')
@@ -23,10 +23,10 @@ function setLocale(lang: any) {
 <template>
   <DropdownMenuRoot>
     <DropdownMenuTrigger
-      class="flex items-center justify-center border interactive border-secondary hover:bg-secondary/80 bg-background size-8"
+      class="flex items-center justify-center border interactive border-secondary hover:bg-secondary/80 bg-background size-7"
     >
       <Tooltip :name="t('settings.language')" :side="'left'" :align="'center'">
-        <span class="size-8 flex justify-center uppercase items-center">
+        <span class="size-6 flex justify-center uppercase items-center">
           {{ locale }}
         </span>
         <span class="sr-only"> {{ t('settings.languageDescription') }}</span>

@@ -41,10 +41,10 @@ import { inject, onBeforeUnmount, onMounted } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useClientDocument } from 'vue-livestore'
 import { tables } from '@/livestore/schema'
-import WebFrame from './addIframe'
-import Video from './addVideo'
+import WebFrame from './EditorAddIframe'
+import Video from './EditorAddVideo'
 import EditorCodeBlock from './EditorCodeBlock.vue'
-import { ResizableMedia } from './resizableMedia'
+import { ResizableMedia } from './ResizableMedia'
 
 const props = defineProps({
   modelValue: {

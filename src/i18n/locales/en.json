@@ -9,6 +9,7 @@
     "CtrlEnterCreate": "ctrl enter to create",
     "save": "Create document",
     "delete": "Delete document",
+    "deleteAll": "Delete all",
     "deleteConfirm": "This action cannot be undone",
     "copyToClipboard": "Copy code to clipboard"
   },

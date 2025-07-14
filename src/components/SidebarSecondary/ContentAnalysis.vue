@@ -5,7 +5,7 @@ import NumberFlow from '@number-flow/vue'
 import { ChevronsUpDown } from 'lucide-vue-next'
 import { computed, inject, shallowRef } from 'vue'
 import { useI18n } from 'vue-i18n'
-import Toc from '@/components/Tiptap/toc/toc.vue'
+import Toc from '@/components/Tiptap/TableOfContents/EditorToc.vue'
 
 const { t } = useI18n()
 
@@ -68,7 +68,7 @@ const contentAnalysis = computed(() => {
 <template>
   <div class="w-full">
     <button
-      class="flex pl-1 pr-2 w-full h-12 bg-secondary/20 text-left items-center justify-between gap-2"
+      class="flex pl-1 pr-2 w-full h-10 bg-secondary/20 text-left items-center justify-between gap-2"
       @click="showContentAnalysis = !showContentAnalysis"
     >
       <span class="text-sm font-semibold text-primary">
@@ -148,7 +148,7 @@ const contentAnalysis = computed(() => {
   </div>
   <div class="w-full">
     <button
-      class="flex pl-1 pr-2 w-full h-12 bg-secondary/20 text-left items-center justify-between gap-2"
+      class="flex pl-1 pr-2 w-full h-10 bg-secondary/20 text-left items-center justify-between gap-2"
       :class="
         contentAnalysis.headings.length > 0 ? '' : 'pointer-events-none'
       "
@@ -173,7 +173,7 @@ const contentAnalysis = computed(() => {
     </button>
     <div
       v-if="showOnlyHeadings"
-      class="showOnlyHeadings px-2 pb-3 pt-0.5 space-y-1 overflow-x-hidden scrollbar scrollbar-thumb-primary scrollbar-track-secondary overflow-y-auto"
+      class="showOnlyHeadings px-2 space-y-1 overflow-x-hidden scrollbar scrollbar-thumb-primary scrollbar-track-secondary overflow-y-auto"
     >
       <Toc :editor="editor" :items="toc" />
     </div>

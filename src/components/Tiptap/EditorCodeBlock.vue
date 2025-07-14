@@ -5,7 +5,7 @@ import { Clipboard, ClipboardCheck, Maximize, Minimize2 } from 'lucide-vue-next'
 import { ScrollAreaRoot, ScrollAreaScrollbar, ScrollAreaThumb, ScrollAreaViewport } from 'reka-ui'
 import { bundledLanguages } from 'shiki/bundle/web'
 import { shallowRef } from 'vue'
-import ListboxVirtual from './ListboxVirtual.vue'
+import ListboxVirtual from '../Shared/ListboxVirtual.vue'
 
 export default {
   components: {

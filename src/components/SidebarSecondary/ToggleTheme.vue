@@ -22,10 +22,10 @@ const { t } = useI18n()
   <DropdownMenuRoot>
     <DropdownMenuTrigger class="interactive relative group">
       <span
-        class="flex items-center justify-center border hover:bg-secondary/80 border-secondary group-data-[state=open]:text-primary bg-background size-8"
+        class="flex items-center justify-center border hover:bg-secondary/80 border-secondary group-data-[state=open]:text-primary bg-background size-7"
       >
-        <Moon class="scale-0 rotate-0 size-4 dark:scale-100" />
-        <SunMedium class="absolute rotate-90 size-4 scale-100 dark:scale-0" />
+        <Moon class="scale-0 rotate-0 size-3 dark:scale-100" />
+        <SunMedium class="absolute rotate-90 size-3 scale-100 dark:scale-0" />
         <span class="sr-only">{{ t("settings.themeDescription") }}</span>
       </span>
     </DropdownMenuTrigger>
