@@ -669,3 +669,7 @@ html:has(.app-font-size-lg) {
 html:has(.app-font-size-xl) {
   @apply text-xl;
 }
+
+.resize-handle {
+  @apply w-0.5 bg-secondary data-[state=hover]:bg-primary
+}

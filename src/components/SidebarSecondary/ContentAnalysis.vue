@@ -155,7 +155,7 @@ const contentAnalysis = computed(() => {
       @click="showOnlyHeadings = !showOnlyHeadings"
     >
       <span
-        class="text-sm"
+        class="text-sm font-semibold"
         :class="
           contentAnalysis.headings.length > 0
             ? 'text-primary'

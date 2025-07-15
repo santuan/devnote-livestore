@@ -91,7 +91,7 @@
 }
 
 .tiptap {
-  @apply px-2 md:px-4 pb-12 md:pt-2 outline-hidden placeholder:text-primary min-h-[calc(100vh-6rem)];
+  @apply px-2 md:px-4 md:pb-2 md:pt-2 outline-hidden placeholder:text-primary min-h-[calc(100vh-8rem)];
   /* @apply font-mono font-normal; */
   @apply font-serif;
 }
