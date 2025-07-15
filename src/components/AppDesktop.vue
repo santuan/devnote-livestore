@@ -1,13 +1,11 @@
 <script setup lang="ts">
 import { queryDb } from '@livestore/livestore'
 import {
-  breakpointsTailwind,
-  useBreakpoints,
   useMagicKeys,
   useStorage,
   whenever,
 } from '@vueuse/core'
-import { Eye, PanelRightOpen, Plus } from 'lucide-vue-next'
+import { Eye, PanelRightOpen } from 'lucide-vue-next'
 import { SplitterGroup, SplitterPanel, SplitterResizeHandle } from 'reka-ui'
 import {
   computed,
@@ -23,6 +21,7 @@ import { useToggleColorTheme } from '@/composables/useToggleColorTheme'
 import Editor from '../components/Tiptap/EditorTipTap.vue'
 import { events, tables } from '../livestore/schema'
 import ButtonLogo from './Shared/ButtonLogo.vue'
+import ButtonNewDocument from './Shared/ButtonNewDocument.vue'
 import DialogCommandMenu from './Shared/DialogCommandMenu.vue'
 import DocumentItem from './Sidebar/DocumentItem.vue'
 import DocumentList from './Sidebar/DocumentList.vue'
@@ -31,26 +30,26 @@ import SidebarSecondary from './SidebarSecondary/index.vue'
 const colorTheme = useStorage('theme', 'theme-foreground')
 
 const { t } = useI18n()
-const editable_id = shallowRef('')
-const input_title = shallowRef<HTMLElement | null>(null)
-const focus_logo = shallowRef<HTMLElement | null>(null)
-const focusMode = shallowRef(false)
 
+const editable_id = shallowRef('')
 const editor_content = shallowRef()
 const editor_toc = shallowRef([])
-const sidebar_documents_splitter_ref = shallowRef()
-const sidebar_secondary_splitter_ref = shallowRef()
-const resize = shallowRef(0)
-const breakpoints = useBreakpoints(breakpointsTailwind)
-const largerThanLg = breakpoints.greater('lg')
-const layout = shallowRef<number[]>([0, 0])
-const { store } = useStore()
-const uiState$ = queryDb(tables.uiState.get(), { label: 'uiState' })
-const { newDocumentTitle, newDocumentContent, showDocuments, editable } = useClientDocument(tables.uiState)
 
 provide('content', editor_content)
 provide('toc', editor_toc)
 provide('editable_id', editable_id)
+
+const input_title = shallowRef<HTMLElement | null>(null)
+const focus_logo = shallowRef<HTMLElement | null>(null)
+const focus_mode = shallowRef(false)
+const sidebar_documents_splitter_ref = shallowRef()
+const sidebar_secondary_splitter_ref = shallowRef()
+const resize = shallowRef(0)
+const layout = shallowRef<number[]>([0, 0])
+
+const { store } = useStore()
+const uiState$ = queryDb(tables.uiState.get(), { label: 'uiState' })
+const { newDocumentTitle, newDocumentContent, showDocuments, editable } = useClientDocument(tables.uiState)
 
 const isEditing = computed(() => editable_id.value.length === 0)
 
@@ -134,19 +133,10 @@ watchEffect(() => {
 
 function toggle_documents() {
   showDocuments.value = !showDocuments.value
-  if (focusMode.value === true) {
-    focusMode.value = false
+  if (focus_mode.value === true) {
+    focus_mode.value = false
   }
 }
-
-const resizeTo = computed(() => {
-  if (largerThanLg.value === true) {
-    return 30
-  }
-  else {
-    return 50
-  }
-})
 
 watch(
   () => showDocuments.value,
@@ -156,7 +146,7 @@ watch(
     }
     else {
       if (sidebar_documents_splitter_ref.value.isCollapsed) {
-        sidebar_documents_splitter_ref.value.resize(resizeTo.value)
+        sidebar_documents_splitter_ref.value.resize(25)
       }
     }
   },
@@ -181,14 +171,14 @@ watch(
 )
 
 function focusModeOff() {
-  focusMode.value = false
+  focus_mode.value = false
   if (sidebar_secondary_splitter_ref.value.isCollapsed) {
     sidebar_secondary_splitter_ref.value.expand()
   }
 }
 
 function focusModeOn() {
-  focusMode.value = true
+  focus_mode.value = true
 }
 
 function collapseSecondarySidebar() {
@@ -208,7 +198,7 @@ const keys = useMagicKeys()
 const magic_disabled_focus_mode = keys['ctrl+alt+shift+f']
 whenever(magic_disabled_focus_mode, (n) => {
   if (n === true) {
-    focusMode.value = !focusMode.value
+    focus_mode.value = !focus_mode.value
   }
 })
 
@@ -310,7 +300,7 @@ onMounted(() => {
         @resize="resize = $event"
       >
         <ButtonLogo
-          v-show="!focusMode"
+          v-show="!focus_mode"
           ref="focus_logo"
           @click="toggle_documents"
         />
@@ -319,7 +309,7 @@ onMounted(() => {
           class="w-full duration-300 transition-opacity"
           :class="[
             showDocuments ? 'relative z-[71]' : '',
-            focusMode ? 'opacity-0 pointer-events-none' : '',
+            focus_mode ? 'opacity-0 pointer-events-none' : '',
           ]"
         >
           <DocumentList
@@ -334,7 +324,7 @@ onMounted(() => {
             />
           </DocumentList>
         </div>
-        <div v-show="!focusMode">
+        <div v-show="!focus_mode">
           <DialogCommandMenu />
         </div>
       </SplitterPanel>
@@ -348,7 +338,7 @@ onMounted(() => {
         :min-size="20"
         :class="editable ? 'bg-secondary/20' : ''"
       >
-        <div class="new-todo relative px-2 flex flex-col gap-2 h-screen">
+        <div class="relative px-2 grid gap-2 h-screen">
           <input
             v-if="editable"
             ref="input_title"
@@ -361,14 +351,8 @@ onMounted(() => {
           <h1 v-else class="text-3xl mt-3 font-serif font-semibold px-5">
             {{ newDocumentTitle }}
           </h1>
-          <div class="absolute top-0 right-0 mr-2 mt-px">
-            <button
-              :disabled="isEditing"
-              class="disabled:bg-secondary disabled:border-secondary hover:bg-primary/80 border-primary border text-xs disabled:pointer-events-none disabled:text-secondary-foreground/20 h-8 w-8 bg-primary text-primary-foreground flex justify-center items-center"
-              @click="resetStore()"
-            >
-              <Plus class="size-4" />
-            </button>
+          <div v-if="editable" class="absolute top-0 right-0 mr-2 mt-px">
+            <ButtonNewDocument :is-editing @click="resetStore" />
           </div>
           <Editor
             :key="newDocumentTitle"
@@ -398,14 +382,14 @@ onMounted(() => {
         :collapsed-size="0"
       >
         <button
-          v-if="focusMode"
+          v-if="focus_mode"
           class="size-8 fixed top-0 right-0 z-10 flex justify-center items-center"
           @click="focusModeOff()"
         >
           <Eye class="size-4 pointer-events-none" />
         </button>
         <button
-          v-if="!focusMode"
+          v-if="!focus_mode"
           v-show="layout[2] === 0"
           class="size-8 fixed right-0 top-0 flex justify-center items-center"
           @click="expandSecondarySidebar()"
@@ -414,7 +398,7 @@ onMounted(() => {
         </button>
         <SidebarSecondary
           v-if="layout[2] !== 0"
-          :focus-mode="focusMode"
+          :focus-mode="focus_mode"
           @collapse-secondary-sidebar="collapseSecondarySidebar"
           @focus-mode-on="focusModeOn"
           @toggle-editable="toggle_editable"

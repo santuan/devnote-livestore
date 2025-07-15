@@ -1,8 +1,12 @@
-# Vue LiveStore Example
+# Vue LiveStore Devnote Example
 
-## Running
+## Available commands
 
 ```bash
-pnpm install
-pnpm dev
+bun install
+bun run dev
+bun run build
+bun run preview
+bun run lint
+bun run type-check
 ```

@@ -5,11 +5,10 @@
   "private": true,
   "scripts": {
     "dev": "vite",
-    "build": "run-p type-check \"build-only {@}\" --",
     "preview": "vite preview",
-    "build-only": "vite build",
+    "build": "vite build",
     "type-check": "vue-tsc --build",
-    "lint": "eslint . --fix"
+    "lint": "eslint ."
   },
   "dependencies": {
     "@floating-ui/dom": "^1.6.0",
@@ -71,7 +70,6 @@
     "@vueuse/math": "^13.5.0",
     "katex": "^0.16.22",
     "lucide-vue-next": "^0.525.0",
-    "monaco-editor": "^0.52.2",
     "prosemirror-model": "^1.25.0",
     "prosemirror-view": "^1.39.1",
     "reka-ui": "^2.3.2",
@@ -92,8 +90,6 @@
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "eslint": "^9.31.0",
-    "jiti": "^2.4.2",
-    "npm-run-all2": "^8.0.4",
     "tailwind-merge": "^3.3.1",
     "tailwind-scrollbar": "^4.0.2",
     "tailwind-variants": "^1.0.0",

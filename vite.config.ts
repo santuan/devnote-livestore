@@ -1,14 +1,13 @@
 // @ts-check
 
 import path from 'node:path'
-import process from 'node:process'
 
 import { livestoreDevtoolsPlugin } from '@livestore/devtools-vite'
 
-import { defineConfig } from 'vite'
-import vue from '@vitejs/plugin-vue'
-import vueDevTools from 'vite-plugin-vue-devtools'
 import tailwindcss from '@tailwindcss/vite'
+import vue from '@vitejs/plugin-vue'
+import { defineConfig } from 'vite'
+import vueDevTools from 'vite-plugin-vue-devtools'
 
 export default defineConfig({
   plugins: [
@@ -17,7 +16,7 @@ export default defineConfig({
     vueDevTools(),
     livestoreDevtoolsPlugin({ schemaPath: './src/livestore/schema.ts' }),
   ],
-    optimizeDeps: {
+  optimizeDeps: {
     // TODO remove once fixed https://github.com/vitejs/vite/issues/8427
     exclude: ['@livestore/wa-sqlite'],
   },
