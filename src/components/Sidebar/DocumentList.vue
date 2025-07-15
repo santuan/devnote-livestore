@@ -22,7 +22,7 @@ const documents = computed(() => props.count ?? 0)
       </div>
     </div>
     <div
-      class="max-h-[calc(100vh-3.75rem)] border-t border-secondary overflow-x-hidden overflow-y-auto"
+      class="max-h-[calc(100vh-2.75rem)] h-screen border-t border-secondary overflow-x-hidden overflow-y-auto"
     >
       <slot />
     </div>

@@ -22,7 +22,7 @@ const editable_id = inject('editable_id') as Ref<string | null>
   <div
     class="border-b border-secondary w-full flex justify-between group"
   >
-    <div class="view-mode w-full flex  flex-col sm:flex-row">
+    <div class="w-full flex flex-row">
       <button
         class="w-full px-3"
         :class="props.data.id === editable_id ? 'text-primary font-bold underline underline-offset-2' : ''"

@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import { queryDb } from '@livestore/livestore'
 import {
+  breakpointsTailwind,
+  useBreakpoints,
   useMagicKeys,
   useStorage,
   whenever,
@@ -28,6 +30,9 @@ import DocumentList from './Sidebar/DocumentList.vue'
 import SidebarSecondary from './SidebarSecondary/index.vue'
 
 const colorTheme = useStorage('theme', 'theme-foreground')
+
+const breakpoints = useBreakpoints(breakpointsTailwind)
+const largerThanLg = breakpoints.greater('lg')
 
 const { t } = useI18n()
 
@@ -96,6 +101,9 @@ function editDocument(id: string) {
     newDocumentTitle.value = foundTodo.text
     newDocumentContent.value = foundTodo.content
     editable_id.value = id
+  }
+  if (!largerThanLg.value) {
+    showDocuments.value = false
   }
 }
 
@@ -276,6 +284,9 @@ onMounted(() => {
 
 <template>
   <div class="font-mono text-foreground">
+    <div v-show="!focus_mode">
+      <DialogCommandMenu />
+    </div>
     <SplitterGroup
       id="splitter-group-1"
       direction="horizontal"
@@ -289,10 +300,10 @@ onMounted(() => {
         :max-size="30"
         collapsible
         :collapsed-size="5"
-        class="min-w-8 items-start justify-start h-screen"
+        class="min-w-8 items-start justify-start h-screen bg-background"
         :class="[
           showDocuments
-            ? 'fixed md:relative min-w-80 md:min-w-auto flex z-[71]'
+            ? 'fixed md:relative min-w-80 md:min-w-auto  flex z-[71]'
             : 'hidden lg:flex',
           sidebar_documents_splitter_ref?.isCollapsed ? 'max-w-8!' : '',
           resize === 10 ? ' border-r-2! border-primary!' : '',
@@ -306,7 +317,7 @@ onMounted(() => {
         />
         <div
           v-show="!sidebar_documents_splitter_ref?.isCollapsed"
-          class="w-full duration-300 transition-opacity"
+          class="w-full duration-300 transition-opacity bg-background"
           :class="[
             showDocuments ? 'relative z-[71]' : '',
             focus_mode ? 'opacity-0 pointer-events-none' : '',
@@ -324,13 +335,11 @@ onMounted(() => {
             />
           </DocumentList>
         </div>
-        <div v-show="!focus_mode">
-          <DialogCommandMenu />
-        </div>
+        <button v-if="showDocuments" class="fixed inset-0 z-[70] bg-background/80 !outline-0 md:hidden" @click="showDocuments = false" />
       </SplitterPanel>
       <SplitterResizeHandle
         id="splitter-group-1-resize-handle-1"
-        class="resize-handle"
+        class="resize-handle hidden md:flex"
       />
       <SplitterPanel
         id="splitter-group-1-panel-2"
@@ -338,7 +347,7 @@ onMounted(() => {
         :min-size="20"
         :class="editable ? 'bg-secondary/20' : ''"
       >
-        <div class="relative px-2 grid gap-2 h-screen">
+        <div class="relative px-2 flex flex-col gap-2 h-screen">
           <input
             v-if="editable"
             ref="input_title"
@@ -348,9 +357,6 @@ onMounted(() => {
             class="border border-primary rounded-none! outline-0 px-2 py-1 w-full"
             @keyup.enter="createDocument"
           >
-          <h1 v-else class="text-3xl mt-3 font-serif font-semibold px-5">
-            {{ newDocumentTitle }}
-          </h1>
           <div v-if="editable" class="absolute top-0 right-0 mr-2 mt-px">
             <ButtonNewDocument :is-editing @click="resetStore" />
           </div>
