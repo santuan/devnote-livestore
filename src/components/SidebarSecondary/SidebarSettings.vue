@@ -40,9 +40,9 @@ const showSettings = shallowRef(true)
   </div>
   <div
     v-show="showSettings"
-    class="flex bg-primary/5 divide-y divide-muted text-xs justify-start items-start p-1 gap-2 flex-col"
+    class=" bg-background text-xs py-1 gap-1 grid @xs:grid-cols-2"
   >
-    <div class="flex gap-2 items-center justify-between w-full">
+    <div class="flex gap-2 items-center bg-secondary/20 p-1 justify-between w-full">
       <span>{{ t("commandBar.focusSidebar") }}</span>
       <button
         class="px-2 py-1 border bg-background"
@@ -56,7 +56,7 @@ const showSettings = shallowRef(true)
         {{ showDocuments }}
       </button>
     </div>
-    <div class="flex gap-2 items-center justify-between w-full">
+    <div class="flex gap-2 items-center bg-secondary/20 p-1 justify-between w-full">
       <span>{{ t("verb.edit") }}</span>
       <button
         class="px-2 py-1 border bg-background"
@@ -70,7 +70,7 @@ const showSettings = shallowRef(true)
         {{ editable }}
       </button>
     </div>
-    <div class="flex gap-2 items-center justify-between w-full">
+    <div class="flex gap-2 items-center bg-secondary/20 p-1 justify-between w-full">
       <span>{{ t("settings.perspective") }}</span>
       <button
         class="px-2 py-1 border bg-background"
@@ -84,11 +84,11 @@ const showSettings = shallowRef(true)
         focus
       </button>
     </div>
-    <div class="flex gap-2 items-center justify-between w-full">
+    <div class="flex gap-2 items-center bg-secondary/20 p-1 justify-between w-full">
       <span>{{ t("settings.language") }}</span>
       <DropdownLanguage />
     </div>
-    <div class="flex gap-2 items-center justify-between w-full">
+    <div class="flex gap-2 items-center bg-secondary/20 p-1 justify-between w-full">
       <span>{{ t("settings.theme") }}</span>
       <ToggleTheme />
     </div>

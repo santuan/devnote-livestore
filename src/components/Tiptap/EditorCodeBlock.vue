@@ -3,7 +3,7 @@ import { NodeViewContent, nodeViewProps, NodeViewWrapper } from '@tiptap/vue-3'
 import { useElementSize } from '@vueuse/core'
 import { Clipboard, ClipboardCheck, Maximize, Minimize2 } from 'lucide-vue-next'
 import { ScrollAreaRoot, ScrollAreaScrollbar, ScrollAreaThumb, ScrollAreaViewport } from 'reka-ui'
-import { bundledLanguages } from 'shiki/bundle/web'
+import { bundledLanguages } from 'shiki/bundle/full'
 import { shallowRef } from 'vue'
 import ListboxVirtual from '../Shared/ListboxVirtual.vue'
 

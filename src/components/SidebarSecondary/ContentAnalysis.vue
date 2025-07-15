@@ -84,19 +84,19 @@ const contentAnalysis = computed(() => {
     >
       <div class="flex flex-col">
         <span class="opacity-50">{{ t("leva.codeBlocks") }}:</span>
-        <span class="ml-1 font-mono font-bold">
+        <span class="font-mono font-bold">
           {{ contentAnalysis.codeBlocks }}
         </span>
       </div>
       <div class="flex flex-col">
         <span class="opacity-50">{{ t("leva.headings") }}:</span>
-        <span class="ml-1 font-mono font-bold">
+        <span class="font-mono font-bold">
           {{ contentAnalysis.totalHeadings }}
         </span>
       </div>
       <div class="flex flex-col">
         <span class="opacity-50">{{ t("leva.words") }}:</span>
-        <span class="ml-1 font-mono font-bold">
+        <span class="font-mono font-bold">
           {{ contentAnalysis.wordCount }}
         </span>
       </div>
@@ -104,7 +104,7 @@ const contentAnalysis = computed(() => {
         <span class="opacity-50">{{ t("leva.task") }}:</span>
         <span
           v-if="contentAnalysis.taskListCount !== 0"
-          class="ml-1 font-mono font-bold"
+          class="font-mono font-bold"
           :class="
             contentAnalysis.taskListCount
               === contentAnalysis.taskListCheckedCount

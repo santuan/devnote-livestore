@@ -367,6 +367,7 @@ onMounted(() => {
           />
           <button
             v-show="isEditing"
+            v-if="editable"
             class="bg-primary h-12 text-primary-foreground py-2"
             @click="createDocument"
           >
