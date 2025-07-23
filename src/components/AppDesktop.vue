@@ -19,15 +19,15 @@ import {
 } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useClientDocument, useQuery, useStore } from 'vue-livestore'
+import DocumentItem from '@/components/PanelLeft/DocumentItem.vue'
+import DocumentList from '@/components/PanelLeft/DocumentList.vue'
+import SidebarSecondary from '@/components/PanelRight/index.vue'
+import ButtonLogo from '@/components/Shared/ButtonLogo.vue'
+import ButtonNewDocument from '@/components/Shared/ButtonNewDocument.vue'
+import DialogCommandMenu from '@/components/Shared/DialogCommandMenu.vue'
+import Editor from '@/components/Tiptap/EditorTipTap.vue'
 import { useToggleColorTheme } from '@/composables/useToggleColorTheme'
-import Editor from '../components/Tiptap/EditorTipTap.vue'
-import { events, tables } from '../livestore/schema'
-import ButtonLogo from './Shared/ButtonLogo.vue'
-import ButtonNewDocument from './Shared/ButtonNewDocument.vue'
-import DialogCommandMenu from './Shared/DialogCommandMenu.vue'
-import DocumentItem from './Sidebar/DocumentItem.vue'
-import DocumentList from './Sidebar/DocumentList.vue'
-import SidebarSecondary from './SidebarSecondary/index.vue'
+import { events, tables } from '@/livestore/schema'
 
 const colorTheme = useStorage('theme', 'theme-foreground')
 
@@ -54,6 +54,7 @@ const layout = shallowRef<number[]>([0, 0])
 
 const { store } = useStore()
 const uiState$ = queryDb(tables.uiState.get(), { label: 'uiState' })
+
 const { newDocumentTitle, newDocumentContent, showDocuments, editable } = useClientDocument(tables.uiState)
 
 const isEditing = computed(() => editable_id.value.length === 0)
@@ -70,10 +71,15 @@ const visibleDocuments$ = queryDb(
 )
 
 const documents = useQuery(visibleDocuments$)
+const documents_count = computed(() => documents.value.length)
 
 function toggle_editable() {
   editor_content.value?.setEditable(!editable.value)
   editable.value = editor_content.value?.options?.editable
+}
+
+function hide_panel_left() {
+  showDocuments.value = false
 }
 
 function createDocument() {
@@ -96,12 +102,14 @@ function resetStore() {
 }
 
 function editDocument(id: string) {
+  if (!id)
+    return
   const foundTodo = documents.value.find(todo => todo.id === id)
-  if (foundTodo) {
-    newDocumentTitle.value = foundTodo.text
-    newDocumentContent.value = foundTodo.content
-    editable_id.value = id
-  }
+  if (!foundTodo)
+    return
+  newDocumentTitle.value = foundTodo.text
+  newDocumentContent.value = foundTodo.content
+  editable_id.value = id
   if (!largerThanLg.value) {
     showDocuments.value = false
   }
@@ -287,6 +295,9 @@ onMounted(() => {
     <div v-show="!focus_mode">
       <DialogCommandMenu />
     </div>
+    <div v-if="editable" class="fixed bottom-0 right-0">
+      <ButtonNewDocument :is-editing @click="resetStore" />
+    </div>
     <SplitterGroup
       id="splitter-group-1"
       direction="horizontal"
@@ -324,18 +335,20 @@ onMounted(() => {
           ]"
         >
           <DocumentList
-            :count="documents.length"
+            :count="documents_count"
           >
             <DocumentItem
               v-for="item in documents"
+              :id="item?.id"
               :key="item.id"
-              :data="item"
+              :completed="item?.completed"
+              :text="item?.text"
               @edit="editDocument"
               @toggle="toggleCompleted"
             />
           </DocumentList>
         </div>
-        <button v-if="showDocuments" class="fixed inset-0 z-[70] bg-background/80 !outline-0 md:hidden" @click="showDocuments = false" />
+        <button v-if="showDocuments" class="fixed inset-0 z-[70] bg-background/80 !outline-0 md:hidden" @click="hide_panel_left" />
       </SplitterPanel>
       <SplitterResizeHandle
         id="splitter-group-1-resize-handle-1"
@@ -357,9 +370,7 @@ onMounted(() => {
             class="border border-primary rounded-none! outline-0 px-2 py-1 w-full"
             @keyup.enter="createDocument"
           >
-          <div v-if="editable" class="absolute top-0 right-0 mr-2 mt-px">
-            <ButtonNewDocument :is-editing @click="resetStore" />
-          </div>
+
           <Editor
             :key="newDocumentTitle"
             v-model="newDocumentContent"

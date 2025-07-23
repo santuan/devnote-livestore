@@ -21,7 +21,9 @@ export default defineComponent({
   methods: {
     onItemClick(_e: any, id: any) {
       if (this.editor) {
-        const element = this.editor.view.dom.querySelector(`[data-toc-id="${id}"`)
+        const element = this.editor.view.dom.querySelector(
+          `[data-toc-id="${id}"`,
+        )
         const pos = this.editor.view.posAtDOM(element, 0)
         // set focus
         const tr = this.editor.view.state.tr
@@ -35,7 +37,11 @@ export default defineComponent({
         if (scrollContainer && element) {
           const containerRect = scrollContainer.getBoundingClientRect()
           const elementRect = element.getBoundingClientRect()
-          const scrollTop = elementRect.top - containerRect.top + scrollContainer.scrollTop - 20
+          const scrollTop
+            = elementRect.top
+              - containerRect.top
+              + scrollContainer.scrollTop
+              - 20
           scrollContainer.scrollTo({
             top: scrollTop,
             behavior: 'smooth',
@@ -48,7 +54,11 @@ export default defineComponent({
 </script>
 
 <template>
-  <template v-if="items.length === 0" />
+  <template v-if="items.length === 0">
+    <div class="w-full justify-center items-center flex text-secondary-foreground border border-secondary min-h-20 p-3">
+      <span>Empty</span>
+    </div>
+  </template>
   <template v-else>
     <div class="py-2">
       <ToCItem

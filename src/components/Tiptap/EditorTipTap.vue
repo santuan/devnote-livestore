@@ -11,11 +11,22 @@ import History from '@tiptap/extension-history'
 import HorizontalRule from '@tiptap/extension-horizontal-rule'
 import Italic from '@tiptap/extension-italic'
 import Link from '@tiptap/extension-link'
-import { BulletList, ListItem, OrderedList, TaskItem, TaskList } from '@tiptap/extension-list'
+import {
+  BulletList,
+  ListItem,
+  OrderedList,
+  TaskItem,
+  TaskList,
+} from '@tiptap/extension-list'
 import Mathematics from '@tiptap/extension-mathematics'
 import Paragraph from '@tiptap/extension-paragraph'
 import Strike from '@tiptap/extension-strike'
-import { Table, TableCell, TableHeader, TableRow } from '@tiptap/extension-table'
+import {
+  Table,
+  TableCell,
+  TableHeader,
+  TableRow,
+} from '@tiptap/extension-table'
 import {
   getHierarchicalIndexes,
   TableOfContents,
@@ -148,7 +159,7 @@ onMounted(() => {
     ],
     content: props.modelValue,
     editable: editable.value,
-    onCreate: () => { },
+    onCreate: () => {},
     onUpdate: () => {
       emit('update:modelValue', editor.value.getHTML())
     },
@@ -162,32 +173,44 @@ onBeforeUnmount(() => {
 
 <template>
   <div
-    v-if="editor" class="EditorTiptap @container " :class="[
-      editable ? 'outline outline-primary' : '!outline-0',
-    ]"
+    v-if="editor"
+    class="EditorTiptap @container"
+    :class="[editable ? 'outline outline-primary' : '!outline-0']"
   >
-    <div v-if="editable" class="absolute left-0 right-0 top-0 h-8 bg-background border-b border-secondary flex justify-start p-1 z-40">
+    <div
+      v-if="editable"
+      class="absolute left-0 right-0 top-0 h-8 bg-background border-b border-secondary flex justify-start p-1 z-40"
+    >
       <button
-        :class="{ 'bg-primary text-primary-foreground': editor.isActive('codeBlock') }" class="interactive font-mono border border-primary  text-xs px-3 "
-        value="Codeblock" @click="editor.chain().focus().toggleCodeBlock().run()"
+        :class="{
+          'bg-primary text-primary-foreground': editor.isActive('codeBlock'),
+        }"
+        class="interactive font-mono border border-primary text-xs px-3"
+        value="Codeblock"
+        @click="editor.chain().focus().toggleCodeBlock().run()"
       >
-        {{ t('toolbar.codeBlock') }}
+        {{ t("toolbar.codeBlock") }}
       </button>
     </div>
     <ScrollAreaRoot
-      class="ScrollAreaEditor group" :class="[
-        toolbar ? 'with-toolbar' : '',
-        editable ? 'pt-6' : '',
-      ]" style="--scrollbar-size: 10px"
+      class="ScrollAreaEditor group"
+      :class="[toolbar ? 'with-toolbar' : '', editable ? 'pt-6' : '']"
+      style="--scrollbar-size: 10px"
     >
       <ScrollAreaViewport
         id="editorScrollArea"
         class="w-full h-full border-transparent border outline-hidden group-focus-within:ring-primary! group-focus-within:ring-2! group-focus-within:ring-inset! focus:ring-primary! focus:ring-1!"
       >
-        <h1 v-if="!editable" class="text-3xl mt-3 font-serif font-semibold px-5">
+        <h1
+          v-if="!editable"
+          class="text-3xl mt-3 font-serif font-semibold px-5"
+        >
           {{ newDocumentTitle }}
         </h1>
-        <div class="relative max-w-full mx-auto prose EditorContent dark:prose-invert" spellcheck="false">
+        <div
+          class="relative max-w-full mx-auto prose EditorContent dark:prose-invert"
+          spellcheck="false"
+        >
           <EditorContent :editor="editor" />
         </div>
       </ScrollAreaViewport>

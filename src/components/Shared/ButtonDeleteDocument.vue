@@ -15,7 +15,7 @@ import {
 import { inject, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useClientDocument, useStore } from 'vue-livestore'
-import { events, tables } from '../../livestore/schema'
+import { events, tables } from '@/livestore/schema'
 
 const props = defineProps<{
   id: string

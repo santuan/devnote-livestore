@@ -5,6 +5,7 @@ import { inject } from 'vue'
 import ContentAnalysis from './ContentAnalysis.vue'
 import DatabaseSettings from './DatabaseSettings.vue'
 import SidebarSettings from './SidebarSettings.vue'
+import TableOfContent from './TableOfContent.vue'
 
 const props = defineProps<{
   focusMode: boolean
@@ -21,10 +22,10 @@ const editable_id = inject('editable_id') as Ref<string | null>
 
 <template>
   <div
-    class="w-full max-h-screen px-1 font-mono min-h-screen z-10 duration-300 transition-opacity bg-background text-foreground overflow-x-hidden overflow-y-auto"
+    class="w-full max-h-screen text-xs px-1 font-mono z-10 duration-300 transition-opacity bg-background text-foreground overflow-x-hidden overflow-y-auto"
     :class="props.focusMode ? 'opacity-0 pointer-events-none' : ''"
   >
-    <div class="py-1 flex justify-between items-center text-sm gap-1">
+    <div class="p-1 flex sticky top-0 z-10 bg-background justify-between items-center text-xs gap-1">
       <div class="flex justify-start items-center">
         <strong class="font-bold mr-1">ID:</strong>
         <span class="line-clamp-1 text-muted-foreground">
@@ -39,13 +40,17 @@ const editable_id = inject('editable_id') as Ref<string | null>
         </button>
       </div>
     </div>
-    <SidebarSettings
-      :focus-mode="focusMode"
-      @collapse-secondary-sidebar="emit('collapseSecondarySidebar')"
-      @focus-mode-on="emit('focusModeOn')"
-      @toggle-editable="emit('toggleEditable')"
-    />
-    <ContentAnalysis />
-    <DatabaseSettings />
+    <div
+      class="p-px max-h-[calc(100vh-4.5rem)] min-h-[calc(100vh-4.5rem)] bg-primary/5"
+    >
+      <SidebarSettings
+        @collapse-secondary-sidebar="emit('collapseSecondarySidebar')"
+        @focus-mode-on="emit('focusModeOn')"
+        @toggle-editable="emit('toggleEditable')"
+      />
+      <ContentAnalysis />
+      <TableOfContent />
+      <DatabaseSettings />
+    </div>
   </div>
 </template>

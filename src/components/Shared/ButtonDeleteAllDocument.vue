@@ -14,7 +14,7 @@ import {
 import { ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useStore } from 'vue-livestore'
-import { events } from '../../livestore/schema'
+import { events } from '@/livestore/schema'
 
 const { store } = useStore()
 
