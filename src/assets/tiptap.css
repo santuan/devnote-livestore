@@ -1,7 +1,7 @@
 @reference "@/assets/main.css";
 
 .EditorTiptap {
-  @apply grid w-full min-h-[50vh] relative pt-2;
+  @apply grid w-full min-h-[50vh] relative;
 }
 
 /* .EditorTiptap .prose .tiptap {
@@ -91,7 +91,7 @@
 }
 
 .tiptap {
-  @apply px-2 md:px-4 md:pb-2 md:pt-2 outline-hidden placeholder:text-primary min-h-[calc(100vh-8rem)];
+  @apply px-2 md:px-4 md:pb-2 md:pt-2 outline-hidden placeholder:text-primary min-h-[calc(100vh-5rem)];
   /* @apply font-mono font-normal; */
   @apply font-serif;
 }

@@ -130,6 +130,14 @@ onMounted(() => {
       Youtube.configure({ controls: true, ccLanguage: 'es', nocookie: true }),
       TableOfContents.configure({
         getIndex: getHierarchicalIndexes,
+        scrollParent: () => {
+          const scrollArea = document.getElementById('editorScrollArea')
+          if (scrollArea) {
+            scrollArea.style.scrollBehavior = 'smooth'
+            return scrollArea
+          }
+          return window
+        },
         onUpdate: (content: any) => {
           toc.value = content
         },

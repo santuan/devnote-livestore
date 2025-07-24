@@ -40,10 +40,16 @@ export default defineComponent({
   <div
     :class="{
       'is-active': item.isActive && !item.isScrolledOver,
-      'is-scrolled-over': item.isScrolledOver,
     }"
     :style="{ '--level': item.originalLevel }"
+    class="flex items-center justify-start"
   >
+    <span
+      class="h-6 border-l border-transparent duration-300"
+      :class="{
+        '!border-primary': item.isScrolledOver,
+      }"
+    />
     <a
       class="flex items-center justify-between w-full gap-2 p-1 truncate transition-colors duration-150 rounded hover:bg-secondary/50 focus:outline-none cursor-default focus:ring-1 focus:ring-primary"
       :class="[getHeadingClass(item.originalLevel)]"
@@ -51,7 +57,12 @@ export default defineComponent({
       :data-item-index="item.itemIndex"
       @click.prevent="onItemClick"
     >
-      <span class="line-clamp-1 w-full text-left text-xs">
+      <span
+        class="line-clamp-1 opacity-60 hover:opacity-100 w-full text-left text-xs"
+        :class="{
+          'opacity-100': item.isScrolledOver,
+        }"
+      >
         {{ item.textContent }}
       </span>
       <span class="opacity-30">H{{ item.originalLevel }}</span>

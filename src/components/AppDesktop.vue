@@ -40,10 +40,6 @@ const editable_id = shallowRef('')
 const editor_content = shallowRef()
 const editor_toc = shallowRef([])
 
-provide('content', editor_content)
-provide('toc', editor_toc)
-provide('editable_id', editable_id)
-
 const input_title = shallowRef<HTMLElement | null>(null)
 const focus_logo = shallowRef<HTMLElement | null>(null)
 const focus_mode = shallowRef(false)
@@ -51,6 +47,10 @@ const sidebar_documents_splitter_ref = shallowRef()
 const sidebar_secondary_splitter_ref = shallowRef()
 const resize = shallowRef(0)
 const layout = shallowRef<number[]>([0, 0])
+
+provide('content', editor_content)
+provide('toc', editor_toc)
+provide('editable_id', editable_id)
 
 const { store } = useStore()
 const uiState$ = queryDb(tables.uiState.get(), { label: 'uiState' })
@@ -334,21 +334,26 @@ onMounted(() => {
         >
           <DocumentList
             :count="documents_count"
+            @open="toggle_documents"
           >
-            <ButtonNewDocument
-              v-if="editable"
-              :is-editing
-              @click="resetStore"
-            />
-            <DocumentItem
-              v-for="item in documents"
-              :id="item?.id"
-              :key="item.id"
-              :completed="item?.completed"
-              :text="item?.text"
-              @edit="editDocument"
-              @toggle="toggleCompleted"
-            />
+            <template #top>
+              <ButtonNewDocument
+                v-if="editable"
+                :is-editing
+                @click="resetStore"
+              />
+            </template>
+            <template #list>
+              <DocumentItem
+                v-for="item in documents"
+                :id="item?.id"
+                :key="item.id"
+                :completed="item?.completed"
+                :text="item?.text"
+                @edit="editDocument"
+                @toggle="toggleCompleted"
+              />
+            </template>
           </DocumentList>
         </div>
         <button v-if="showDocuments" class="fixed inset-0 z-[70] bg-background/80 !outline-0 md:hidden" @click="hide_panel_left" />

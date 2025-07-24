@@ -2,6 +2,7 @@
 import type { Document } from '@/livestore/document'
 import { TextSelection } from '@tiptap/pm/state'
 import { defineComponent } from 'vue'
+
 import ToCItem from './EditorTocItem.vue'
 
 export default defineComponent({

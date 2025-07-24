@@ -22,10 +22,11 @@ function toggle_show_documents() {
 }
 
 const showSettings = shallowRef(false)
+const showPerspective = shallowRef(false)
 </script>
 
 <template>
-  <div class="text-xs bg-background">
+  <div class="bg-background">
     <button
       class="flex pl-1 pr-2 w-full h-10 text-left items-center justify-start gap-2"
       @click="showSettings = !showSettings"
@@ -38,49 +39,63 @@ const showSettings = shallowRef(false)
         {{ t("leva.settings") }}
       </span>
     </button>
+    <div v-show="showSettings" class="@xs:pl-5">
+      <div class="flex gap-2 items-center p-1 justify-between w-full">
+        <span>{{ t("settings.language") }}</span>
+        <DropdownLanguage />
+      </div>
+      <div class="flex gap-2 items-center p-1 justify-between w-full">
+        <span>{{ t("settings.theme") }}</span>
+        <ToggleTheme />
+      </div>
+      <DatabaseSettings class="@xs:col-span-3" />
+    </div>
   </div>
-  <div
-    v-show="showSettings"
-    class="bg-background p-2 gap-3 grid @xs:grid-cols-3"
-  >
+  <div class="bg-background">
     <button
-      :class="
-        showDocuments
-          ? 'bg-primary text-primary-foreground border-primary'
-          : 'bg-secondary/80'
-      "
-      class="flex gap-2 items-center p-2 justify-center w-full"
-      @click="toggle_show_documents"
+      class="flex pl-1 pr-2 w-full h-10 text-left items-center justify-start gap-2"
+      @click="showPerspective = !showPerspective"
     >
-      <span>{{ t("commandBar.focusSidebar") }}</span>
+      <ChevronRight
+        class="text-foreground size-3 duration-300 transition-transform"
+        :class="showPerspective ? 'rotate-90' : ''"
+      />
+      <span class="font-semibold text-primary">
+        {{ t("settings.perspective") }}
+      </span>
     </button>
-    <button
-      class="flex gap-2 items-center p-2 justify-center w-full"
-      :class="
-        editable
-          ? 'bg-primary text-primary-foreground border-primary'
-          : 'bg-secondary/80'
-      "
-      @click="emit('toggleEditable')"
+    <div
+      v-show="showPerspective"
+      class="bg-background p-2 @xs:pl-5 gap-3 grid @xs:grid-cols-3"
     >
-      <span>{{ t("verb.edit") }}</span>
-    </button>
-
-    <button
-      class="flex gap-2 items-center p-2 justify-center text-center w-full bg-secondary/80"
-      @click="emit('focusModeOn')"
-    >
-      <span>Focus</span>
-    </button>
-
-    <div class="flex gap-2 items-center p-1 justify-between w-full">
-      <span>{{ t("settings.language") }}</span>
-      <DropdownLanguage />
+      <button
+        :class="
+          showDocuments
+            ? 'bg-primary text-primary-foreground border-primary'
+            : 'bg-secondary/80'
+        "
+        class="flex gap-2 items-center p-2 justify-center w-full"
+        @click="toggle_show_documents"
+      >
+        <span>{{ t("commandBar.focusSidebar") }}</span>
+      </button>
+      <button
+        class="flex gap-2 items-center p-2 justify-center w-full"
+        :class="
+          editable
+            ? 'bg-primary text-primary-foreground border-primary'
+            : 'bg-secondary/80'
+        "
+        @click="emit('toggleEditable')"
+      >
+        <span>{{ t("verb.edit") }}</span>
+      </button>
+      <button
+        class="flex gap-2 items-center p-2 justify-center text-center w-full bg-secondary/80"
+        @click="emit('focusModeOn')"
+      >
+        <span>Focus</span>
+      </button>
     </div>
-    <div class="flex gap-2 items-center p-1 justify-between w-full">
-      <span>{{ t("settings.theme") }}</span>
-      <ToggleTheme />
-    </div>
-    <DatabaseSettings class="@xs:col-span-3" />
   </div>
 </template>
