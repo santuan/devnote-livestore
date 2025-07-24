@@ -4,6 +4,7 @@ import { shallowRef } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useClientDocument } from 'vue-livestore'
 import { tables } from '@/livestore/schema'
+import DatabaseSettings from './DatabaseSettings.vue'
 import DropdownLanguage from './DropdownLanguage.vue'
 import ToggleTheme from './ToggleTheme.vue'
 
@@ -40,7 +41,7 @@ const showSettings = shallowRef(false)
   </div>
   <div
     v-show="showSettings"
-    class="bg-background p-2 gap-3 grid @sm:grid-cols-3"
+    class="bg-background p-2 gap-3 grid @xs:grid-cols-3"
   >
     <button
       :class="
@@ -80,5 +81,6 @@ const showSettings = shallowRef(false)
       <span>{{ t("settings.theme") }}</span>
       <ToggleTheme />
     </div>
+    <DatabaseSettings class="@xs:col-span-3" />
   </div>
 </template>

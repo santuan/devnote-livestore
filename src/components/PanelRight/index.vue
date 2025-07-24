@@ -3,7 +3,6 @@ import type { Ref } from 'vue'
 import { X } from 'lucide-vue-next'
 import { inject } from 'vue'
 import ContentAnalysis from './ContentAnalysis.vue'
-import DatabaseSettings from './DatabaseSettings.vue'
 import SidebarSettings from './SidebarSettings.vue'
 import TableOfContent from './TableOfContent.vue'
 
@@ -22,7 +21,7 @@ const editable_id = inject('editable_id') as Ref<string | null>
 
 <template>
   <div
-    class="w-full max-h-screen text-xs px-1 font-mono z-10 duration-300 transition-opacity bg-background text-foreground overflow-x-hidden overflow-y-auto"
+    class="w-full max-h-screen text-xs px-1 font-mono z-10 duration-300 transition-opacity bg-background text-foreground overflow-x-hidden overflow-y-auto scrollbar-thumb-rounded-full scrollbar-track-rounded-full scrollbar scrollbar-thumb-secondary-foreground scrollbar-track-secondary"
     :class="props.focusMode ? 'opacity-0 pointer-events-none' : ''"
   >
     <div class="p-1 flex sticky top-0 z-10 bg-background justify-between items-center text-xs gap-1">
@@ -41,16 +40,15 @@ const editable_id = inject('editable_id') as Ref<string | null>
       </div>
     </div>
     <div
-      class="p-px max-h-[calc(100vh-4.5rem)] min-h-[calc(100vh-4.5rem)] bg-primary/5"
+      class="p-px max-h-[calc(100vh-2rem)] min-h-[calc(100vh-2rem)] bg-primary/5 "
     >
+      <ContentAnalysis />
+      <TableOfContent />
       <SidebarSettings
         @collapse-secondary-sidebar="emit('collapseSecondarySidebar')"
         @focus-mode-on="emit('focusModeOn')"
         @toggle-editable="emit('toggleEditable')"
       />
-      <ContentAnalysis />
-      <TableOfContent />
-      <DatabaseSettings />
     </div>
   </div>
 </template>

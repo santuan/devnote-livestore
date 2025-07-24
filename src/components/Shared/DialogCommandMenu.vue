@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import type { Editor } from '@tiptap/core'
 import type { Ref } from 'vue'
 import { queryDb } from '@livestore/livestore'
 import { useMagicKeys, whenever } from '@vueuse/core'
@@ -20,7 +21,7 @@ import {
   DialogTrigger,
   VisuallyHidden,
 } from 'reka-ui'
-import { inject, ref } from 'vue'
+import { inject, nextTick, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useClientDocument, useQuery } from 'vue-livestore'
 import Tooltip from '@/components/Shared/Tooltip.vue'
@@ -40,15 +41,19 @@ function close() {
 }
 
 const editable_id = inject('editable_id') as Ref<string | null>
+const editor = inject('content') as Ref<Editor>
+
 const documents = useQuery(visibleDocuments$)
 
-function select_document(id: any) {
+async function select_document(id: any) {
   const foundTodo = documents.value.find(todo => todo.id === id)
   if (foundTodo) {
     newDocumentTitle.value = foundTodo.text
     newDocumentContent.value = foundTodo.content
     editable_id.value = id
     show_commandbar.value = false
+    await nextTick()
+    editor.value.commands.focus()
   }
 }
 

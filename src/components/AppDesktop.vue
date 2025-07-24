@@ -295,9 +295,7 @@ onMounted(() => {
     <div v-show="!focus_mode">
       <DialogCommandMenu />
     </div>
-    <div v-if="editable" class="fixed bottom-0 right-0">
-      <ButtonNewDocument :is-editing @click="resetStore" />
-    </div>
+
     <SplitterGroup
       id="splitter-group-1"
       direction="horizontal"
@@ -337,6 +335,11 @@ onMounted(() => {
           <DocumentList
             :count="documents_count"
           >
+            <ButtonNewDocument
+              v-if="editable"
+              :is-editing
+              @click="resetStore"
+            />
             <DocumentItem
               v-for="item in documents"
               :id="item?.id"
@@ -367,10 +370,9 @@ onMounted(() => {
             v-model="newDocumentTitle"
             :placeholder="t('editor.untitled')"
             type="text"
-            class="border border-primary rounded-none! outline-0 px-2 py-1 w-full"
+            class="outline outline-primary rounded-none!  px-2 py-1 min-h-8 w-full"
             @keyup.enter="createDocument"
           >
-
           <Editor
             :key="newDocumentTitle"
             v-model="newDocumentContent"

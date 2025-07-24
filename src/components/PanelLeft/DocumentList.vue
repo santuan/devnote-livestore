@@ -12,7 +12,7 @@ const documents = computed(() => props.count ?? 0)
 
 <template>
   <div class="w-full @container">
-    <div class="flex mb-3 gap-2 justify-end items-center">
+    <div class="flex mb-1.5 gap-2 justify-end items-center">
       <div class="flex items-center gap-1">
         <NumberFlow class="text-xs mr-1" :value="documents" />
         <h1 class="text-xs hidden mr-2 @xs:flex text-primary">
