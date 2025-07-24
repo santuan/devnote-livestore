@@ -1,13 +1,15 @@
 <script lang="ts">
 import type { Document } from '@/livestore/document'
 import { TextSelection } from '@tiptap/pm/state'
-import { defineComponent } from 'vue'
+import { Hash } from 'lucide-vue-next'
 
+import { defineComponent } from 'vue'
 import ToCItem from './EditorTocItem.vue'
 
 export default defineComponent({
   components: {
     ToCItem,
+    Hash,
   },
   props: {
     items: {
@@ -56,8 +58,8 @@ export default defineComponent({
 
 <template>
   <template v-if="items.length === 0">
-    <div class="w-full justify-center items-center flex text-secondary-foreground border border-secondary min-h-20 p-3">
-      <span>Empty</span>
+    <div class="w-full justify-center items-center flex text-secondary-foreground border border-secondary min-h-12 p-1">
+      <Hash class="opacity-30 size-4 " />
     </div>
   </template>
   <template v-else>
