@@ -100,6 +100,11 @@
     "vite": "npm:rolldown-vite@latest",
     "vite-plugin-vue-devtools": "^8.0.0",
     "vue-tsc": "^3.0.5"
+  },
+  "overrides": {
+    "@tiptap/core": "3.0.9",
+    "@tiptap/extension-code-block": "3.0.9",
+    "@tiptap/pm": "3.0.9"
   }
 
 }
