@@ -2,6 +2,7 @@
 import type { Ref } from 'vue'
 import { X } from 'lucide-vue-next'
 import { inject } from 'vue'
+import EditorToolbar from '../Tiptap/Toolbar/EditorToolbar.vue'
 import ContentAnalysis from './ContentAnalysis.vue'
 import SidebarSettings from './SidebarSettings.vue'
 import TableOfContent from './TableOfContent.vue'
@@ -42,6 +43,7 @@ const editable_id = inject('editable_id') as Ref<string | null>
     <div
       class="p-px max-h-[calc(100vh-2.5rem)] min-h-[calc(100vh-2.5rem)] bg-primary/5 "
     >
+      <EditorToolbar />
       <ContentAnalysis />
       <TableOfContent />
       <SidebarSettings

@@ -18,7 +18,7 @@ import {
   TaskItem,
   TaskList,
 } from '@tiptap/extension-list'
-import Mathematics from '@tiptap/extension-mathematics'
+import { Mathematics, migrateMathStrings } from '@tiptap/extension-mathematics'
 import Paragraph from '@tiptap/extension-paragraph'
 import Strike from '@tiptap/extension-strike'
 import {
@@ -90,7 +90,34 @@ onMounted(() => {
       HorizontalRule,
       Italic,
       ListItem,
-      Mathematics,
+      Mathematics.configure({
+        blockOptions: {
+          onClick: (node, pos) => {
+            // eslint-disable-next-line no-alert
+            const newCalculation = prompt('Enter new calculation:', node.attrs.latex)
+            if (newCalculation) {
+              editor.value.chain().setNodeSelection(pos).updateBlockMath({ latex: newCalculation }).focus().run()
+            }
+          },
+        },
+        inlineOptions: {
+          onClick: (node, pos) => {
+            // eslint-disable-next-line no-alert
+            const katex = prompt('Enter new calculation:', node.attrs.latex)
+            if (katex) {
+              editor.value.chain().setNodeSelection(pos).updateInlineMath({ latex: katex }).focus().run()
+            }
+          },
+        },
+        katexOptions: {
+          throwOnError: false,
+          macros: {
+            '\\R': '\\mathbb{R}',
+            '\\N': '\\mathbb{N}',
+          },
+        },
+
+      }),
       OrderedList,
       Paragraph,
       ResizableMedia,
@@ -133,7 +160,6 @@ onMounted(() => {
         scrollParent: () => {
           const scrollArea = document.getElementById('editorScrollArea')
           if (scrollArea) {
-            scrollArea.style.scrollBehavior = 'smooth'
             return scrollArea
           }
           return window
@@ -167,7 +193,9 @@ onMounted(() => {
     ],
     content: props.modelValue,
     editable: editable.value,
-    onCreate: () => {},
+    onCreate: ({ editor: currentEditor }) => {
+      migrateMathStrings(currentEditor)
+    },
     onUpdate: () => {
       emit('update:modelValue', editor.value.getHTML())
     },
@@ -185,24 +213,9 @@ onBeforeUnmount(() => {
     class="EditorTiptap @container"
     :class="[editable ? 'outline outline-primary' : '!outline-0']"
   >
-    <div
-      v-if="editable"
-      class="absolute left-0 right-0 top-0 h-8 bg-background border-b border-secondary flex justify-start p-1 z-40"
-    >
-      <button
-        :class="{
-          'bg-primary text-primary-foreground': editor.isActive('codeBlock'),
-        }"
-        class="interactive font-mono border border-primary text-xs px-3"
-        value="Codeblock"
-        @click="editor.chain().focus().toggleCodeBlock().run()"
-      >
-        {{ t("toolbar.codeBlock") }}
-      </button>
-    </div>
     <ScrollAreaRoot
       class="ScrollAreaEditor group"
-      :class="[toolbar ? 'with-toolbar' : '', editable ? 'pt-6' : '']"
+      :class="[toolbar ? 'with-toolbar' : '', editable ? '' : '']"
       style="--scrollbar-size: 10px"
     >
       <ScrollAreaViewport

@@ -338,7 +338,6 @@ onMounted(() => {
           >
             <template #top>
               <ButtonNewDocument
-                v-if="editable"
                 :is-editing
                 @click="resetStore"
               />
