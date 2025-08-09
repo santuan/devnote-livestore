@@ -51,24 +51,20 @@ const showToolbar = shallowRef(true)
           <ToolbarUndo />
           <ToolbarRedo />
           <ToolbarCharacters />
+          <ToolbarHeadingSelector />
         </ToolbarToggleGroup>
-        <ToolbarHeadingSelector />
         <ToolbarToggleGroup class="ToolbarToggleGroup">
           <ToolbarList />
           <ToolbarInlineCode />
           <ToolbarTaskList />
           <ToolbarQuote />
-        </ToolbarToggleGroup>
-        <!--
-          -->
-        <ToolbarCodeBlock />
-        <ToolbarToggleGroup class="ToolbarToggleGroup">
           <ToolbarTextAlign />
           <ToolbarLatex />
           <ToolbarTextSeparator />
           <ToolbarTable />
           <ToolbarClear />
         </ToolbarToggleGroup>
+        <ToolbarCodeBlock />
       </ToolbarRoot>
     </div>
   </div>
@@ -99,7 +95,8 @@ const showToolbar = shallowRef(true)
 }
 
 .ToolbarToggleGroup {
-  display: flex
+  display: flex;
+  flex-wrap: wrap
 }
 
 .ToolbarToggleGroup body:has(.cursor_pointer) :deep(label) {

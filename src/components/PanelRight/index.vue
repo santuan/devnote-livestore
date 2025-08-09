@@ -1,7 +1,15 @@
 <script setup lang="ts">
 import type { Ref } from 'vue'
 import { X } from 'lucide-vue-next'
+import {
+  TabsContent,
+  TabsIndicator,
+  TabsList,
+  TabsRoot,
+  TabsTrigger,
+} from 'reka-ui'
 import { inject } from 'vue'
+import { useI18n } from 'vue-i18n'
 import EditorToolbar from '../Tiptap/Toolbar/EditorToolbar.vue'
 import ContentAnalysis from './ContentAnalysis.vue'
 import SidebarSettings from './SidebarSettings.vue'
@@ -16,16 +24,19 @@ const emit = defineEmits<{
   (e: 'toggleEditable'): void
   (e: 'focusModeOn'): void
 }>()
+const { t } = useI18n()
 
 const editable_id = inject('editable_id') as Ref<string | null>
 </script>
 
 <template>
   <div
-    class="w-full max-h-screen text-xs  font-mono z-10 duration-300 transition-opacity bg-background text-foreground overflow-x-hidden overflow-y-auto scrollbar-thumb-rounded-full scrollbar-track-rounded-full scrollbar scrollbar-thumb-secondary-foreground scrollbar-track-secondary"
+    class="w-full max-h-screen text-xs font-mono z-10 duration-300 transition-opacity bg-background text-foreground overflow-x-hidden overflow-y-auto scrollbar-thumb-rounded-full scrollbar-track-rounded-full scrollbar scrollbar-thumb-secondary-foreground scrollbar-track-secondary"
     :class="props.focusMode ? 'opacity-0 pointer-events-none' : ''"
   >
-    <div class="p-1 pr-0 flex sticky top-0 right-0 z-10 bg-background justify-between items-center text-xs gap-1">
+    <div
+      class="p-1 pr-0 flex sticky top-0 right-0 z-10 bg-background justify-between items-center text-xs gap-1"
+    >
       <div class="flex justify-start items-center">
         <strong class="font-bold mr-1">ID:</strong>
         <span class="line-clamp-1 text-muted-foreground">
@@ -41,16 +52,60 @@ const editable_id = inject('editable_id') as Ref<string | null>
       </div>
     </div>
     <div
-      class="p-px max-h-[calc(100vh-2.5rem)] min-h-[calc(100vh-2.5rem)] bg-primary/5 "
+      class="p-px max-h-[calc(100vh-2.5rem)] min-h-[calc(100vh-2.5rem)] bg-primary/5"
     >
-      <EditorToolbar />
-      <ContentAnalysis />
-      <TableOfContent />
-      <SidebarSettings
-        @collapse-secondary-sidebar="emit('collapseSecondarySidebar')"
-        @focus-mode-on="emit('focusModeOn')"
-        @toggle-editable="emit('toggleEditable')"
-      />
+      <TabsRoot
+        class="flex flex-col w-full "
+        default-value="tab1"
+      >
+        <TabsList
+          class="relative shrink-0 flex border-b border-transparent"
+          aria-label="Manage your account"
+        >
+          <TabsIndicator
+            class="indicator absolute px-8 left-0 h-0.5 bottom-0 translate-y-px"
+          >
+            <div class="bg-primary w-full h-full" />
+          </TabsIndicator>
+          <TabsTrigger
+            class="bg-secondary px-5 h-8 flex-1 flex items-center justify-center text-xs leading-none text-mauve11 select-none rounded-tl-md hover:text-primary data-[state=active]:font-bold data-[state=active]:text-primary outline-none cursor-default focus-visible:relative focus-visible:shadow focus-visible:shadow-primary"
+            value="tab1"
+          >
+            {{ t("leva.document") }}
+          </TabsTrigger>
+          <TabsTrigger
+            class="bg-secondary px-5 h-8 flex-1 flex items-center justify-center text-xs leading-none text-mauve11 select-none rounded-tr-md hover:text-primary data-[state=active]:font-bold data-[state=active]:text-primary outline-none cursor-default focus-visible:relative focus-visible:shadow focus-visible:shadow-primary"
+            value="tab2"
+          >
+            {{ t("leva.settings") }}
+          </TabsTrigger>
+        </TabsList>
+        <TabsContent
+          class="grow py-1 bg-secondary rounded-b-md outline-none focus:shadow-[0_0_0_2px] focus:shadow-primary"
+          value="tab1"
+        >
+          <EditorToolbar />
+          <ContentAnalysis />
+          <TableOfContent />
+        </TabsContent>
+        <TabsContent
+          class="grow py-1 bg-secondary rounded-b-md outline-none focus:shadow focus:shadow-primary"
+          value="tab2"
+        >
+          <SidebarSettings
+            @collapse-secondary-sidebar="emit('collapseSecondarySidebar')"
+            @focus-mode-on="emit('focusModeOn')"
+            @toggle-editable="emit('toggleEditable')"
+          />
+        </TabsContent>
+      </TabsRoot>
     </div>
   </div>
 </template>
+
+<style>
+.indicator {
+  width: var(--reka-tabs-indicator-size);
+  left: var(--reka-tabs-indicator-position)
+}
+</style>

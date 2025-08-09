@@ -3,6 +3,7 @@ import { queryDb } from '@livestore/livestore'
 import {
   breakpointsTailwind,
   useBreakpoints,
+  useColorMode,
   useMagicKeys,
   useStorage,
   whenever,
@@ -285,6 +286,7 @@ whenever(magic_collapse_secondary_sidebar, (n) => {
 })
 
 onMounted(() => {
+  useColorMode()
   resetStore()
   useToggleColorTheme(colorTheme.value)
 })
