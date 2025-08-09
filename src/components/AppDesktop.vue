@@ -285,6 +285,54 @@ whenever(magic_collapse_secondary_sidebar, (n) => {
   }
 })
 
+const magic_navigate_next_document = keys['ctrl+shift+alt+ArrowDown']
+whenever(magic_navigate_next_document, (n) => {
+  if (n === true) {
+    navigateToNextDocument()
+  }
+})
+
+const magic_navigate_previous_document = keys['ctrl+shift+alt+ArrowUp']
+whenever(magic_navigate_previous_document, (n) => {
+  if (n === true) {
+    navigateToPreviousDocument()
+  }
+})
+
+function navigateToNextDocument() {
+  if (documents.value.length === 0)
+    return
+
+  const currentIndex = documents.value.findIndex(doc => doc.id === editable_id.value)
+  let nextIndex = 0
+
+  if (currentIndex !== -1) {
+    nextIndex = (currentIndex + 1) % documents.value.length
+  }
+
+  const nextDocument = documents.value[nextIndex]
+  if (nextDocument) {
+    editDocument(nextDocument.id)
+  }
+}
+
+function navigateToPreviousDocument() {
+  if (documents.value.length === 0)
+    return
+
+  const currentIndex = documents.value.findIndex(doc => doc.id === editable_id.value)
+  let previousIndex = documents.value.length - 1
+
+  if (currentIndex !== -1) {
+    previousIndex = currentIndex === 0 ? documents.value.length - 1 : currentIndex - 1
+  }
+
+  const previousDocument = documents.value[previousIndex]
+  if (previousDocument) {
+    editDocument(previousDocument.id)
+  }
+}
+
 onMounted(() => {
   useColorMode()
   resetStore()
