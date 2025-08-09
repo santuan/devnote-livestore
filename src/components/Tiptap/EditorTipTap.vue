@@ -48,9 +48,10 @@ import {
   ScrollAreaViewport,
 } from 'reka-ui'
 import CodeBlockShiki from 'tiptap-extension-code-block-shiki'
-import { inject, onBeforeUnmount, onMounted } from 'vue'
+import { inject, onBeforeUnmount, onMounted, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useClientDocument } from 'vue-livestore'
+import DialogMath from '@/components/Shared/DialogMath.vue'
 import { tables } from '@/livestore/schema'
 import WebFrame from './EditorAddIframe'
 import Video from './EditorAddVideo'
@@ -73,7 +74,31 @@ const { editable, newDocumentTitle } = useClientDocument(tables.uiState)
 const editor = inject('content') as Ref<Editor>
 const toc = inject('toc') as Ref<object | null>
 
+// Math dialog state
+const mathDialogOpen = ref(false)
+const mathDialogTitle = ref('')
+const mathDialogInitialValue = ref('')
+const mathDialogCallback = ref<((latex: string) => void) | null>(null)
+
 const { t } = useI18n()
+
+function openMathDialog(title: string, initialValue: string, callback: (latex: string) => void) {
+  mathDialogTitle.value = title
+  mathDialogInitialValue.value = initialValue
+  mathDialogCallback.value = callback
+  mathDialogOpen.value = true
+}
+
+function handleMathConfirm(latex: string) {
+  if (mathDialogCallback.value) {
+    mathDialogCallback.value(latex)
+  }
+  mathDialogCallback.value = null
+}
+
+function handleMathCancel() {
+  mathDialogCallback.value = null
+}
 
 onMounted(() => {
   editor.value = new Editor({
@@ -93,20 +118,28 @@ onMounted(() => {
       Mathematics.configure({
         blockOptions: {
           onClick: (node, pos) => {
-            // eslint-disable-next-line no-alert
-            const newCalculation = prompt('Enter new calculation:', node.attrs.latex)
-            if (newCalculation) {
-              editor.value.chain().setNodeSelection(pos).updateBlockMath({ latex: newCalculation }).focus().run()
-            }
+            openMathDialog(
+              'Edit Block Math',
+              node.attrs.latex,
+              (latex) => {
+                if (latex.trim()) {
+                  editor.value.chain().setNodeSelection(pos).updateBlockMath({ latex }).focus().run()
+                }
+              },
+            )
           },
         },
         inlineOptions: {
           onClick: (node, pos) => {
-            // eslint-disable-next-line no-alert
-            const katex = prompt('Enter new calculation:', node.attrs.latex)
-            if (katex) {
-              editor.value.chain().setNodeSelection(pos).updateInlineMath({ latex: katex }).focus().run()
-            }
+            openMathDialog(
+              'Edit Inline Math',
+              node.attrs.latex,
+              (latex) => {
+                if (latex.trim()) {
+                  editor.value.chain().setNodeSelection(pos).updateInlineMath({ latex }).focus().run()
+                }
+              },
+            )
           },
         },
         katexOptions: {
@@ -213,6 +246,15 @@ onBeforeUnmount(() => {
     class="EditorTiptap @container"
     :class="[editable ? 'outline outline-primary' : '!outline-0']"
   >
+    <DialogMath
+      v-model:open="mathDialogOpen"
+      :title="mathDialogTitle"
+      :initial-value="mathDialogInitialValue"
+      description="Enter your LaTeX math expression. Use standard LaTeX syntax like x^2, \frac{a}{b}, \sqrt{x}, etc."
+      @confirm="handleMathConfirm"
+      @cancel="handleMathCancel"
+    />
+
     <ScrollAreaRoot
       class="ScrollAreaEditor group"
       :class="[toolbar ? 'with-toolbar' : '', editable ? '' : '']"
