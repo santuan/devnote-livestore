@@ -66,7 +66,7 @@ const showPerspective = useStorage('show_perspective', true)
     </button>
     <div
       v-show="showPerspective"
-      class="bg-background p-2 @xs:pl-5 gap-3 grid @xs:grid-cols-3"
+      class="bg-background p-2 @xs:pl-6 gap-3 grid @xs:grid-cols-3"
     >
       <button
         :class="

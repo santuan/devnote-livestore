@@ -215,8 +215,22 @@ function windowLayoutTwo() {
 function windowLayoutThree() {
   if (!layout.value)
     return
+  sidebar_documents_splitter_ref.value.resize(50)
+  sidebar_secondary_splitter_ref.value.resize(5)
+}
+
+function windowLayoutFour() {
+  if (!layout.value)
+    return
   sidebar_documents_splitter_ref.value.resize(15)
   sidebar_secondary_splitter_ref.value.resize(15)
+}
+
+function windowLayoutFive() {
+  if (!layout.value)
+    return
+  sidebar_documents_splitter_ref.value.resize(5)
+  sidebar_secondary_splitter_ref.value.resize(5)
 }
 
 function collapseSecondarySidebar() {
@@ -506,15 +520,27 @@ onMounted(() => {
             <span class="bg-primary/10 ring-1 ring-primary/40 text-primary flex justify-center items-center h-6 w-[40%]">40%</span>
             <span class="bg-secondary/30 flex justify-center items-center h-6 w-[30%]" />
           </button>
+
+          <button class="flex gap-px outline-1 outline-primary  text-xs items-center justify-center text-center w-full bg-secondary/80" @click="windowLayoutFour()">
+            <span class="bg-secondary/30 flex justify-center items-center h-6 w-[15%]" />
+            <span class="bg-primary/10 ring-1 ring-primary/40 text-primary flex justify-center items-center h-6 w-[70%]">70%</span>
+            <span class="bg-secondary/30 flex justify-center items-center h-6 w-[15%]" />
+          </button>
+          <button class="flex gap-px outline-1 outline-primary  text-xs items-center justify-center text-center w-full bg-secondary/80" @click="windowLayoutFive()">
+            <span class="bg-secondary/30 flex justify-center items-center h-6 w-[5%]" />
+            <span class="bg-primary/10 ring-1 ring-primary/40 text-primary flex justify-center items-center h-6 w-[90%]">90%</span>
+            <span class="bg-secondary/30 flex justify-center items-center h-6 w-[5%]" />
+          </button>
+
           <button class="flex gap-px outline-1 outline-primary  text-xs items-center justify-center text-center w-full bg-secondary/80" @click="windowLayoutTwo()">
             <span class="bg-secondary/30 flex justify-center items-center h-6 w-[5%]" />
             <span class="bg-primary/10 ring-1 ring-primary/40 text-primary flex justify-center items-center h-6 w-[65%]">65%</span>
             <span class="bg-secondary/30 flex justify-center items-center h-6 w-[30%]" />
           </button>
           <button class="flex gap-px outline-1 outline-primary  text-xs items-center justify-center text-center w-full bg-secondary/80" @click="windowLayoutThree()">
-            <span class="bg-secondary/30 flex justify-center items-center h-6 w-[15%]" />
-            <span class="bg-primary/10 ring-1 ring-primary/40 text-primary flex justify-center items-center h-6 w-[70%]">70%</span>
-            <span class="bg-secondary/30 flex justify-center items-center h-6 w-[15%]" />
+            <span class="bg-secondary/30 flex justify-center items-center h-6 w-[30%]" />
+            <span class="bg-primary/10 ring-1 ring-primary/40 text-primary flex justify-center items-center h-6 w-[65%]">65%</span>
+            <span class="bg-secondary/30 flex justify-center items-center h-6 w-[5%]" />
           </button>
         </SidebarSecondary>
       </SplitterPanel>

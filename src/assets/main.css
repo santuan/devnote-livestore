@@ -609,7 +609,7 @@ html {
 button {
   @apply outline-primary focus-visible:outline-2 focus-visible:-outline-offset-2 ring-0;
   @apply hover:outline-2 hover:-outline-offset-2;
-  @apply active:scale-[.985] duration-150 transition-transform
+  @apply active:scale-[.985] active:translate-y-[.05rem] duration-150 transition-transform
   /* @apply hover:z-10; */
 }
 
