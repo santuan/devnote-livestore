@@ -2,15 +2,16 @@
 import type { Editor } from '@tiptap/vue-3'
 import type { Ref } from 'vue'
 import NumberFlow from '@number-flow/vue'
+import { useStorage } from '@vueuse/core'
 import { ChevronRight } from 'lucide-vue-next'
-import { computed, inject, shallowRef } from 'vue'
+import { computed, inject } from 'vue'
 import { useI18n } from 'vue-i18n'
 
 const { t } = useI18n()
 
 const editor = inject('content') as Ref<Editor>
 
-const showContentAnalysis = shallowRef(true)
+const showContentAnalysis = useStorage('show_content_analysis', true)
 
 const contentAnalysis = computed(() => {
   if (!editor.value) {

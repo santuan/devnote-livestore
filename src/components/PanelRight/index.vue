@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import type { Ref } from 'vue'
+import { useStorage } from '@vueuse/core'
 import { X } from 'lucide-vue-next'
 import {
   TabsContent,
@@ -25,6 +26,8 @@ const emit = defineEmits<{
   (e: 'focusModeOn'): void
 }>()
 const { t } = useI18n()
+
+const sidetabTab = useStorage('values', 'tab1')
 
 const editable_id = inject('editable_id') as Ref<string | null>
 </script>
@@ -54,7 +57,7 @@ const editable_id = inject('editable_id') as Ref<string | null>
     <div
       class="p-px max-h-[calc(100vh-2.5rem)] min-h-[calc(100vh-2.5rem)] bg-primary/5"
     >
-      <TabsRoot class="flex flex-col w-full" default-value="tab1">
+      <TabsRoot v-model="sidetabTab" class="flex flex-col w-full" default-value="tab1">
         <TabsList
           class="relative shrink-0 flex justify-start border-b border-transparent"
           aria-label="Manage your account"
@@ -93,7 +96,9 @@ const editable_id = inject('editable_id') as Ref<string | null>
             @collapse-secondary-sidebar="emit('collapseSecondarySidebar')"
             @focus-mode-on="emit('focusModeOn')"
             @toggle-editable="emit('toggleEditable')"
-          />
+          >
+            <slot />
+          </SidebarSettings>
         </TabsContent>
       </TabsRoot>
     </div>

@@ -1,15 +1,16 @@
 <script setup lang="ts">
 import type { Editor } from '@tiptap/core'
 import type { Ref } from 'vue'
+import { useStorage } from '@vueuse/core'
 import { ChevronRight } from 'lucide-vue-next'
-import { inject, shallowRef } from 'vue'
+import { inject } from 'vue'
 import { useI18n } from 'vue-i18n'
 import EditorToc from '../Tiptap/TableOfContents/EditorToc.vue'
 
 const { t } = useI18n()
 const editor = inject('content') as Ref<Editor>
 const toc = inject('toc') as Ref<any>
-const showOnlyHeadings = shallowRef(true)
+const showOnlyHeadings = useStorage('show_only_headings', true)
 </script>
 
 <template>

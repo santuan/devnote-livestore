@@ -1,6 +1,6 @@
 <script setup lang="ts">
+import { useStorage } from '@vueuse/core'
 import { ChevronRight } from 'lucide-vue-next'
-import { shallowRef } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useClientDocument } from 'vue-livestore'
 import { tables } from '@/livestore/schema'
@@ -21,8 +21,8 @@ function toggle_show_documents() {
   showDocuments.value = !showDocuments.value
 }
 
-const showSettings = shallowRef(true)
-const showPerspective = shallowRef(true)
+const showSettings = useStorage('show_settings', true)
+const showPerspective = useStorage('show_perspective', true)
 </script>
 
 <template>
@@ -96,6 +96,7 @@ const showPerspective = shallowRef(true)
       >
         <span>Focus</span>
       </button>
+      <slot />
     </div>
   </div>
 </template>

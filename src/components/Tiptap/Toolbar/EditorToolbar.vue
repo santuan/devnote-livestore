@@ -1,9 +1,10 @@
 <script setup lang="ts">
 import type { Editor } from '@tiptap/core'
 import type { Ref } from 'vue'
+import { useStorage } from '@vueuse/core'
 import { ChevronRight } from 'lucide-vue-next'
 import { ToolbarRoot, ToolbarToggleGroup } from 'reka-ui'
-import { inject, shallowRef } from 'vue'
+import { inject } from 'vue'
 import { useI18n } from 'vue-i18n'
 import ToolbarCharacters from './ToolbarCharacters.vue'
 import ToolbarClear from './ToolbarClear.vue'
@@ -23,7 +24,7 @@ import ToolbarUndo from './ToolbarUndo.vue'
 const { t } = useI18n()
 const editor = inject('content') as Ref<Editor>
 
-const showToolbar = shallowRef(true)
+const showToolbar = useStorage('show_toolbar', true)
 </script>
 
 <template>
@@ -44,7 +45,7 @@ const showToolbar = shallowRef(true)
     </button>
     <div
       v-if="showToolbar"
-      class="relative py-2 px-1 grid w-full max-w-full mx-auto control-group focus-visible:ring-2 focus-visible:ring-primary"
+      class="relative  px-1 grid w-full max-w-full mx-auto control-group focus-visible:ring-2 focus-visible:ring-primary"
     >
       <ToolbarRoot v-if="editor" class="toolbar">
         <ToolbarToggleGroup class="ToolbarToggleGroup">
