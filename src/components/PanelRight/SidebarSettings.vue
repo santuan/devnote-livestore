@@ -21,8 +21,8 @@ function toggle_show_documents() {
   showDocuments.value = !showDocuments.value
 }
 
-const showSettings = shallowRef(false)
-const showPerspective = shallowRef(false)
+const showSettings = shallowRef(true)
+const showPerspective = shallowRef(true)
 </script>
 
 <template>

@@ -27,7 +27,7 @@ const showToolbar = shallowRef(true)
 </script>
 
 <template>
-  <div class="py-1 z-10 relative bg-background print:hidden">
+  <div class=" z-10 relative bg-background print:hidden">
     <button
       class="flex pl-1 pr-2 w-full h-10 text-left items-center justify-between gap-2"
       @click="showToolbar = !showToolbar"
