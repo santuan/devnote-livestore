@@ -71,26 +71,37 @@ const editable_id = inject('editable_id') as Ref<string | null>
             class="bg-secondary px-3 h-8 items-center justify-center text-xs leading-none text-primary select-none opacity-50 data-[state=active]:opacity-100 hover:text-primary data-[state=active]:font-bold data-[state=active]:text-primary outline-none cursor-default focus-visible:relative focus-visible:shadow focus-visible:shadow-primary"
             value="tab1"
           >
-            {{ t("leva.document") }}
+            Editor
           </TabsTrigger>
           <TabsTrigger
             class="bg-secondary px-3 h-8 items-center justify-center text-xs leading-none text-primary select-none opacity-50 data-[state=active]:opacity-100 hover:text-primary data-[state=active]:font-bold data-[state=active]:text-primary outline-none cursor-default focus-visible:relative focus-visible:shadow focus-visible:shadow-primary"
             value="tab2"
           >
+            {{ t("leva.document") }}
+          </TabsTrigger>
+          <TabsTrigger
+            class="bg-secondary px-3 h-8 items-center justify-center text-xs leading-none text-primary select-none opacity-50 data-[state=active]:opacity-100 hover:text-primary data-[state=active]:font-bold data-[state=active]:text-primary outline-none cursor-default focus-visible:relative focus-visible:shadow focus-visible:shadow-primary"
+            value="tab3"
+          >
             {{ t("leva.settings") }}
           </TabsTrigger>
         </TabsList>
         <TabsContent
-          class="grow bg-secondary outline-none focus:shadow-focus:shadow-primary"
+          class="grow bg-secondary outline-none pt-0.5 focus:shadow-focus:shadow-primary"
           value="tab1"
         >
           <EditorToolbar />
+        </TabsContent>
+        <TabsContent
+          class="grow bg-secondary outline-none pt-0.5 focus:shadow-focus:shadow-primary"
+          value="tab2"
+        >
           <ContentAnalysis />
           <TableOfContent />
         </TabsContent>
         <TabsContent
-          class="grow bg-secondary outline-none focus:shadow focus:shadow-primary"
-          value="tab2"
+          class="grow bg-secondary outline-none pt-0.5 focus:shadow focus:shadow-primary"
+          value="tab3"
         >
           <SidebarSettings
             @collapse-secondary-sidebar="emit('collapseSecondarySidebar')"

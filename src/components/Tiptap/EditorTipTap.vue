@@ -35,7 +35,6 @@ import Text from '@tiptap/extension-text'
 import TextAlign from '@tiptap/extension-text-align'
 import { TextStyleKit } from '@tiptap/extension-text-style'
 import Typography from '@tiptap/extension-typography'
-
 import Underline from '@tiptap/extension-underline'
 import Youtube from '@tiptap/extension-youtube'
 import { CharacterCount, Gapcursor, Placeholder } from '@tiptap/extensions'
@@ -214,6 +213,23 @@ onMounted(() => {
         },
       }),
       CodeBlockShiki.extend({
+        addAttributes() {
+          return {
+            ...this.parent?.(),
+            title: {
+              default: '',
+              parseHTML: element => element.getAttribute('data-title'),
+              renderHTML: (attributes) => {
+                if (!attributes.title) {
+                  return {}
+                }
+                return {
+                  'data-title': attributes.title,
+                }
+              },
+            },
+          }
+        },
         addNodeView() {
           return VueNodeViewRenderer(EditorCodeBlock)
         },

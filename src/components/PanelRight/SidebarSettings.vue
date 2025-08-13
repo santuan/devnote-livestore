@@ -28,7 +28,7 @@ const showPerspective = useStorage('show_perspective', true)
 <template>
   <div class="bg-background">
     <button
-      class="flex pl-1 pr-2 w-full h-10 text-left items-center justify-start gap-2"
+      class="flex pl-1 pr-2 w-full h-8 text-left items-center justify-start gap-2"
       @click="showSettings = !showSettings"
     >
       <ChevronRight
@@ -48,12 +48,12 @@ const showPerspective = useStorage('show_perspective', true)
         <span>{{ t("settings.theme") }}</span>
         <ToggleTheme />
       </div>
-      <DatabaseSettings class="@xs:col-span-3" />
     </div>
   </div>
+  <DatabaseSettings class="@xs:col-span-3" />
   <div class="bg-background">
     <button
-      class="flex pl-1 pr-2 w-full h-10 text-left items-center justify-start gap-2"
+      class="flex pl-1 pr-2 w-full h-8 text-left items-center justify-start gap-2"
       @click="showPerspective = !showPerspective"
     >
       <ChevronRight
@@ -66,7 +66,7 @@ const showPerspective = useStorage('show_perspective', true)
     </button>
     <div
       v-show="showPerspective"
-      class="bg-background p-2 @xs:pl-6 gap-3 grid @xs:grid-cols-3"
+      class="bg-background p-2 @xs:pl-6 gap-3 grid @xs:grid-cols-5"
     >
       <button
         :class="
@@ -74,13 +74,13 @@ const showPerspective = useStorage('show_perspective', true)
             ? 'bg-primary text-primary-foreground border-primary'
             : 'bg-secondary/80'
         "
-        class="flex gap-2 items-center p-2 justify-center w-full"
+        class="flex gap-2 items-center p-1 justify-center w-full"
         @click="toggle_show_documents"
       >
         <span>{{ t("commandBar.focusSidebar") }}</span>
       </button>
       <button
-        class="flex gap-2 items-center p-2 justify-center w-full"
+        class="flex gap-2 items-center p-1 justify-center w-full"
         :class="
           editable
             ? 'bg-primary text-primary-foreground border-primary'
@@ -91,7 +91,7 @@ const showPerspective = useStorage('show_perspective', true)
         <span>{{ t("verb.edit") }}</span>
       </button>
       <button
-        class="flex gap-2 items-center p-2 justify-center text-center w-full bg-secondary/80"
+        class="flex gap-2 items-center p-1 justify-center text-center w-full bg-secondary/80"
         @click="emit('focusModeOn')"
       >
         <span>Focus</span>

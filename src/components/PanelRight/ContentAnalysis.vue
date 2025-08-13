@@ -66,7 +66,7 @@ const contentAnalysis = computed(() => {
   <div>
     <div class="w-full bg-background relative">
       <button
-        class="flex pl-1 pr-2 w-full h-10 text-left items-center justify-between gap-2"
+        class="flex pl-1 pr-2 w-full h-8 text-left items-center justify-between gap-2"
         @click="showContentAnalysis = !showContentAnalysis"
       >
         <div class="flex items-center justify-start gap-2">

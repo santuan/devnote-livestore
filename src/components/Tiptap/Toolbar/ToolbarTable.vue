@@ -1,14 +1,12 @@
 <script setup lang="ts">
 import type { Editor } from '@tiptap/core'
 import type { Ref } from 'vue'
-import { Table } from 'lucide-vue-next'
 
-import { DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuPortal, DropdownMenuRoot, DropdownMenuSeparator, DropdownMenuTrigger, ToolbarButton } from 'reka-ui'
+import { Grid3x2, Minus, Plus } from 'lucide-vue-next'
 
+import { ToolbarButton } from 'reka-ui'
 import { inject } from 'vue'
 import { useI18n } from 'vue-i18n'
-
-import Tooltip from '@/components/Shared/Tooltip.vue'
 
 const editor = inject('content') as Ref<Editor>
 
@@ -16,119 +14,123 @@ const { t } = useI18n()
 </script>
 
 <template>
-  <DropdownMenuRoot>
-    <ToolbarButton as-child>
-      <DropdownMenuTrigger
-        class="group data-[state=open]:text-primary relative"
+  <div class="gap-1 flex-wrap w-full grid border border-secondary p-1">
+    <div class="flex pb-2 justify-between items-center w-full gap-2">
+      <ToolbarButton
+        class="cursor-default flex items-center @xs:min-w-24! border border-secondary px-2 justify-center h-7 gap-2 outline-hidden focus-visible:bg-primary/30 text-xs! hover:bg-primary/24"
+        @click="
+          editor
+            .chain()
+            .focus()
+            .insertTable({ rows: 3, cols: 3, withHeaderRow: true })
+            .run()
+        "
       >
-        <Tooltip
-          :name="`${t('toolbar.table')} (experimental)`"
-          side="bottom"
-          align="end"
-          shortcut="Right click on editor"
-        >
-          <span
-            class="flex items-center interactive justify-center outline-hidden interactive size-8 focus-visible:border-primary border-secondary"
-          >
-            <Table class="size-4 shrink-0" />
-          </span>
-          <span class="sr-only">{{ t("toolbar.table") }}</span>
-        </Tooltip>
-      </DropdownMenuTrigger>
-    </ToolbarButton>
-    <DropdownMenuPortal>
-      <DropdownMenuContent
-        side="bottom"
-        :side-offset="6"
-        class="z-10 text-foreground h-40 lg:h-[25rem]  overflow-y-auto scrollbar scrollbar-thumb-primary scrollbar-track-secondary font-mono grid p-1.5 text-xs border w-60 bg-background border-primary"
+        <span class="sr-only">{{ t("toolbar.insertTable") }}</span>
+        <Plus class="size-4" />
+        <span class="@xs:inline-flex hidden">Add</span>
+      </ToolbarButton>
+      <p class="text-center justify-center items-center w-full flex text-xs">
+        <span>Table</span>
+      </p>
+      <ToolbarButton
+        class="cursor-default flex items-center @xs:min-w-24! border border-secondary px-2 justify-center h-7 gap-2 outline-hidden focus-visible:bg-primary/30 text-xs! hover:bg-primary/20"
+        :disabled="!editor.can().deleteTable()"
+        @click="editor.chain().focus().deleteTable().run()"
       >
-        <DropdownMenuLabel
-          class="cursor-default flex items-center justify-between gap-2 p-2 pr-3 outline-hidden text-xs text-primary"
+        <span class="sr-only">{{ t("toolbar.deleteTable") }}</span>
+        <Minus class="size-4" />
+
+        <span class="@xs:inline-flex hidden">Delete</span>
+      </ToolbarButton>
+    </div>
+    <div
+      class="grid grid-cols-3 mt-2"
+      :class="editor.can().deleteTable() ? '' : 'opacity-10'"
+    >
+      <div />
+      <div class="flex justify-center items-center">
+        <ToolbarButton
+          class="interactive"
+          :disabled="!editor.can().addRowBefore()"
+          @click="editor.chain().focus().addRowBefore().run()"
         >
-          {{ t("toolbar.table") }} (experimental)
-        </DropdownMenuLabel>
-        <DropdownMenuItem
-          class="cursor-default flex items-center justify-between gap-2 p-2 pr-3 outline-hidden focus-visible:bg-primary/30 text-xs hover:bg-primary/20"
-          @click="
-            editor.chain().focus().insertTable({ rows: 3, cols: 3, withHeaderRow: true }).run()
-          "
-        >
-          {{ t("toolbar.insertTable") }}
-        </DropdownMenuItem>
-        <DropdownMenuItem
-          class="cursor-default flex items-center justify-between gap-2 p-2 pr-3 outline-hidden focus-visible:bg-primary/30 text-xs hover:bg-primary/20"
+          <Plus class="size-6" />
+          <span class="sr-only">{{ t("toolbar.addRowBefore") }}</span>
+        </ToolbarButton>
+      </div>
+      <div />
+      <div class="flex justify-end items-center">
+        <ToolbarButton
+          class="interactive"
           :disabled="!editor.can().addColumnBefore()"
           @click="editor.chain().focus().addColumnBefore().run()"
         >
-          {{ t("toolbar.addColumnBefore") }}
-        </DropdownMenuItem>
-        <DropdownMenuItem
-          class="cursor-default flex items-center justify-between gap-2 p-2 pr-3 outline-hidden focus-visible:bg-primary/30 text-xs hover:bg-primary/20"
+          <Plus class="size-6" />
+          <span class="sr-only">{{ t("toolbar.addColumnBefore") }}</span>
+        </ToolbarButton>
+      </div>
+      <div
+        class="flex justify-center h-20 border-1 border-secondary items-center"
+      >
+        <Grid3x2 class="size-12!" :stroke-width="0.3" />
+      </div>
+      <div class="flex justify-start items-center">
+        <ToolbarButton
+          class="interactive"
           :disabled="!editor.can().addColumnAfter()"
           @click="editor.chain().focus().addColumnAfter().run()"
         >
-          {{ t("toolbar.addColumnAfter") }}
-        </DropdownMenuItem>
-        <DropdownMenuItem
-          class="cursor-default flex items-center justify-between gap-2 p-2 pr-3 outline-hidden focus-visible:bg-primary/30 text-xs hover:bg-primary/20"
+          <Plus class="size-6" />
+          <span class="sr-only">{{ t("toolbar.addColumnAfter") }}</span>
+        </ToolbarButton>
+      </div>
+      <div />
+      <div class="flex justify-center items-center">
+        <ToolbarButton
+          class="interactive"
+          :disabled="!editor.can().addRowAfter()"
+          @click="editor.chain().focus().addRowAfter().run()"
+        >
+          <Plus class="size-6" />
+          <span class="sr-only">{{ t("toolbar.addRowAfter") }}</span>
+        </ToolbarButton>
+      </div>
+      <div />
+
+      <div
+        class="bg-secondary col-span-3 border border-secondary w-full mt-2 gap-px grid @sm:grid-cols-4 grid-cols-2"
+      >
+        <ToolbarButton
+          class="cursor-default bg-background text-pretty px-1 py-2 outline-hidden focus-visible:bg-primary/30 text-center hover:bg-primary/20"
           :disabled="!editor.can().deleteColumn()"
           @click="editor.chain().focus().deleteColumn().run()"
         >
           {{ t("toolbar.deleteColumn") }}
-        </DropdownMenuItem>
-        <DropdownMenuSeparator class="h-[0.0125rem] bg-secondary my-1" />
-        <DropdownMenuItem
-          class="cursor-default flex items-center justify-between gap-2 p-2 pr-3 outline-hidden focus-visible:bg-primary/30 text-xs hover:bg-primary/20"
-          :disabled="!editor.can().addRowBefore()"
-          @click="editor.chain().focus().addRowBefore().run()"
-        >
-          {{ t("toolbar.addRowBefore") }}
-        </DropdownMenuItem>
-        <DropdownMenuItem
-          class="cursor-default flex items-center justify-between gap-2 p-2 pr-3 outline-hidden focus-visible:bg-primary/30 text-xs hover:bg-primary/20"
-          :disabled="!editor.can().addRowAfter()"
-          @click="editor.chain().focus().addRowAfter().run()"
-        >
-          {{ t("toolbar.addRowAfter") }}
-        </DropdownMenuItem>
-        <DropdownMenuItem
-          class="cursor-default flex items-center justify-between gap-2 p-2 pr-3 outline-hidden focus-visible:bg-primary/30 text-xs hover:bg-primary/20"
+        </ToolbarButton>
+        <ToolbarButton
+          class="cursor-default bg-background text-pretty px-1 py-2 outline-hidden focus-visible:bg-primary/30 text-center hover:bg-primary/20"
           :disabled="!editor.can().deleteRow()"
           @click="editor.chain().focus().deleteRow().run()"
         >
           {{ t("toolbar.deleteRow") }}
-        </DropdownMenuItem>
-        <DropdownMenuSeparator class="h-[0.0125rem] bg-secondary my-1" />
-        <DropdownMenuItem
-          class="cursor-default flex items-center justify-between gap-2 p-2 pr-3 outline-hidden focus-visible:bg-primary/30 text-xs hover:bg-primary/20"
-          :disabled="!editor.can().deleteTable()"
-          @click="editor.chain().focus().deleteTable().run()"
-        >
-          {{ t("toolbar.deleteTable") }}
-        </DropdownMenuItem>
-        <DropdownMenuSeparator class="h-[0.0125rem] bg-secondary my-1" />
-        <DropdownMenuItem
-          class="cursor-default flex items-center justify-between gap-2 p-2 pr-3 outline-hidden focus-visible:bg-primary/30 text-xs hover:bg-primary/20"
+        </ToolbarButton>
+
+        <ToolbarButton
+          class="cursor-default bg-background text-pretty px-1 py-2 outline-hidden focus-visible:bg-primary/30 text-center hover:bg-primary/20"
           :disabled="!editor.can().mergeCells()"
           @click="editor.chain().focus().mergeCells().run()"
         >
           {{ t("toolbar.mergeCells") }}
-        </DropdownMenuItem>
-        <DropdownMenuItem
-          class="cursor-default flex items-center justify-between gap-2 p-2 pr-3 outline-hidden focus-visible:bg-primary/30 text-xs hover:bg-primary/20"
+        </ToolbarButton>
+        <ToolbarButton
+          class="cursor-default bg-background text-pretty px-1 py-2 outline-hidden focus-visible:bg-primary/30 text-center hover:bg-primary/20"
           :disabled="!editor.can().splitCell()"
           @click="editor.chain().focus().splitCell().run()"
         >
           {{ t("toolbar.splitCell") }}
-        </DropdownMenuItem>
-        <!-- <DropdownMenuItem
-          @click="editor.chain().focus().fixTables().run()"
-          class="cursor-default flex items-center justify-between gap-2 p-2 pr-3 outline-hidden focus-visible:bg-primary/30 text-xs hover:bg-primary/20"
-          :disabled="!editor.can().fixTables()"
-        >
-          Fix Tables
-        </DropdownMenuItem> -->
-      </DropdownMenuContent>
-    </DropdownMenuPortal>
-  </DropdownMenuRoot>
+        </ToolbarButton>
+      </div>
+    </div>
+  </div>
 </template>

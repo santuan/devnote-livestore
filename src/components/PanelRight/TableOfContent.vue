@@ -16,7 +16,7 @@ const showOnlyHeadings = useStorage('show_only_headings', true)
 <template>
   <div class="w-full text-xs bg-background relative">
     <button
-      class="flex pl-1 pr-2 w-full text-xs h-10 text-left items-center justify-between gap-2"
+      class="flex pl-1 pr-2 w-full text-xs h-8 text-left items-center justify-between gap-2"
       @click="showOnlyHeadings = !showOnlyHeadings"
     >
       <div class="flex items-center justify-start gap-2">

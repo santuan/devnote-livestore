@@ -108,6 +108,6 @@ const { t } = useI18n()
 .headingSelector {
   /* grid-column: 1 / 8; */
   @apply flex items-center text-xs! truncate justify-between! bg-background px-2;
-  @apply min-w-40! max-w-40! w-full hover:z-10;
+  @apply min-w-44 @xs:min-w-56! w-full hover:z-10;
 }
 </style>

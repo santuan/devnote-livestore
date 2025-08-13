@@ -108,7 +108,7 @@
 .tiptap h6 {
   @apply scroll-mt-8;
 }
-
+/* 
 .Tiptap-mathematics-editor {
   @apply bg-secondary text-foreground font-mono py-0.5 px-2 text-sm;
 }
@@ -121,7 +121,13 @@
 .Tiptap-mathematics-render {
   border-radius: 0.25rem;
   display: inline-block;
+} */
+
+.tiptap-mathematics-render {
+  font-family: KaTeX_Size2;
 }
+
+
 
 .tiptap table:first-of-type,
 .tiptap h1:first-of-type,

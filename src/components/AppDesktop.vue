@@ -334,6 +334,43 @@ whenever(magic_navigate_previous_document, (n) => {
   }
 })
 
+// Add these keyboard shortcut definitions after your existing magic key definitions
+
+const magic_window_layout_one = keys['ctrl+shift+alt+Digit1']
+whenever(magic_window_layout_one, (n) => {
+  if (n === true) {
+    windowLayoutOne()
+  }
+})
+
+const magic_window_layout_two = keys['ctrl+shift+alt+Digit4']
+whenever(magic_window_layout_two, (n) => {
+  if (n === true) {
+    windowLayoutTwo()
+  }
+})
+
+const magic_window_layout_three = keys['ctrl+shift+alt+Digit5']
+whenever(magic_window_layout_three, (n) => {
+  if (n === true) {
+    windowLayoutThree()
+  }
+})
+
+const magic_window_layout_four = keys['ctrl+shift+alt+Digit2']
+whenever(magic_window_layout_four, (n) => {
+  if (n === true) {
+    windowLayoutFour()
+  }
+})
+
+const magic_window_layout_five = keys['ctrl+shift+alt+Digit3']
+whenever(magic_window_layout_five, (n) => {
+  if (n === true) {
+    windowLayoutFive()
+  }
+})
+
 function navigateToNextDocument() {
   if (documents.value.length === 0)
     return
@@ -452,7 +489,7 @@ onMounted(() => {
         :min-size="20"
         :class="editable ? 'bg-secondary/20' : ''"
       >
-        <div class="relative px-2 flex flex-col gap-2 h-screen">
+        <div class="relative px-2 pt-px flex flex-col gap-2 h-screen">
           <input
             v-if="editable"
             ref="input_title"
@@ -512,7 +549,7 @@ onMounted(() => {
           @focus-mode-on="focusModeOn"
           @toggle-editable="toggle_editable"
         >
-          <h3 class="@xs:col-span-3">
+          <h3 class="@xs:col-span-5">
             Layout
           </h3>
           <button class="flex gap-px outline-1 outline-primary  text-xs items-center justify-center text-center w-full bg-secondary/80" @click="windowLayoutOne()">
@@ -531,7 +568,6 @@ onMounted(() => {
             <span class="bg-primary/10 ring-1 ring-primary/40 text-primary flex justify-center items-center h-6 w-[90%]">90%</span>
             <span class="bg-secondary/30 flex justify-center items-center h-6 w-[5%]" />
           </button>
-
           <button class="flex gap-px outline-1 outline-primary  text-xs items-center justify-center text-center w-full bg-secondary/80" @click="windowLayoutTwo()">
             <span class="bg-secondary/30 flex justify-center items-center h-6 w-[5%]" />
             <span class="bg-primary/10 ring-1 ring-primary/40 text-primary flex justify-center items-center h-6 w-[65%]">65%</span>

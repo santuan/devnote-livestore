@@ -1,8 +1,18 @@
 <script lang="ts">
 import { NodeViewContent, nodeViewProps, NodeViewWrapper } from '@tiptap/vue-3'
 import { useElementSize } from '@vueuse/core'
-import { Clipboard, ClipboardCheck, Maximize, Minimize2 } from 'lucide-vue-next'
-import { ScrollAreaRoot, ScrollAreaScrollbar, ScrollAreaThumb, ScrollAreaViewport } from 'reka-ui'
+import {
+  Clipboard,
+  ClipboardCheck,
+  Maximize,
+  Minimize2,
+} from 'lucide-vue-next'
+import {
+  ScrollAreaRoot,
+  ScrollAreaScrollbar,
+  ScrollAreaThumb,
+  ScrollAreaViewport,
+} from 'reka-ui'
 import { bundledLanguages } from 'shiki/bundle/full'
 import { shallowRef } from 'vue'
 import ListboxVirtual from '../Shared/ListboxVirtual.vue'
@@ -41,6 +51,8 @@ export default {
       copyText: 'Copy',
       copyTextError: false,
       showFullCode: false,
+      isEditingTitle: false, // Add this
+      titleInput: '', // Add this
     }
   },
 
@@ -51,6 +63,14 @@ export default {
       },
       set(language: any) {
         this.updateAttributes({ language })
+      },
+    },
+    codeTitle: {
+      get() {
+        return this.node.attrs.title || ''
+      },
+      set(title: string) {
+        this.updateAttributes({ title })
       },
     },
   },
@@ -89,20 +109,56 @@ export default {
         this.copyText = 'copy'
       }, 1000)
     },
+    startEditingTitle() {
+      this.isEditingTitle = true
+      this.titleInput = this.codeTitle
+      this.$nextTick(() => {
+        this.$refs.titleInput?.focus()
+      })
+    },
+
+    saveTitle() {
+      this.codeTitle = this.titleInput.trim()
+      this.isEditingTitle = false
+    },
+
+    cancelTitleEdit() {
+      this.isEditingTitle = false
+      this.titleInput = ''
+    },
+
+    handleTitleKeydown(event: KeyboardEvent) {
+      if (event.key === 'Enter') {
+        event.preventDefault()
+        this.saveTitle()
+      }
+      else if (event.key === 'Escape') {
+        event.preventDefault()
+        this.cancelTitleEdit()
+      }
+    },
   },
 }
 </script>
 
 <template>
   <NodeViewWrapper
-    class="code-block group  ring-1 ring-muted"
+    class="code-block group ring-1 ring-muted"
     spellcheck="false"
     :class="[
-      showFullCode ? 'absolute! bg-background z-[90] !my-0 left-0! min-h-screen inset-0!' : '',
+      showFullCode
+        ? 'fixed! pt-10 bg-background z-[90] !my-0 left-0! min-h-screen inset-0!'
+        : 'pt-10',
     ]"
   >
-    <ScrollAreaRoot class="w-full ScrollAreaRootCodeBlock h-full" style="--scrollbar-size: 10px">
-      <ScrollAreaViewport class="w-full" :class="showFullCode ? 'h-full' : 'max-h-[400px]'">
+    <ScrollAreaRoot
+      class="w-full ScrollAreaRootCodeBlock h-full"
+      style="--scrollbar-size: 10px"
+    >
+      <ScrollAreaViewport
+        class="w-full"
+        :class="showFullCode ? 'h-full' : 'max-h-[400px]'"
+      >
         <div ref="codeHeight" spellcheck="false">
           <pre><code class="text-xs leading-6 break-all"><NodeViewContent /></code></pre>
         </div>
@@ -116,10 +172,45 @@ export default {
         />
       </ScrollAreaScrollbar>
     </ScrollAreaRoot>
-    <div class=" absolute top-0 right-0">
+    <div class="absolute flex justify-between left-0 top-0 right-0">
+      <!-- Title Section -->
+      <div class="sticky left-0 top-0 font-mono w-64">
+        <div
+          v-if="codeTitle || isEditingTitle"
+          class="flex items-center w-full justify-between"
+        >
+          <!-- Title Display/Edit -->
+          <div class="flex-1 w-full min-w-0 p-1 pr-0">
+            <input
+              v-if="isEditingTitle"
+              ref="titleInput"
+              v-model="titleInput"
+              class="w-full h-8 bg-background focus:outline-primary font-normal px-1 text-xs border-none outline-1 focus:outline-1 text-primary"
+              placeholder="Filename..."
+              @blur="saveTitle"
+              @keydown="handleTitleKeydown"
+            >
+            <button
+              v-if="!isEditingTitle"
+              class="text-xs font-normal h-8 px-1 hover:text-foreground transition-colors cursor-pointer truncate block w-full text-left"
+              @click="startEditingTitle"
+            >
+              {{ codeTitle }}
+            </button>
+          </div>
+        </div>
+        <button
+          v-else
+          class="absolute top-0 w-64 text-left font-normal left-0 text-xs h-8 min-w-20 m-1 p-1 text-muted-foreground hover:text-foreground transition-colors bg-background py-1 border border-muted z-10"
+          @click="startEditingTitle"
+        >
+          Filename...
+        </button>
+      </div>
+
       <div
-        class="sticky codeBlockActions top-0 right-0  flex items-center duration-100 justify-end gap-1  translate-y-1"
-        :class="showFullCode ? '-translate-x-3 z-[91]' : '-translate-x-2 z-30'"
+        class="sticky w-64 codeBlockActions p-1 top-0 right-0 translate-x-0! flex items-center duration-100 justify-end gap-1"
+        :class="showFullCode ? 'z-[91]' : 'z-30'"
       >
         <Transition mode="out-in">
           <span
@@ -132,14 +223,18 @@ export default {
         <ListboxVirtual v-model="selectedLanguage" :items="languages" />
         <button
           class="print:hidden flex items-center justify-center size-8 bg-secondary shrink-0"
-          :class="copyText === 'Copied' ? 'bg-primary!' : ''" @click="copyToClipboard()"
+          :class="copyText === 'Copied' ? 'bg-primary!' : ''"
+          @click="copyToClipboard()"
         >
-          <ClipboardCheck v-show="copyText === 'Copied'" class="size-5 text-primary-foreground" />
+          <ClipboardCheck
+            v-show="copyText === 'Copied'"
+            class="size-5 text-primary-foreground"
+          />
           <Clipboard v-show="copyText !== 'Copied'" class="size-5" />
           <span class="sr-only">Copy to clipboard</span>
         </button>
         <button
-          v-if="height > 600" class="flex items-center justify-center duration-100 size-8 bg-secondary shrink-0"
+          class="flex items-center justify-center duration-100 size-8 bg-secondary shrink-0"
           @click="showFullCode = !showFullCode"
         >
           <Minimize2 v-if="showFullCode" class="size-5 pointer-events-none" />
@@ -166,8 +261,8 @@ export default {
   @apply border border-primary/50;
 }
 
-.tiptap .code-block .codeBlockActions  {
-    @apply  -translate-x-3
+.tiptap .code-block .codeBlockActions {
+  @apply -translate-x-3;
 }
 
 .tiptap .code-block [data-reka-scroll-area-viewport]:focus,

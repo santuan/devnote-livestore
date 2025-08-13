@@ -19,7 +19,7 @@ const { t } = useI18n()
     <ToolbarButton
       :disabled="!editor.can().chain().focus().toggleBold().run()"
       :class="{ 'is-active': editor.isActive('bold') }"
-      class="interactive"
+      class="interactive "
       :value="t('toolbar.bold')"
       @click="editor.chain().focus().toggleBold().run()"
     >
@@ -31,7 +31,7 @@ const { t } = useI18n()
     <ToolbarButton
       :disabled="!editor.can().chain().focus().toggleItalic().run()"
       :class="{ 'is-active': editor.isActive('italic') }"
-      class="interactive"
+      class="interactive "
       :value="t('toolbar.italic')"
       @click="editor.chain().focus().toggleItalic().run()"
     >
