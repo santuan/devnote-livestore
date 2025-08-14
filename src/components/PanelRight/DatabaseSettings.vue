@@ -11,7 +11,7 @@ const { t } = useI18n()
 <template>
   <div class="text-xs bg-background">
     <button
-      class="flex pl-1 pr-2 w-full h-10  text-left items-center justify-between gap-2"
+      class="flex pl-1 pr-2 w-full h-8  text-left items-center justify-between gap-2"
       @click="showDBSettings = !showDBSettings"
     >
       <div class="flex items-center justify-start gap-2">
@@ -23,9 +23,9 @@ const { t } = useI18n()
     </button>
     <div
       v-show="showDBSettings"
-      class="flex  divide-y divide-muted text-xs justify-start items-start p-3 gap-2 flex-col"
+      class="flex pl-6 pb-3 pr-1 mt-2 text-xs justify-start items-start gap-2 flex-col"
     >
-      <div class="flex gap-2 items-center justify-between w-full">
+      <div class="flex ring ring-destructive pl-1 gap-2 items-center justify-between w-full">
         <span>{{ t("editor.deleteAll") }}</span>
         <ButtonDeleteAllDocument />
       </div>

@@ -64,7 +64,7 @@ const contentAnalysis = computed(() => {
 
 <template>
   <div>
-    <div class="w-full bg-background relative">
+    <div class="w-full  bg-background relative">
       <button
         class="flex pl-1 pr-2 w-full h-8 text-left items-center justify-between gap-2"
         @click="showContentAnalysis = !showContentAnalysis"
@@ -81,7 +81,7 @@ const contentAnalysis = computed(() => {
       </button>
       <div
         v-if="showContentAnalysis"
-        class="flex px-1 flex-col @xs:grid @xs:grid-cols-2 pl-2 @md:grid-cols-4 mt-1 gap-2 text-xs pb-3 pt-2"
+        class="flex px-1 flex-col @xs:grid @xs:grid-cols-2 pl-3 @xs:pl-6 @md:grid-cols-4 mt-1 gap-2 text-xs pb-3 pt-2"
       >
         <div class="flex flex-col">
           <span class="opacity-50">{{ t("leva.codeBlocks") }}:</span>

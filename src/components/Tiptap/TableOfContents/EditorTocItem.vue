@@ -42,23 +42,23 @@ export default defineComponent({
       'is-active': item.isActive && !item.isScrolledOver,
     }"
     :style="{ '--level': item.originalLevel }"
-    class="flex items-center justify-start"
+    class="flex items-center  justify-start"
   >
     <span
-      class="h-6 border-l border-transparent duration-300"
+      class="h-7 w-[9px] border-r-2 ml-0.5 border-transparent duration-300"
       :class="{
         '!border-primary': item.isScrolledOver,
       }"
     />
     <a
-      class="flex items-center justify-between w-full gap-2 p-1 truncate transition-colors duration-150 rounded hover:bg-secondary/50 focus:outline-none cursor-default focus:ring-1 focus:ring-primary"
+      class="flex items-center justify-between w-full gap-2 p-1 truncate transition-colors duration-150 hover:bg-secondary/50 focus:outline-none cursor-default focus:ring-1 focus:ring-primary"
       :class="[getHeadingClass(item.originalLevel)]"
       :href="`#${item.id}`"
       :data-item-index="item.itemIndex"
       @click.prevent="onItemClick"
     >
       <span
-        class="line-clamp-1 opacity-60 hover:opacity-100 w-full text-left text-xs"
+        class="line-clamp-1 pl-3 opacity-60 hover:opacity-100 w-full text-left text-xs"
         :class="{
           'opacity-100': item.isScrolledOver,
         }"

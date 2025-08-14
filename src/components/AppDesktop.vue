@@ -12,6 +12,7 @@ import { Eye, PanelRightOpen } from 'lucide-vue-next'
 import { SplitterGroup, SplitterPanel, SplitterResizeHandle } from 'reka-ui'
 import {
   computed,
+  onBeforeUnmount,
   onMounted,
   provide,
   shallowRef,
@@ -48,6 +49,9 @@ const sidebar_documents_splitter_ref = shallowRef()
 const sidebar_secondary_splitter_ref = shallowRef()
 const resize = shallowRef(0)
 const layout = shallowRef<number[]>([0, 0])
+const isShiftPressed = shallowRef(false)
+const isLeftDragging = shallowRef(false)
+const isRightDragging = shallowRef(false)
 
 provide('content', editor_content)
 provide('toc', editor_toc)
@@ -56,7 +60,8 @@ provide('editable_id', editable_id)
 const { store } = useStore()
 const uiState$ = queryDb(tables.uiState.get(), { label: 'uiState' })
 
-const { newDocumentTitle, newDocumentContent, showDocuments, editable } = useClientDocument(tables.uiState)
+const { newDocumentTitle, newDocumentContent, showDocuments, editable }
+  = useClientDocument(tables.uiState)
 
 const isEditing = computed(() => editable_id.value.length === 0)
 
@@ -233,6 +238,36 @@ function windowLayoutFive() {
   sidebar_secondary_splitter_ref.value.resize(5)
 }
 
+function handleLayoutChange(newLayout: number[]) {
+  layout.value = newLayout
+
+  if (isShiftPressed.value && newLayout.length >= 3) {
+    const leftPanelSize = newLayout[0]
+    const rightPanelSize = newLayout[2]
+
+    // Determinar cuál panel cambió más recientemente comparando con el layout anterior
+    // y sincronizar el otro panel
+    if (leftPanelSize !== rightPanelSize) {
+      // Usar un pequeño delay para evitar bucles infinitos
+      if (isShiftPressed.value) {
+        // Calcular el promedio para mantener simetría
+        if (isRightDragging.value === true) {
+          sidebar_documents_splitter_ref.value?.resize(rightPanelSize)
+          console.log(
+            `shift  right drag${isRightDragging.value}${isLeftDragging.value}`,
+          )
+        }
+        else {
+          console.log(
+            `shift  left drag${isRightDragging.value}${isLeftDragging.value}`,
+          )
+          sidebar_secondary_splitter_ref.value?.resize(leftPanelSize)
+        }
+      }
+    }
+  }
+}
+
 function collapseSecondarySidebar() {
   if (!sidebar_secondary_splitter_ref.value)
     return
@@ -375,7 +410,9 @@ function navigateToNextDocument() {
   if (documents.value.length === 0)
     return
 
-  const currentIndex = documents.value.findIndex(doc => doc.id === editable_id.value)
+  const currentIndex = documents.value.findIndex(
+    doc => doc.id === editable_id.value,
+  )
   let nextIndex = 0
 
   if (currentIndex !== -1) {
@@ -392,11 +429,14 @@ function navigateToPreviousDocument() {
   if (documents.value.length === 0)
     return
 
-  const currentIndex = documents.value.findIndex(doc => doc.id === editable_id.value)
+  const currentIndex = documents.value.findIndex(
+    doc => doc.id === editable_id.value,
+  )
   let previousIndex = documents.value.length - 1
 
   if (currentIndex !== -1) {
-    previousIndex = currentIndex === 0 ? documents.value.length - 1 : currentIndex - 1
+    previousIndex
+      = currentIndex === 0 ? documents.value.length - 1 : currentIndex - 1
   }
 
   const previousDocument = documents.value[previousIndex]
@@ -409,6 +449,28 @@ onMounted(() => {
   useColorMode()
   resetStore()
   useToggleColorTheme(colorTheme.value)
+
+  // Detectar cuando se presiona/suelta Shift
+  const handleKeyDown = (event: KeyboardEvent) => {
+    if (event.key === 'Shift') {
+      isShiftPressed.value = true
+    }
+  }
+
+  const handleKeyUp = (event: KeyboardEvent) => {
+    if (event.key === 'Shift') {
+      isShiftPressed.value = false
+    }
+  }
+
+  window.addEventListener('keydown', handleKeyDown)
+  window.addEventListener('keyup', handleKeyUp)
+
+  // Limpiar event listeners al desmontar
+  onBeforeUnmount(() => {
+    window.removeEventListener('keydown', handleKeyDown)
+    window.removeEventListener('keyup', handleKeyUp)
+  })
 })
 </script>
 
@@ -422,7 +484,7 @@ onMounted(() => {
       id="splitter-group-1"
       direction="horizontal"
       auto-save-id="app-desktop"
-      @layout="layout = $event"
+      @layout="handleLayoutChange"
     >
       <SplitterPanel
         id="splitter-group-1-panel-1"
@@ -454,15 +516,9 @@ onMounted(() => {
             focus_mode ? 'opacity-0 pointer-events-none' : '',
           ]"
         >
-          <DocumentList
-            :count="documents_count"
-            @open="toggle_documents"
-          >
+          <DocumentList :count="documents_count" @open="toggle_documents">
             <template #top>
-              <ButtonNewDocument
-                :is-editing
-                @click="resetStore"
-              />
+              <ButtonNewDocument :is-editing @click="resetStore" />
             </template>
             <template #list>
               <DocumentItem
@@ -477,12 +533,18 @@ onMounted(() => {
             </template>
           </DocumentList>
         </div>
-        <button v-if="showDocuments" class="fixed inset-0 z-[70] bg-background/80 !outline-0 md:hidden" @click="hide_panel_left" />
+        <button
+          v-if="showDocuments"
+          class="fixed inset-0 z-[70] bg-background/80 !outline-0 md:hidden"
+          @click="hide_panel_left"
+        />
       </SplitterPanel>
       <SplitterResizeHandle
         id="splitter-group-1-resize-handle-1"
         class="resize-handle hidden md:flex"
+        @dragging="isLeftDragging = $event"
       />
+
       <SplitterPanel
         id="splitter-group-1-panel-2"
         class="min-w-1"
@@ -490,20 +552,21 @@ onMounted(() => {
         :class="editable ? 'bg-secondary/20' : ''"
       >
         <div class="relative px-2 pt-px flex flex-col gap-2 h-screen">
-          <input
-            v-if="editable"
-            ref="input_title"
-            v-model="newDocumentTitle"
-            :placeholder="t('editor.untitled')"
-            type="text"
-            class="outline outline-primary rounded-none!  px-2 py-1 min-h-8 w-full"
-            @keyup.enter="createDocument"
-          >
           <Editor
-            :key="newDocumentTitle"
+            :key="editable_id"
             v-model="newDocumentContent"
             :editor="editor_content"
-          />
+          >
+            <input
+              v-if="editable"
+              ref="input_title"
+              v-model="newDocumentTitle"
+              :placeholder="t('editor.untitled')"
+              type="text"
+              class="outline outline-primary  bg-background rounded-none! px-2 py-1 min-h-8 w-full"
+              @keyup.enter="createDocument"
+            >
+          </Editor>
           <button
             v-show="isEditing"
             v-if="editable"
@@ -517,7 +580,9 @@ onMounted(() => {
       <SplitterResizeHandle
         id="splitter-group-1-resize-handle-2"
         class="resize-handle"
+        @dragging="isRightDragging = $event"
       />
+
       <SplitterPanel
         id="splitter-group-1-panel-3"
         ref="sidebar_secondary_splitter_ref"
@@ -552,31 +617,76 @@ onMounted(() => {
           <h3 class="@xs:col-span-5">
             Layout
           </h3>
-          <button class="flex gap-px outline-1 outline-primary  text-xs items-center justify-center text-center w-full bg-secondary/80" @click="windowLayoutOne()">
-            <span class="bg-secondary/30 flex justify-center items-center h-6 w-[30%]" />
-            <span class="bg-primary/10 ring-1 ring-primary/40 text-primary flex justify-center items-center h-6 w-[40%]">40%</span>
-            <span class="bg-secondary/30 flex justify-center items-center h-6 w-[30%]" />
+          <button
+            class="flex gap-px outline-1 outline-primary text-xs items-center justify-center text-center w-full bg-secondary/80"
+            @click="windowLayoutOne()"
+          >
+            <span
+              class="bg-secondary/30 flex justify-center items-center h-6 w-[30%]"
+            />
+            <span
+              class="bg-primary/10 ring-1 ring-primary/40 text-primary flex justify-center items-center h-6 w-[40%]"
+            >40%</span>
+            <span
+              class="bg-secondary/30 flex justify-center items-center h-6 w-[30%]"
+            />
           </button>
 
-          <button class="flex gap-px outline-1 outline-primary  text-xs items-center justify-center text-center w-full bg-secondary/80" @click="windowLayoutFour()">
-            <span class="bg-secondary/30 flex justify-center items-center h-6 w-[15%]" />
-            <span class="bg-primary/10 ring-1 ring-primary/40 text-primary flex justify-center items-center h-6 w-[70%]">70%</span>
-            <span class="bg-secondary/30 flex justify-center items-center h-6 w-[15%]" />
+          <button
+            class="flex gap-px outline-1 outline-primary text-xs items-center justify-center text-center w-full bg-secondary/80"
+            @click="windowLayoutFour()"
+          >
+            <span
+              class="bg-secondary/30 flex justify-center items-center h-6 w-[15%]"
+            />
+            <span
+              class="bg-primary/10 ring-1 ring-primary/40 text-primary flex justify-center items-center h-6 w-[70%]"
+            >70%</span>
+            <span
+              class="bg-secondary/30 flex justify-center items-center h-6 w-[15%]"
+            />
           </button>
-          <button class="flex gap-px outline-1 outline-primary  text-xs items-center justify-center text-center w-full bg-secondary/80" @click="windowLayoutFive()">
-            <span class="bg-secondary/30 flex justify-center items-center h-6 w-[5%]" />
-            <span class="bg-primary/10 ring-1 ring-primary/40 text-primary flex justify-center items-center h-6 w-[90%]">90%</span>
-            <span class="bg-secondary/30 flex justify-center items-center h-6 w-[5%]" />
+          <button
+            class="flex gap-px outline-1 outline-primary text-xs items-center justify-center text-center w-full bg-secondary/80"
+            @click="windowLayoutFive()"
+          >
+            <span
+              class="bg-secondary/30 flex justify-center items-center h-6 w-[5%]"
+            />
+            <span
+              class="bg-primary/10 ring-1 ring-primary/40 text-primary flex justify-center items-center h-6 w-[90%]"
+            >90%</span>
+            <span
+              class="bg-secondary/30 flex justify-center items-center h-6 w-[5%]"
+            />
           </button>
-          <button class="flex gap-px outline-1 outline-primary  text-xs items-center justify-center text-center w-full bg-secondary/80" @click="windowLayoutTwo()">
-            <span class="bg-secondary/30 flex justify-center items-center h-6 w-[5%]" />
-            <span class="bg-primary/10 ring-1 ring-primary/40 text-primary flex justify-center items-center h-6 w-[65%]">65%</span>
-            <span class="bg-secondary/30 flex justify-center items-center h-6 w-[30%]" />
+          <button
+            class="flex gap-px outline-1 outline-primary text-xs items-center justify-center text-center w-full bg-secondary/80"
+            @click="windowLayoutTwo()"
+          >
+            <span
+              class="bg-secondary/30 flex justify-center items-center h-6 w-[5%]"
+            />
+            <span
+              class="bg-primary/10 ring-1 ring-primary/40 text-primary flex justify-center items-center h-6 w-[65%]"
+            >65%</span>
+            <span
+              class="bg-secondary/30 flex justify-center items-center h-6 w-[30%]"
+            />
           </button>
-          <button class="flex gap-px outline-1 outline-primary  text-xs items-center justify-center text-center w-full bg-secondary/80" @click="windowLayoutThree()">
-            <span class="bg-secondary/30 flex justify-center items-center h-6 w-[30%]" />
-            <span class="bg-primary/10 ring-1 ring-primary/40 text-primary flex justify-center items-center h-6 w-[65%]">65%</span>
-            <span class="bg-secondary/30 flex justify-center items-center h-6 w-[5%]" />
+          <button
+            class="flex gap-px outline-1 outline-primary text-xs items-center justify-center text-center w-full bg-secondary/80"
+            @click="windowLayoutThree()"
+          >
+            <span
+              class="bg-secondary/30 flex justify-center items-center h-6 w-[30%]"
+            />
+            <span
+              class="bg-primary/10 ring-1 ring-primary/40 text-primary flex justify-center items-center h-6 w-[65%]"
+            >65%</span>
+            <span
+              class="bg-secondary/30 flex justify-center items-center h-6 w-[5%]"
+            />
           </button>
         </SidebarSecondary>
       </SplitterPanel>

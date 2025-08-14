@@ -63,7 +63,7 @@ export default defineComponent({
     </div>
   </template>
   <template v-else>
-    <div class="py-2">
+    <div class="">
       <ToCItem
         v-for="(item, i) in items"
         :key="item.id"

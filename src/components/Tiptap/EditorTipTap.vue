@@ -278,16 +278,18 @@ onBeforeUnmount(() => {
     >
       <ScrollAreaViewport
         id="editorScrollArea"
-        class="w-full h-full border-transparent border outline-hidden group-focus-within:ring-primary! group-focus-within:ring-2! group-focus-within:ring-inset! focus:ring-primary! focus:ring-1!"
+        class="w-full h-full border-transparent border outline-hidden "
       >
-        <h1
-          v-if="!editable"
-          class="text-3xl mt-3 font-serif font-semibold px-5"
-        >
-          {{ newDocumentTitle }}
-        </h1>
+        <template v-if="!editable">
+          <h1
+            class="text-3xl mt-3 font-serif font-semibold px-5"
+          >
+            {{ newDocumentTitle }}
+          </h1>
+        </template>
+        <slot />
         <div
-          class="relative max-w-full mx-auto prose EditorContent dark:prose-invert"
+          class="relative  max-w-full mx-auto prose EditorContent dark:prose-invert"
           spellcheck="false"
         >
           <EditorContent :editor="editor" />

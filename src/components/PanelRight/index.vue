@@ -55,7 +55,7 @@ const editable_id = inject('editable_id') as Ref<string | null>
       </div>
     </div>
     <div
-      class="p-px max-h-[calc(100vh-2.5rem)] min-h-[calc(100vh-2.5rem)] bg-primary/5"
+      class="p-px max-h-[calc(100vh-2.5rem)] bg-background min-h-[calc(100vh-2.5rem)]"
     >
       <TabsRoot v-model="sidetabTab" class="flex flex-col w-full" default-value="tab1">
         <TabsList
@@ -87,20 +87,20 @@ const editable_id = inject('editable_id') as Ref<string | null>
           </TabsTrigger>
         </TabsList>
         <TabsContent
-          class="grow bg-secondary outline-none pt-0.5 focus:shadow-focus:shadow-primary"
+          class="grow  outline-none pt-0.5 focus:shadow-focus:shadow-primary"
           value="tab1"
         >
           <EditorToolbar />
         </TabsContent>
         <TabsContent
-          class="grow bg-secondary outline-none pt-0.5 focus:shadow-focus:shadow-primary"
+          class="grow  outline-none pt-0.5 focus:shadow-focus:shadow-primary"
           value="tab2"
         >
           <ContentAnalysis />
           <TableOfContent />
         </TabsContent>
         <TabsContent
-          class="grow bg-secondary outline-none pt-0.5 focus:shadow focus:shadow-primary"
+          class="grow  outline-none pt-0.5 focus:shadow focus:shadow-primary"
           value="tab3"
         >
           <SidebarSettings

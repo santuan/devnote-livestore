@@ -235,6 +235,7 @@ export default {
         </button>
         <button
           class="flex items-center justify-center duration-100 size-8 bg-secondary shrink-0"
+          :class="height > 388 || showFullCode ? '' : 'disabled pointer-events-none opacity-50 hidden'"
           @click="showFullCode = !showFullCode"
         >
           <Minimize2 v-if="showFullCode" class="size-5 pointer-events-none" />
