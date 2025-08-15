@@ -487,7 +487,7 @@ onMounted(() => {
         :max-size="30"
         collapsible
         :collapsed-size="5"
-        class="min-w-8 items-start justify-start h-screen bg-background"
+        class="min-w-8 items-start justify-start h-screen bg-secondary/20"
         :class="[
           showDocuments
             ? 'fixed md:relative min-w-80 md:min-w-auto  flex z-[71]'
@@ -495,6 +495,7 @@ onMounted(() => {
           sidebar_documents_splitter_ref?.isCollapsed ? 'max-w-8!' : '',
           resize === 10 ? ' border-r-2! border-primary!' : '',
         ]"
+        @dblclick="focusModeOff()"
         @resize="resize = $event"
       >
         <ButtonLogo
@@ -580,11 +581,12 @@ onMounted(() => {
       <SplitterPanel
         id="splitter-group-1-panel-3"
         ref="sidebar_secondary_splitter_ref"
-        class="min-w-8 @container"
+        class="min-w-8 @container bg-secondary/20"
         :min-size="15"
         :max-size="30"
         collapsible
         :collapsed-size="0"
+        @dblclick="focusModeOff()"
       >
         <button
           v-if="focus_mode"
