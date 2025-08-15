@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { Ref } from 'vue'
-import { Check, Minus, Plus } from 'lucide-vue-next'
+import { Check, ChevronDown, Minus, Plus } from 'lucide-vue-next'
 import {
   DropdownMenuArrow,
   DropdownMenuContent,
@@ -13,6 +13,7 @@ import {
   NumberFieldIncrement,
   NumberFieldInput,
   NumberFieldRoot,
+  ToolbarButton,
 } from 'reka-ui'
 import { inject, ref, watch } from 'vue'
 
@@ -103,7 +104,7 @@ const toggleState = ref(false)
         </NumberFieldDecrement>
         <NumberFieldInput
           id="fontSize"
-          class="bg-transparent w-12 border  border-secondary  h-8 tabular-nums text-center focus:outline-2 z-10 focus:outline-primary p-1 text-xs"
+          class="bg-secondary w-12 border  border-secondary  h-8 tabular-nums text-center focus:outline-2 z-10 focus:outline-primary p-1 text-xs"
           placeholder="16"
         />
 
@@ -111,18 +112,21 @@ const toggleState = ref(false)
           <Plus class="w-3 h-3" />
         </NumberFieldIncrement>
         <DropdownMenuRoot v-model:open="toggleState">
-          <DropdownMenuTrigger
-            class=" inline-flex items-center min-w-20 text-xs! h-8 justify-center text-secondary-foreground bg-secondary "
-            aria-label="Customise options"
-          >
-            sizes
-          </DropdownMenuTrigger>
+          <ToolbarButton as-child>
+            <DropdownMenuTrigger
+              class=" inline-flex items-center min-w-12 text-xs! focus:outline-2 z-10 focus:outline-primary p-1  h-8 justify-center border  border-secondary text-secondary-foreground bg-background"
+              aria-label="Select size"
+            >
+              <ChevronDown class="size-3" />
+            </DropdownMenuTrigger>
+          </ToolbarButton>
 
           <DropdownMenuPortal>
             <DropdownMenuContent
               class="min-w-24 uppercase text-center outline-none text-background-foreground border border-secondary bg-background rounded p-2 shadow"
               :side-offset="5"
-              :side="'left'"
+              :side="'bottom'"
+              :align="'end'"
             >
               <DropdownMenuItem
                 :class="{

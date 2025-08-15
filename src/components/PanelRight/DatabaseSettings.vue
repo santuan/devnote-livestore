@@ -23,7 +23,7 @@ const { t } = useI18n()
     </button>
     <div
       v-show="showDBSettings"
-      class="flex pl-6 pb-3 pr-1 mt-2 text-xs justify-start items-start gap-2 flex-col"
+      class="flex @xs:pl-6 pb-3 px-1 mt-2 text-xs justify-start items-start gap-2 flex-col"
     >
       <div class="flex ring ring-destructive pl-1 gap-2 items-center justify-between w-full">
         <span>{{ t("editor.deleteAll") }}</span>

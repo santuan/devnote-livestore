@@ -253,14 +253,8 @@ function handleLayoutChange(newLayout: number[]) {
         // Calcular el promedio para mantener simetría
         if (isRightDragging.value === true) {
           sidebar_documents_splitter_ref.value?.resize(rightPanelSize)
-          console.log(
-            `shift  right drag${isRightDragging.value}${isLeftDragging.value}`,
-          )
         }
         else {
-          console.log(
-            `shift  left drag${isRightDragging.value}${isLeftDragging.value}`,
-          )
           sidebar_secondary_splitter_ref.value?.resize(leftPanelSize)
         }
       }
@@ -563,7 +557,7 @@ onMounted(() => {
               v-model="newDocumentTitle"
               :placeholder="t('editor.untitled')"
               type="text"
-              class="outline outline-primary  bg-background rounded-none! px-2 py-1 min-h-8 w-full"
+              class="outline outline-primary bg-background rounded-none! px-2 py-1 min-h-8 w-full"
               @keyup.enter="createDocument"
             >
           </Editor>
@@ -614,7 +608,7 @@ onMounted(() => {
           @focus-mode-on="focusModeOn"
           @toggle-editable="toggle_editable"
         >
-          <h3 class="@xs:col-span-5">
+          <h3 class="@xs:col-span-4 col-span-2">
             Layout
           </h3>
           <button

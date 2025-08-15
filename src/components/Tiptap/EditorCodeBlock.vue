@@ -109,11 +109,13 @@ export default {
         this.copyText = 'copy'
       }, 1000)
     },
+
     startEditingTitle() {
       this.isEditingTitle = true
       this.titleInput = this.codeTitle
       this.$nextTick(() => {
-        this.$refs.titleInput?.focus()
+        const titleInput = this.$refs.titleInput as HTMLInputElement | undefined
+        titleInput?.focus?.()
       })
     },
 

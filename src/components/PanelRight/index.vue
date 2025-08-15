@@ -13,6 +13,7 @@ import { inject } from 'vue'
 import { useI18n } from 'vue-i18n'
 import EditorToolbar from '../Tiptap/Toolbar/EditorToolbar.vue'
 import ContentAnalysis from './ContentAnalysis.vue'
+import DatabaseSettings from './DatabaseSettings.vue'
 import SidebarSettings from './SidebarSettings.vue'
 import TableOfContent from './TableOfContent.vue'
 
@@ -79,12 +80,6 @@ const editable_id = inject('editable_id') as Ref<string | null>
           >
             {{ t("leva.document") }}
           </TabsTrigger>
-          <TabsTrigger
-            class="bg-secondary px-3 h-8 items-center justify-center text-xs leading-none text-primary select-none opacity-50 data-[state=active]:opacity-100 hover:text-primary data-[state=active]:font-bold data-[state=active]:text-primary outline-none cursor-default focus-visible:relative focus-visible:shadow focus-visible:shadow-primary"
-            value="tab3"
-          >
-            {{ t("leva.settings") }}
-          </TabsTrigger>
         </TabsList>
         <TabsContent
           class="grow  outline-none pt-0.5 focus:shadow-focus:shadow-primary"
@@ -96,13 +91,6 @@ const editable_id = inject('editable_id') as Ref<string | null>
           class="grow  outline-none pt-0.5 focus:shadow-focus:shadow-primary"
           value="tab2"
         >
-          <ContentAnalysis />
-          <TableOfContent />
-        </TabsContent>
-        <TabsContent
-          class="grow  outline-none pt-0.5 focus:shadow focus:shadow-primary"
-          value="tab3"
-        >
           <SidebarSettings
             @collapse-secondary-sidebar="emit('collapseSecondarySidebar')"
             @focus-mode-on="emit('focusModeOn')"
@@ -110,6 +98,9 @@ const editable_id = inject('editable_id') as Ref<string | null>
           >
             <slot />
           </SidebarSettings>
+          <ContentAnalysis />
+          <TableOfContent />
+          <DatabaseSettings />
         </TabsContent>
       </TabsRoot>
     </div>

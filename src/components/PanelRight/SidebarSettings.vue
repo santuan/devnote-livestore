@@ -4,7 +4,6 @@ import { ChevronRight } from 'lucide-vue-next'
 import { useI18n } from 'vue-i18n'
 import { useClientDocument } from 'vue-livestore'
 import { tables } from '@/livestore/schema'
-import DatabaseSettings from './DatabaseSettings.vue'
 import DropdownLanguage from './DropdownLanguage.vue'
 import ToggleTheme from './ToggleTheme.vue'
 
@@ -29,31 +28,6 @@ const showPerspective = useStorage('show_perspective', true)
   <div class="bg-background">
     <button
       class="flex pl-1 pr-2 w-full h-8 text-left items-center justify-start gap-2"
-      @click="showSettings = !showSettings"
-    >
-      <ChevronRight
-        class="text-foreground size-3 duration-300 transition-transform"
-        :class="showSettings ? 'rotate-90' : ''"
-      />
-      <span class="font-semibold text-primary">
-        {{ t("leva.settings") }}
-      </span>
-    </button>
-    <div v-show="showSettings" class="@xs:pl-5">
-      <div class="flex gap-2 items-center p-1 justify-between w-full">
-        <span>{{ t("settings.language") }}</span>
-        <DropdownLanguage />
-      </div>
-      <div class="flex gap-2 items-center p-1 justify-between w-full">
-        <span>{{ t("settings.theme") }}</span>
-        <ToggleTheme />
-      </div>
-    </div>
-  </div>
-  <DatabaseSettings class="@xs:col-span-3" />
-  <div class="bg-background">
-    <button
-      class="flex pl-1 pr-2 w-full h-8 text-left items-center justify-start gap-2"
       @click="showPerspective = !showPerspective"
     >
       <ChevronRight
@@ -66,7 +40,7 @@ const showPerspective = useStorage('show_perspective', true)
     </button>
     <div
       v-show="showPerspective"
-      class="bg-background p-2 @xs:pl-6 gap-3 grid @xs:grid-cols-5"
+      class="bg-background p-2 @xs:pl-6 pb-4 gap-3 grid grid-cols-2 @xs:grid-cols-4"
     >
       <button
         :class="
@@ -97,6 +71,30 @@ const showPerspective = useStorage('show_perspective', true)
         <span>Focus</span>
       </button>
       <slot />
+    </div>
+  </div>
+  <div class="bg-background">
+    <button
+      class="flex pl-1 pr-2 w-full h-8 text-left items-center justify-start gap-2"
+      @click="showSettings = !showSettings"
+    >
+      <ChevronRight
+        class="text-foreground size-3 duration-300 transition-transform"
+        :class="showSettings ? 'rotate-90' : ''"
+      />
+      <span class="font-semibold text-primary">
+        {{ t("leva.settings") }}
+      </span>
+    </button>
+    <div v-show="showSettings" class="@xs:pl-5 mt-1 pb-4">
+      <div class="flex gap-2 items-center p-1 justify-between w-full">
+        <span>{{ t("settings.language") }}</span>
+        <DropdownLanguage />
+      </div>
+      <div class="flex gap-2 items-center p-1 justify-between w-full">
+        <span>{{ t("settings.theme") }}</span>
+        <ToggleTheme />
+      </div>
     </div>
   </div>
 </template>

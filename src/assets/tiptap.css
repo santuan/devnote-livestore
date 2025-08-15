@@ -193,7 +193,7 @@ html.dark .shiki span {
 }
 
 .iframeContainer {
-  @apply w-full relative border! border-primary! grid ring-transparent bg-background;
+  @apply w-full relative border! border-secondary! grid ring-transparent bg-background;
 }
 
 .is-preview .iframeContainer {
@@ -318,7 +318,7 @@ html.dark .shiki span {
 }
 
 .tiptap .ProseMirror-selectednode {
-  @apply ring-2 ring-primary border-secondary/5 border-2;
+  @apply border-primary! border-2! border-dashed;
 }
 
 .is-editable .tiptap .media-node-view {
@@ -326,7 +326,7 @@ html.dark .shiki span {
 }
 
 .is-editable .tiptap .media-node-view.ProseMirror-selectednode {
-  @apply ring-0! ring-transparent! bg-primary/[0.02] border-2 border-primary border-dashed;
+  @apply ring-0! ring-transparent! bg-primary/[0.02] border-2 border-red-600 border-dashed;
 }
 
 .tiptap li p {

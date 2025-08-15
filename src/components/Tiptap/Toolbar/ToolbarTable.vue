@@ -15,35 +15,37 @@ const { t } = useI18n()
 
 <template>
   <div class="gap-1 @xs:grid-cols-4 pb-3  w-full grid border border-secondary p-1">
-    <div class="flex pb-2 @xs:col-span-4 justify-between items-center w-full gap-2">
-      <p class="text-left justify-start items-center w-full flex text-xs">
+    <div class="pb-2 @xs:col-span-4 grid grid-cols-2 w-full gap-2">
+      <p class="text-left p-1 w-full text-xs">
         <span>Table</span>
       </p>
-      <ToolbarButton
-        class="cursor-default flex items-center @xs:min-w-24! border border-secondary px-2 justify-center h-7 gap-2 outline-hidden focus-visible:bg-primary/30 text-xs! hover:bg-primary/24"
-        @click="
-          editor
-            .chain()
-            .focus()
-            .insertTable({ rows: 3, cols: 3, withHeaderRow: true })
-            .run()
-        "
-      >
-        <span class="sr-only">{{ t("toolbar.insertTable") }}</span>
-        <Plus class="size-4" />
-        <span class="@xs:inline-flex hidden">Add</span>
-      </ToolbarButton>
+      <div class="grid" :class="editor.can().deleteTable() ? 'grid-cols-2' : ''">
+        <ToolbarButton
+          class="cursor-default flex items-center @xs:min-w-24! border border-secondary px-2 justify-center h-7 gap-2 outline-hidden focus-visible:border-primary focus-visible:border-dashed hover:border-2 text-xs! hover:border-primary"
+          @click="
+            editor
+              .chain()
+              .focus()
+              .insertTable({ rows: 3, cols: 3, withHeaderRow: true })
+              .run()
+          "
+        >
+          <span class="sr-only">{{ t("toolbar.insertTable") }}</span>
+          <Plus class="size-4" />
+          <span class="@xs:inline-flex hidden">Add</span>
+        </ToolbarButton>
 
-      <ToolbarButton
-        class="cursor-default flex items-center @xs:min-w-24! border border-secondary px-2 justify-center h-7 gap-2 outline-hidden focus-visible:bg-primary/30 text-xs! hover:bg-primary/20"
-        :disabled="!editor.can().deleteTable()"
-        :class="editor.can().deleteTable() ? '' : 'opacity-30 pointer-events-none'"
-        @click="editor.chain().focus().deleteTable().run()"
-      >
-        <span class="sr-only">{{ t("toolbar.deleteTable") }}</span>
-        <Minus class="size-4" />
-        <span class="@xs:inline-flex hidden">Delete</span>
-      </ToolbarButton>
+        <ToolbarButton
+          v-if="editor.can().deleteTable()"
+          class="cursor-default flex items-center @xs:min-w-24! border border-secondary px-2 justify-center h-7 gap-2 outline-hidden focus-visible:border-primary focus-visible:border-dashed hover:border-2 text-xs! hover:border-primary"
+          :class="editor.can().deleteTable() ? '' : 'opacity-30 pointer-events-none'"
+          @click="editor.chain().focus().deleteTable().run()"
+        >
+          <span class="sr-only">{{ t("toolbar.deleteTable") }}</span>
+          <Minus class="size-4" />
+          <span class="@xs:inline-flex hidden">Delete</span>
+        </ToolbarButton>
+      </div>
     </div>
     <div
       class="grid @xs:col-span-2 grid-cols-3"
