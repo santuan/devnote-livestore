@@ -6,6 +6,7 @@ import { useClientDocument } from 'vue-livestore'
 import { tables } from '@/livestore/schema'
 import DropdownLanguage from './DropdownLanguage.vue'
 import ToggleTheme from './ToggleTheme.vue'
+import WindowsLayout from './WindowsLayout.vue'
 
 const emit = defineEmits<{
   (e: 'collapseSecondarySidebar'): void
@@ -20,6 +21,7 @@ function toggle_show_documents() {
   showDocuments.value = !showDocuments.value
 }
 
+const showLayouts = useStorage('show_layouts', true)
 const showSettings = useStorage('show_settings', true)
 const showPerspective = useStorage('show_perspective', true)
 </script>
@@ -40,7 +42,7 @@ const showPerspective = useStorage('show_perspective', true)
     </button>
     <div
       v-show="showPerspective"
-      class="bg-background p-2 @xs:pl-6 pb-4 gap-3 grid grid-cols-2 @xs:grid-cols-4"
+      class="bg-background p-2 @xs:pl-6 pb-4 gap-1 grid grid-cols-2 @xs:grid-cols-3"
     >
       <button
         :class="
@@ -70,9 +72,26 @@ const showPerspective = useStorage('show_perspective', true)
       >
         <span>Focus</span>
       </button>
-      <slot />
     </div>
   </div>
+  <div class="bg-background">
+    <button
+      class="flex pl-1 pr-2 w-full h-8 text-left items-center justify-start gap-2"
+      @click="showLayouts = !showLayouts"
+    >
+      <ChevronRight
+        class="text-foreground size-3 duration-300 transition-transform"
+        :class="showLayouts ? 'rotate-90' : ''"
+      />
+      <span class="font-semibold text-primary">
+        Layout
+      </span>
+    </button>
+    <div v-show="showLayouts" class="@xs:pl-5 mt-1 pr-2 pb-4">
+      <WindowsLayout />
+    </div>
+  </div>
+
   <div class="bg-background">
     <button
       class="flex pl-1 pr-2 w-full h-8 text-left items-center justify-start gap-2"

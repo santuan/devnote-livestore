@@ -95,9 +95,8 @@ const editable_id = inject('editable_id') as Ref<string | null>
             @collapse-secondary-sidebar="emit('collapseSecondarySidebar')"
             @focus-mode-on="emit('focusModeOn')"
             @toggle-editable="emit('toggleEditable')"
-          >
-            <slot />
-          </SidebarSettings>
+          />
+
           <ContentAnalysis />
           <TableOfContent />
           <DatabaseSettings />
