@@ -45,11 +45,11 @@ const showToolbar = useStorage('show_toolbar', true)
       </div>
     </button>
     <div
-      class="relative px-2 w-full pt-2 mx-auto control-group focus-visible:ring-2 focus-visible:ring-primary"
+      class="relative px-2 w-full  mx-auto control-group focus-visible:ring-2 focus-visible:ring-primary"
     >
       <ToolbarRoot
         v-if="showToolbar"
-        class="toolbar bg-background select-none focus-visible:outline! focus-visible:outline-primary/10! grid gap-3 focus-visible:outline-offset-[1.5px]! w-full"
+        class="toolbar bg-background pt-2 select-none focus-visible:outline! focus-visible:outline-primary/10! grid gap-3 focus-visible:outline-offset-[1.5px]! w-full"
       >
         <div class="flex gap-2 flex-wrap">
           <ToolbarToggleGroup class="">

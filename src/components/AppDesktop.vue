@@ -33,9 +33,6 @@ import { events, tables } from '@/livestore/schema'
 
 const colorTheme = useStorage('theme', 'theme-foreground')
 
-const breakpoints = useBreakpoints(breakpointsTailwind)
-const largerThanLg = breakpoints.greater('lg')
-
 const { t } = useI18n()
 
 const editable_id = shallowRef('')
@@ -53,6 +50,9 @@ const isShiftPressed = shallowRef(false)
 const isLeftDragging = shallowRef(false)
 const isRightDragging = shallowRef(false)
 
+const breakpoints = useBreakpoints(breakpointsTailwind)
+const largerThanLg = breakpoints.greater('lg')
+
 provide('content', editor_content)
 provide('toc', editor_toc)
 provide('editable_id', editable_id)
@@ -64,8 +64,7 @@ provide('layout', layout)
 const { store } = useStore()
 const uiState$ = queryDb(tables.uiState.get(), { label: 'uiState' })
 
-const { newDocumentTitle, newDocumentContent, showDocuments, editable }
-  = useClientDocument(tables.uiState)
+const { newDocumentTitle, newDocumentContent, showDocuments, editable } = useClientDocument(tables.uiState)
 
 const isEditing = computed(() => editable_id.value.length === 0)
 
@@ -198,36 +197,31 @@ watch(
 
 function focusModeOff() {
   focus_mode.value = false
-  if (sidebar_secondary_splitter_ref.value.isCollapsed) {
-    sidebar_secondary_splitter_ref.value.expand()
-  }
 }
 
 function focusModeOn() {
   focus_mode.value = true
 }
 
-function handleLayoutChange(newLayout: number[]) {
+function handleHoldShiftLayoutChange(newLayout: number[]) {
   layout.value = newLayout
 
-  if (isShiftPressed.value && newLayout.length >= 3) {
-    const leftPanelSize = newLayout[0]
-    const rightPanelSize = newLayout[2]
+  if (!isShiftPressed.value || newLayout.length < 3) {
+    return
+  }
 
-    // Determinar cuál panel cambió más recientemente comparando con el layout anterior
-    // y sincronizar el otro panel
-    if (leftPanelSize !== rightPanelSize) {
-      // Usar un pequeño delay para evitar bucles infinitos
-      if (isShiftPressed.value) {
-        // Calcular el promedio para mantener simetría
-        if (isRightDragging.value === true) {
-          sidebar_documents_splitter_ref.value?.resize(rightPanelSize)
-        }
-        else {
-          sidebar_secondary_splitter_ref.value?.resize(leftPanelSize)
-        }
-      }
-    }
+  const leftPanelSize = newLayout[0]
+  const rightPanelSize = newLayout[2]
+
+  if (leftPanelSize === rightPanelSize) {
+    return
+  }
+
+  if (isRightDragging.value === true) {
+    sidebar_documents_splitter_ref.value?.resize(rightPanelSize)
+  }
+  else {
+    sidebar_secondary_splitter_ref.value?.resize(leftPanelSize)
   }
 }
 
@@ -410,7 +404,7 @@ onMounted(() => {
       id="splitter-group-1"
       direction="horizontal"
       auto-save-id="app-desktop"
-      @layout="handleLayoutChange"
+      @layout="handleHoldShiftLayoutChange"
     >
       <SplitterPanel
         id="splitter-group-1-panel-1"

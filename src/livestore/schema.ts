@@ -28,7 +28,7 @@ export const tables = {
       value: {
         newDocumentTitle: '',
         newDocumentContent: '',
-        filter: 'all',
+        filter: 'active',
         showDocuments: true,
         editable: true,
       },

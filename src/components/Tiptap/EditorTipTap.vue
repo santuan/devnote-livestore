@@ -67,19 +67,19 @@ const props = defineProps({
     default: false,
   },
 })
+
 const emit = defineEmits(['update:modelValue'])
 const { editable, newDocumentTitle } = useClientDocument(tables.uiState)
 
 const editor = inject('content') as Ref<Editor>
 const toc = inject('toc') as Ref<object | null>
+const { t } = useI18n()
 
 // Math dialog state
 const mathDialogOpen = ref(false)
 const mathDialogTitle = ref('')
 const mathDialogInitialValue = ref('')
 const mathDialogCallback = ref<((latex: string) => void) | null>(null)
-
-const { t } = useI18n()
 
 function openMathDialog(title: string, initialValue: string, callback: (latex: string) => void) {
   mathDialogTitle.value = title
@@ -295,6 +295,7 @@ onBeforeUnmount(() => {
           <EditorContent :editor="editor" />
         </div>
       </ScrollAreaViewport>
+
       <ScrollAreaScrollbar
         class="print:hidden! flex select-none touch-none p-0.5 ease-out data-[orientation=vertical]:w-2.5 data-[orientation=horizontal]:flex-col data-[orientation=horizontal]:h-2.5"
         orientation="vertical"

@@ -35,7 +35,7 @@ const editable_id = inject('editable_id') as Ref<string | null>
 
 <template>
   <div
-    class="w-full max-h-screen text-xs font-mono z-10 duration-300 transition-opacity bg-background text-foreground overflow-x-hidden overflow-y-auto scrollbar-thumb-rounded-full scrollbar-track-rounded-full scrollbar scrollbar-thumb-secondary-foreground scrollbar-track-secondary"
+    class="w-full text-xs font-mono z-10 duration-300 transition-opacity bg-background text-foreground"
     :class="props.focusMode ? 'opacity-0 pointer-events-none' : ''"
   >
     <div
@@ -56,12 +56,12 @@ const editable_id = inject('editable_id') as Ref<string | null>
       </div>
     </div>
     <div
-      class="p-px max-h-[calc(100vh-2.5rem)] bg-background min-h-[calc(100vh-2.5rem)]"
+      class="p-px max-h-[calc(100vh-2.5rem)] bg-background  min-h-[calc(100vh-2.5rem)]"
     >
-      <TabsRoot v-model="sidetabTab" class="flex flex-col w-full" default-value="tab1">
+      <TabsRoot v-model="sidetabTab" class="flex h-[calc(100vh-2.5rem)] flex-col w-full" default-value="tab1">
         <TabsList
           class="relative shrink-0 flex justify-start border-b border-transparent"
-          aria-label="Manage your account"
+          aria-label="Secondary sidebar"
         >
           <TabsIndicator
             class="indicator absolute px-0 left-0 h-0.5 bottom-0 translate-y-px"
@@ -72,23 +72,25 @@ const editable_id = inject('editable_id') as Ref<string | null>
             class="bg-secondary px-3 h-8 items-center justify-center text-xs leading-none text-primary select-none opacity-50 data-[state=active]:opacity-100 hover:text-primary data-[state=active]:font-bold data-[state=active]:text-primary outline-none cursor-default focus-visible:relative focus-visible:shadow focus-visible:shadow-primary"
             value="tab1"
           >
-            Editor
+            {{ t("leva.document") }}
           </TabsTrigger>
           <TabsTrigger
             class="bg-secondary px-3 h-8 items-center justify-center text-xs leading-none text-primary select-none opacity-50 data-[state=active]:opacity-100 hover:text-primary data-[state=active]:font-bold data-[state=active]:text-primary outline-none cursor-default focus-visible:relative focus-visible:shadow focus-visible:shadow-primary"
             value="tab2"
           >
-            {{ t("leva.document") }}
+            {{ t("leva.settings") }}
           </TabsTrigger>
         </TabsList>
         <TabsContent
-          class="grow  outline-none pt-0.5 focus:shadow-focus:shadow-primary"
+          class="grow overflow-x-hidden overflow-y-auto scrollbar-thumb-rounded-full scrollbar-track-rounded-full scrollbar scrollbar-thumb-primary scrollbar-track-transparent outline-none pt-0.5 focus:shadow-focus:shadow-primary"
           value="tab1"
         >
           <EditorToolbar />
+          <ContentAnalysis />
+          <TableOfContent />
         </TabsContent>
         <TabsContent
-          class="grow  outline-none pt-0.5 focus:shadow-focus:shadow-primary"
+          class="grow overflow-x-hidden overflow-y-auto scrollbar-thumb-rounded-full scrollbar-track-rounded-full scrollbar scrollbar-thumb-primary scrollbar-track-transparent outline-none pt-0.5 focus:shadow-focus:shadow-primary"
           value="tab2"
         >
           <SidebarSettings
@@ -97,8 +99,6 @@ const editable_id = inject('editable_id') as Ref<string | null>
             @toggle-editable="emit('toggleEditable')"
           />
 
-          <ContentAnalysis />
-          <TableOfContent />
           <DatabaseSettings />
         </TabsContent>
       </TabsRoot>
