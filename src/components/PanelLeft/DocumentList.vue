@@ -35,7 +35,7 @@ const documents = computed(() => props.count ?? 0)
       <Filters />
     </div>
     <div
-      class="max-h-[calc(100vh-2.75rem)] h-screen border-t border-secondary overflow-x-hidden overflow-y-auto"
+      class="max-h-[calc(100vh-2.75rem)] scrollbar-thumb-rounded-full scrollbar-track-rounded-full scrollbar scrollbar-thumb-primary scrollbar-track-transparent h-screen border-t border-secondary overflow-x-hidden overflow-y-auto"
     >
       <slot name="list" />
     </div>

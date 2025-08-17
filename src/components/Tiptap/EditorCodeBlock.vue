@@ -179,7 +179,7 @@ export default {
       <div class="sticky left-0 top-0 font-mono w-64">
         <div
           v-if="codeTitle || isEditingTitle"
-          class="flex items-center w-full justify-between"
+          class="flex items-center  w-96 justify-between"
         >
           <!-- Title Display/Edit -->
           <div class="flex-1 w-full min-w-0 p-1 pr-0">
@@ -194,7 +194,7 @@ export default {
             >
             <button
               v-if="!isEditingTitle"
-              class="text-xs font-normal h-8 px-1 hover:text-foreground transition-colors cursor-pointer truncate block w-full text-left"
+              class="text-xs font-normal h-8 px-1 hover:text-foreground transition-colors  truncate block w-full text-left"
               @click="startEditingTitle"
             >
               {{ codeTitle }}
@@ -203,7 +203,7 @@ export default {
         </div>
         <button
           v-else
-          class="absolute top-0 w-64 text-left font-normal left-0 text-xs h-8 min-w-20 m-1 p-1 text-muted-foreground hover:text-foreground transition-colors bg-background py-1 border border-muted z-10"
+          class="absolute top-0 w-96 text-left font-normal left-0 text-xs h-8 min-w-20 m-1 p-1 text-muted-foreground hover:text-foreground transition-colors bg-background py-1 border border-muted z-10"
           @click="startEditingTitle"
         >
           Filename...

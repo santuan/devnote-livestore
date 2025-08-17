@@ -3,8 +3,12 @@ import type { Ref } from 'vue'
 import { useMagicKeys, whenever } from '@vueuse/core'
 import { inject } from 'vue'
 
-const sidebar_documents_splitter_ref = inject('sidebar_documents_splitter') as Ref<any>
-const sidebar_secondary_splitter_ref = inject('sidebar_secondary_splitter') as Ref<any>
+const sidebar_documents_splitter_ref = inject(
+  'sidebar_documents_splitter',
+) as Ref<any>
+const sidebar_secondary_splitter_ref = inject(
+  'sidebar_secondary_splitter',
+) as Ref<any>
 const layout = inject('layout') as Ref<any>
 
 function windowLayout25() {

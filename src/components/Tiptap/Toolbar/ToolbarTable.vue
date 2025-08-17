@@ -14,7 +14,7 @@ const { t } = useI18n()
 </script>
 
 <template>
-  <div class="gap-1 @xs:grid-cols-4  w-full grid border border-secondary p-1">
+  <div class="gap-1 @xs:grid-cols-4 w-full grid border border-secondary p-1">
     <div class=" @xs:col-span-4 grid grid-cols-2 w-full gap-2">
       <p class="text-left pl-2 flex justify-start items-center w-full text-xs">
         <span>Table</span>

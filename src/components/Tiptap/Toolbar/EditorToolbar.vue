@@ -3,7 +3,7 @@ import type { Editor } from '@tiptap/core'
 import type { Ref } from 'vue'
 import { useStorage } from '@vueuse/core'
 import { ChevronRight } from 'lucide-vue-next'
-import { ToolbarRoot, ToolbarToggleGroup } from 'reka-ui'
+import { ToolbarButton, ToolbarRoot, ToolbarToggleGroup } from 'reka-ui'
 import { inject } from 'vue'
 import { useI18n } from 'vue-i18n'
 import ToolbarCharacters from './ToolbarCharacters.vue'
@@ -99,18 +99,29 @@ const showToolbar = useStorage('show_toolbar', true)
               <ToolbarTextAlign />
             </div>
           </ToolbarToggleGroup>
-          <ToolbarToggleGroup>
+          <ToolbarToggleGroup class="w-full">
             <span>Component</span>
-            <div class="flex gap-1">
+            <div class="flex w-full flex-wrap gap-1 mb-2">
               <ToolbarCodeBlock />
               <ToolbarLatex />
+              <ToolbarButton
+                type="button" class="px-4 border border-secondary h-8 gap-2" title="Insert LaTeX" :class="editor.can().deleteTable() ? 'pointer-events-none disabled opacity-30' : ''"
+                @click="
+                  editor
+                    .chain()
+                    .focus()
+                    .insertTable({ rows: 3, cols: 3, withHeaderRow: true })
+                    .run()
+                "
+              >
+                <span class="text-xs">Add Table</span>
+              </ToolbarButton>
             </div>
+            <ToolbarTable v-if="editor.can().deleteTable()" />
           </ToolbarToggleGroup>
         </div>
 
-        <ToolbarToggleGroup>
-          <ToolbarTable />
-        </ToolbarToggleGroup>
+        <ToolbarToggleGroup />
       </ToolbarRoot>
     </div>
   </div>

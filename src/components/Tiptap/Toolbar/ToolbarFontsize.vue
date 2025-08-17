@@ -131,24 +131,24 @@ const toggleState = ref(false)
               <DropdownMenuItem
                 :class="{
                   'is-active': editor.isActive('textStyle', {
-                    fontSize: '.75rem',
+                    fontSize: '12px',
                   }),
                 }"
-                data-test-id=".75rem"
+                data-test-id="12px"
                 class="group text-xs leading-none text-primary font-mono rounded-[3px] flex items-center h-[25px] px-[5px] relative pl-[25px] select-none outline-none data-[disabled]:text-mauve8 data-[disabled]:pointer-events-none data-[highlighted]:bg-primary/20 data-[highlighted]:text-primary"
-                @click="editor.chain().focus().setFontSize('.75rem').run()"
+                @click="editor.chain().focus().setFontSize('12px').run()"
               >
                 xs
               </DropdownMenuItem>
               <DropdownMenuItem
                 :class="{
                   'is-active': editor.isActive('textStyle', {
-                    fontSize: '0.875',
+                    fontSize: '14px',
                   }),
                 }"
-                data-test-id="0.875"
+                data-test-id="14px"
                 class="group text-xs leading-none text-primary font-mono rounded-[3px] flex items-center h-[25px] px-[5px] relative pl-[25px] select-none outline-none data-[disabled]:text-mauve8 data-[disabled]:pointer-events-none data-[highlighted]:bg-primary/20 data-[highlighted]:text-primary"
-                @click="editor.chain().focus().setFontSize('0.875').run()"
+                @click="editor.chain().focus().setFontSize('14px').run()"
               >
                 sm
               </DropdownMenuItem>
@@ -171,84 +171,84 @@ const toggleState = ref(false)
               <DropdownMenuItem
                 :class="{
                   'is-active': editor.isActive('textStyle', {
-                    fontSize: '1.125rem',
+                    fontSize: '18px',
                   }),
                 }"
-                data-test-id="1.125rem"
+                data-test-id="18px"
                 class="group text-xs leading-none text-primary font-mono rounded-[3px] flex items-center h-[25px] px-[5px] relative pl-[25px] select-none outline-none data-[disabled]:text-mauve8 data-[disabled]:pointer-events-none data-[highlighted]:bg-primary/20 data-[highlighted]:text-primary"
-                @click="editor.chain().focus().setFontSize('1.125rem').run()"
+                @click="editor.chain().focus().setFontSize('18px').run()"
               >
                 lg
               </DropdownMenuItem>
               <DropdownMenuItem
                 :class="{
                   'is-active': editor.isActive('textStyle', {
-                    fontSize: '1.25rem',
+                    fontSize: '20px',
                   }),
                 }"
-                data-test-id="1.25rem"
+                data-test-id="20px"
                 class="group text-xs leading-none text-primary font-mono rounded-[3px] flex items-center h-[25px] px-[5px] relative pl-[25px] select-none outline-none data-[disabled]:text-mauve8 data-[disabled]:pointer-events-none data-[highlighted]:bg-primary/20 data-[highlighted]:text-primary"
-                @click="editor.chain().focus().setFontSize('1.25rem').run()"
+                @click="editor.chain().focus().setFontSize('20px').run()"
               >
                 xl
               </DropdownMenuItem>
               <DropdownMenuItem
                 :class="{
                   'is-active': editor.isActive('textStyle', {
-                    fontSize: '1.5rem',
+                    fontSize: '24px',
                   }),
                 }"
-                data-test-id="1.5rem"
+                data-test-id="24px"
                 class="group text-xs leading-none text-primary font-mono rounded-[3px] flex items-center h-[25px] px-[5px] relative pl-[25px] select-none outline-none data-[disabled]:text-mauve8 data-[disabled]:pointer-events-none data-[highlighted]:bg-primary/20 data-[highlighted]:text-primary"
-                @click="editor.chain().focus().setFontSize('1.5rem').run()"
+                @click="editor.chain().focus().setFontSize('24px').run()"
               >
                 2xl
               </DropdownMenuItem>
               <DropdownMenuItem
                 :class="{
                   'is-active': editor.isActive('textStyle', {
-                    fontSize: '1.875rem',
+                    fontSize: '30px',
                   }),
                 }"
-                data-test-id="1.875rem"
+                data-test-id="30px"
                 class="group text-xs leading-none text-primary font-mono rounded-[3px] flex items-center h-[25px] px-[5px] relative pl-[25px] select-none outline-none data-[disabled]:text-mauve8 data-[disabled]:pointer-events-none data-[highlighted]:bg-primary/20 data-[highlighted]:text-primary"
-                @click="editor.chain().focus().setFontSize('1.875rem').run()"
+                @click="editor.chain().focus().setFontSize('30px').run()"
               >
                 3xl
               </DropdownMenuItem>
               <DropdownMenuItem
                 :class="{
                   'is-active': editor.isActive('textStyle', {
-                    fontSize: '2.25rem',
+                    fontSize: '36px',
                   }),
                 }"
-                data-test-id="2.25rem"
+                data-test-id="36px"
                 class="group text-xs leading-none text-primary font-mono rounded-[3px] flex items-center h-[25px] px-[5px] relative pl-[25px] select-none outline-none data-[disabled]:text-mauve8 data-[disabled]:pointer-events-none data-[highlighted]:bg-primary/20 data-[highlighted]:text-primary"
-                @click="editor.chain().focus().setFontSize('2.25rem').run()"
+                @click="editor.chain().focus().setFontSize('36px').run()"
               >
                 4xl
               </DropdownMenuItem>
               <DropdownMenuItem
                 :class="{
                   'is-active': editor.isActive('textStyle', {
-                    fontSize: '3rem',
+                    fontSize: '48px',
                   }),
                 }"
-                data-test-id="3rem"
+                data-test-id="48px"
                 class="group text-xs leading-none text-primary font-mono rounded-[3px] flex items-center h-[25px] px-[5px] relative pl-[25px] select-none outline-none data-[disabled]:text-mauve8 data-[disabled]:pointer-events-none data-[highlighted]:bg-primary/20 data-[highlighted]:text-primary"
-                @click="editor.chain().focus().setFontSize('3rem').run()"
+                @click="editor.chain().focus().setFontSize('48px').run()"
               >
                 5xl
               </DropdownMenuItem>
               <DropdownMenuItem
                 :class="{
                   'is-active': editor.isActive('textStyle', {
-                    fontSize: '3.5rem',
+                    fontSize: '60px',
                   }),
                 }"
-                data-test-id="3.5rem"
+                data-test-id="60px"
                 class="group text-xs leading-none text-primary font-mono rounded-[3px] flex items-center h-[25px] px-[5px] relative pl-[25px] select-none outline-none data-[disabled]:text-mauve8 data-[disabled]:pointer-events-none data-[highlighted]:bg-primary/20 data-[highlighted]:text-primary"
-                @click="editor.chain().focus().setFontSize('3.5rem').run()"
+                @click="editor.chain().focus().setFontSize('60px').run()"
               >
                 6xl
               </DropdownMenuItem>
