@@ -37,6 +37,8 @@ const { t } = useI18n()
 
 const editable_id = shallowRef('')
 const editor_content = shallowRef()
+const newDocumentTitle = shallowRef('')
+const newDocumentContent = shallowRef('')
 const editor_toc = shallowRef([])
 
 const input_title = shallowRef<HTMLElement | null>(null)
@@ -53,6 +55,8 @@ const isRightDragging = shallowRef(false)
 const breakpoints = useBreakpoints(breakpointsTailwind)
 const largerThanLg = breakpoints.greater('lg')
 
+provide('new_document_title', newDocumentTitle)
+provide('new_document_content', newDocumentContent)
 provide('content', editor_content)
 provide('toc', editor_toc)
 provide('editable_id', editable_id)
@@ -64,7 +68,7 @@ provide('layout', layout)
 const { store } = useStore()
 const uiState$ = queryDb(tables.uiState.get(), { label: 'uiState' })
 
-const { newDocumentTitle, newDocumentContent, showDocuments, editable } = useClientDocument(tables.uiState)
+const { showDocuments, editable } = useClientDocument(tables.uiState)
 
 const isEditing = computed(() => editable_id.value.length === 0)
 
@@ -462,9 +466,13 @@ onMounted(() => {
       </SplitterPanel>
       <SplitterResizeHandle
         id="splitter-group-1-resize-handle-1"
-        class="resize-handle hidden md:flex"
+        class="resize-handle hidden md:flex justify-center relative items-center min-w-1"
         @dragging="isLeftDragging = $event"
-      />
+      >
+        <p class="message ">
+          Hold shift to move both panels
+        </p>
+      </SplitterResizeHandle>
 
       <SplitterPanel
         id="splitter-group-1-panel-2"
@@ -500,9 +508,13 @@ onMounted(() => {
       </SplitterPanel>
       <SplitterResizeHandle
         id="splitter-group-1-resize-handle-2"
-        class="resize-handle"
+        class="resize-handle hidden md:flex justify-center relative items-center min-w-1"
         @dragging="isRightDragging = $event"
-      />
+      >
+        <p class="message">
+          Hold shift to move both panels
+        </p>
+      </SplitterResizeHandle>
 
       <SplitterPanel
         id="splitter-group-1-panel-3"

@@ -23,11 +23,9 @@ import {
 } from 'reka-ui'
 import { inject, nextTick, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
-import { useClientDocument, useQuery } from 'vue-livestore'
+import { useQuery } from 'vue-livestore'
 import Tooltip from '@/components/Shared/Tooltip.vue'
 import { tables } from '@/livestore/schema'
-
-const { newDocumentTitle, newDocumentContent } = useClientDocument(tables.uiState)
 
 const visibleDocuments$ = queryDb(tables.documents.where({
   deletedAt: null,
@@ -42,7 +40,8 @@ function close() {
 
 const editable_id = inject('editable_id') as Ref<string | null>
 const editor = inject('content') as Ref<Editor>
-
+const newDocumentTitle = inject('new_document_title') as Ref<string>
+const newDocumentContent = inject('new_document_content') as Ref<string>
 const documents = useQuery(visibleDocuments$)
 
 async function select_document(id: any) {
@@ -108,7 +107,8 @@ whenever(magic_command_menu, (n) => {
                 :class="item.id === editable_id ? 'text-primary underline underline-offset-2 font-extrabold' : ''"
                 @select="select_document(item.id)"
               >
-                <span>{{ item.text || item.id }}</span>
+                <span v-if="item.text">{{ item.text }}</span>
+                <span v-else>No title <span class="font-light text-muted-foreground">{{ item.id }}</span></span>
                 <Circle v-if="!item.completed" class="size-4 stroke-current  text-primary" />
                 <CircleOff v-else class="size-4 stroke-current  text-primary" />
               </ComboboxItem>

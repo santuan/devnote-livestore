@@ -14,12 +14,12 @@ const { t } = useI18n()
 </script>
 
 <template>
-  <div class="gap-1 @xs:grid-cols-4 pb-3  w-full grid border border-secondary p-1">
-    <div class="pb-2 @xs:col-span-4 grid grid-cols-2 w-full gap-2">
-      <p class="text-left p-1 w-full text-xs">
+  <div class="gap-1 @xs:grid-cols-4  w-full grid border border-secondary p-1">
+    <div class=" @xs:col-span-4 grid grid-cols-2 w-full gap-2">
+      <p class="text-left pl-2 flex justify-start items-center w-full text-xs">
         <span>Table</span>
       </p>
-      <div class="grid" :class="editor.can().deleteTable() ? 'grid-cols-2' : ''">
+      <div class="flex justify-end items-center" :class="editor.can().deleteTable() ? 'grid-cols-2' : ''">
         <ToolbarButton
           class="cursor-default flex items-center @xs:min-w-24! border border-secondary px-2 justify-center h-7 gap-2 outline-hidden focus-visible:border-primary focus-visible:border-dashed hover:border-2 text-xs! hover:border-primary"
           @click="
@@ -49,7 +49,7 @@ const { t } = useI18n()
     </div>
     <div
       class="grid @xs:col-span-2 grid-cols-3"
-      :class="editor.can().deleteTable() ? '' : 'opacity-30 pointer-events-none'"
+      :class="editor.can().deleteTable() ? '' : 'hidden'"
     >
       <div />
       <div class="flex justify-center items-center">
@@ -102,7 +102,7 @@ const { t } = useI18n()
       <div />
     </div>
     <div
-      :class="editor.can().deleteTable() ? '' : 'opacity-30 pointer-events-none'"
+      :class="editor.can().deleteTable() ? '' : 'hidden'"
       class="bg-secondary @xs:col-span-2 border border-secondary w-full mt-2 gap-px grid"
     >
       <ToolbarButton

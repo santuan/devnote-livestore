@@ -14,8 +14,8 @@ import {
 } from 'reka-ui'
 import { inject, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
-import { useClientDocument, useStore } from 'vue-livestore'
-import { events, tables } from '@/livestore/schema'
+import { useStore } from 'vue-livestore'
+import { events } from '@/livestore/schema'
 
 const props = defineProps<{
   id: string
@@ -23,8 +23,9 @@ const props = defineProps<{
 }>()
 
 const { store } = useStore()
-const { newDocumentTitle, newDocumentContent } = useClientDocument(tables.uiState)
 const editable_id = inject('editable_id') as Ref<string | null>
+const newDocumentTitle = inject('new_document_title') as Ref<string>
+const newDocumentContent = inject('new_document_content') as Ref<string>
 
 const show_delete_document_modal = ref(false)
 

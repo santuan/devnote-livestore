@@ -17,8 +17,6 @@ export const tables = {
   uiState: State.SQLite.clientDocument({
     name: 'uiState',
     schema: Schema.Struct({
-      newDocumentTitle: Schema.String,
-      newDocumentContent: Schema.String,
       filter: Schema.Literal('all', 'active', 'completed'),
       showDocuments: Schema.Boolean,
       editable: Schema.Boolean,
@@ -26,8 +24,6 @@ export const tables = {
     default: {
       id: SessionIdSymbol,
       value: {
-        newDocumentTitle: '',
-        newDocumentContent: '',
         filter: 'active',
         showDocuments: true,
         editable: true,

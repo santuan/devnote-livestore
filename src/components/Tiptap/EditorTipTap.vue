@@ -69,8 +69,9 @@ const props = defineProps({
 })
 
 const emit = defineEmits(['update:modelValue'])
-const { editable, newDocumentTitle } = useClientDocument(tables.uiState)
+const { editable } = useClientDocument(tables.uiState)
 
+const newDocumentTitle = inject('new_document_title') as Ref<Editor>
 const editor = inject('content') as Ref<Editor>
 const toc = inject('toc') as Ref<object | null>
 const { t } = useI18n()

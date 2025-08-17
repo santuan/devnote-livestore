@@ -674,3 +674,14 @@ html:has(.app-font-size-xl) {
 .resize-handle {
   @apply w-0.5 bg-secondary data-[state=hover]:bg-primary
 }
+
+.resize-handle[data-state=hover] .message {
+  opacity: 1;
+  
+}
+
+.resize-handle .message {
+  opacity: 0;
+  @apply absolute pointer-events-none top-1/2 left-0 min-w-32 -translate-y-1/2 -translate-x-1/2 text-xs text-center text-balance p-2 z-50 ring-primary ring bg-background;
+  @apply delay-500 duration-150
+}
