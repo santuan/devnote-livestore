@@ -72,11 +72,17 @@ const editable_id = inject('editable_id') as Ref<string | null>
             class="bg-secondary px-3 h-8 items-center justify-center text-xs leading-none text-primary select-none opacity-50 data-[state=active]:opacity-100 hover:text-primary data-[state=active]:font-bold data-[state=active]:text-primary outline-none cursor-default focus-visible:relative focus-visible:shadow focus-visible:shadow-primary"
             value="tab1"
           >
-            {{ t("leva.document") }}
+            Format
           </TabsTrigger>
           <TabsTrigger
             class="bg-secondary px-3 h-8 items-center justify-center text-xs leading-none text-primary select-none opacity-50 data-[state=active]:opacity-100 hover:text-primary data-[state=active]:font-bold data-[state=active]:text-primary outline-none cursor-default focus-visible:relative focus-visible:shadow focus-visible:shadow-primary"
             value="tab2"
+          >
+            {{ t("leva.document") }}
+          </TabsTrigger>
+          <TabsTrigger
+            class="bg-secondary px-3 h-8 items-center justify-center text-xs leading-none text-primary select-none opacity-50 data-[state=active]:opacity-100 hover:text-primary data-[state=active]:font-bold data-[state=active]:text-primary outline-none cursor-default focus-visible:relative focus-visible:shadow focus-visible:shadow-primary"
+            value="tab3"
           >
             {{ t("leva.settings") }}
           </TabsTrigger>
@@ -86,12 +92,17 @@ const editable_id = inject('editable_id') as Ref<string | null>
           value="tab1"
         >
           <EditorToolbar />
+        </TabsContent>
+        <TabsContent
+          class="grow overflow-x-hidden overflow-y-auto scrollbar-thumb-rounded-full scrollbar-track-rounded-full scrollbar scrollbar-thumb-primary scrollbar-track-transparent outline-none pt-0.5 focus:shadow-focus:shadow-primary"
+          value="tab2"
+        >
           <ContentAnalysis />
           <TableOfContent />
         </TabsContent>
         <TabsContent
           class="grow overflow-x-hidden overflow-y-auto scrollbar-thumb-rounded-full scrollbar-track-rounded-full scrollbar scrollbar-thumb-primary scrollbar-track-transparent outline-none pt-0.5 focus:shadow-focus:shadow-primary"
-          value="tab2"
+          value="tab3"
         >
           <SidebarSettings
             @collapse-secondary-sidebar="emit('collapseSecondarySidebar')"

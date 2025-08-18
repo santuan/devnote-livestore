@@ -68,7 +68,7 @@ whenever(magic_command_menu, (n) => {
   <DialogRoot v-model:open="show_commandbar">
     <Tooltip :name="t('commandBar.title')" side="bottom" shortcut="ctrl + alt + o">
       <DialogTrigger
-        class="fixed z-[80] left-0 bottom-0 m-px flex items-center justify-center border interactive border-secondary hover:bg-secondary/80 bg-background size-8"
+        class="fixed z-[80] left-0 bottom-0 m-0 flex items-center justify-center border interactive border-secondary hover:bg-secondary/80 bg-background size-8"
       >
         <Search class="size-4" />
         <span class="sr-only">{{ t("commandBar.title") }}</span>

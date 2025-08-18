@@ -21,7 +21,7 @@ const { t } = useI18n()
       @click="editor.chain().focus().toggleCode().run()"
     >
       <span
-        class="flex items-center justify-center text-xs rounded size-5 bg-foreground text-background"
+        class="key"
       >
         M
       </span>
@@ -29,3 +29,19 @@ const { t } = useI18n()
     </ToolbarButton>
   </Tooltip>
 </template>
+
+<style scoped>
+@reference "@/assets/main.css";
+
+.interactive.is-active {
+  @apply bg-red-600;
+
+  .key {
+    @apply bg-primary text-primary-foreground
+  }
+}
+
+.key {
+  @apply flex items-center justify-center text-xs  size-5 bg-gray-900/10! text-foreground;
+}
+</style>

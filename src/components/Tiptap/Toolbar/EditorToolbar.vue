@@ -53,55 +53,59 @@ const showToolbar = useStorage('show_toolbar', true)
       >
         <div class="flex gap-2 flex-wrap">
           <ToolbarToggleGroup class="">
-            <span>History</span>
-            <div class="flex">
+            <span class="text-[10px]!">History</span>
+            <div class="flex mt-0.5">
               <ToolbarUndo />
               <ToolbarRedo />
             </div>
           </ToolbarToggleGroup>
 
           <ToolbarToggleGroup class="">
-            <span>Format</span>
-            <div class="flex flex-wrap">
+            <span class="text-[10px]!">Inline</span>
+            <div class="flex mt-0.5 flex-wrap">
               <ToolbarCharacters />
               <ToolbarInlineCode />
               <ToolbarQuote />
+            </div>
+          </ToolbarToggleGroup>
+          <ToolbarToggleGroup>
+            <span class="text-[10px]!">Clear</span>
+            <div class="flex mt-0.5">
               <ToolbarClear />
             </div>
           </ToolbarToggleGroup>
-        </div>
-        <div class="flex gap-2 flex-wrap">
           <ToolbarToggleGroup>
-            <span>Heading</span>
-            <div class="flex">
-              <ToolbarHeadingSelector />
-            </div>
-          </ToolbarToggleGroup>
-          <ToolbarToggleGroup>
-            <span>Font size</span>
-            <div class="flex">
-              <ToolbarFontsize />
-            </div>
-          </ToolbarToggleGroup>
-        </div>
-        <div class="flex gap-2 flex-wrap">
-          <ToolbarToggleGroup>
-            <span>List</span>
-            <div class="flex">
+            <span class="text-[10px]!">Block</span>
+            <div class="flex mt-0.5">
               <ToolbarList />
               <ToolbarTaskList />
               <ToolbarTextSeparator />
             </div>
           </ToolbarToggleGroup>
           <ToolbarToggleGroup>
-            <span>Text align</span>
-            <div class="flex">
+            <span class="text-[10px]!">Text align</span>
+            <div class="flex mt-0.5">
               <ToolbarTextAlign />
             </div>
           </ToolbarToggleGroup>
+          <ToolbarToggleGroup>
+            <span class="text-[10px]!">Font size</span>
+            <div class="flex mt-0.5">
+              <ToolbarFontsize />
+            </div>
+          </ToolbarToggleGroup>
+        </div>
+        <ToolbarToggleGroup>
+          <span class="text-[10px]!">Heading</span>
+          <div class="flex mt-0.5">
+            <ToolbarHeadingSelector />
+          </div>
+        </ToolbarToggleGroup>
+
+        <div class="flex gap-2 flex-wrap">
           <ToolbarToggleGroup class="w-full">
-            <span>Component</span>
-            <div class="flex w-full flex-wrap gap-1 mb-2">
+            <span class="text-[10px]!">Component</span>
+            <div class="flex w-full mt-0.5 flex-wrap gap-1 mb-2">
               <ToolbarCodeBlock />
               <ToolbarLatex />
               <ToolbarButton
