@@ -2,7 +2,7 @@
 import type { Editor } from '@tiptap/core'
 import type { Ref } from 'vue'
 
-import { Grid3x2, Minus, Plus } from 'lucide-vue-next'
+import { Minus, Plus } from 'lucide-vue-next'
 
 import { ToolbarButton } from 'reka-ui'
 import { inject } from 'vue'
