@@ -127,7 +127,9 @@
   font-family: KaTeX_Size2;
 }
 
-
+.tiptap hr {
+  @apply border-secondary mt-10 mb-0 pb-0 pt-0;
+}
 
 .tiptap table:first-of-type,
 .tiptap h1:first-of-type,

@@ -39,7 +39,7 @@ const editable_id = inject('editable_id') as Ref<string | null>
     :class="props.focusMode ? 'opacity-0 pointer-events-none' : ''"
   >
     <div
-      class="p-1 pr-0 flex sticky top-0 right-0 z-10 bg-background justify-between items-center text-xs gap-1"
+      class="p-1 pr-1 flex sticky top-0 right-0 z-10 bg-background justify-between items-center text-xs gap-1"
     >
       <div class="flex justify-start items-center">
         <strong class="font-bold mr-1">ID:</strong>

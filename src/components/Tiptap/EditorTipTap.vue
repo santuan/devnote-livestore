@@ -167,7 +167,7 @@ onMounted(() => {
       // Custom extensions
       CharacterCount.configure({ limit: 50000 }),
       Placeholder.configure({ placeholder: t('editor.placeholder') }),
-      Table.configure({ resizable: true, allowTableNodeSelection: true, lastColumnResizable: true }),
+      Table.configure({ resizable: false, allowTableNodeSelection: true, lastColumnResizable: false }),
       TaskItem.configure({ nested: false }),
       TextAlign.configure({ types: ['heading', 'paragraph'] }),
       TextStyleKit.configure({
