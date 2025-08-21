@@ -51,7 +51,7 @@ const layout = shallowRef<number[]>([0, 0])
 const isAltPressed = shallowRef(false)
 const isLeftDragging = shallowRef(false)
 const isRightDragging = shallowRef(false)
-
+const unsavedChanges = shallowRef(false)
 const breakpoints = useBreakpoints(breakpointsTailwind)
 const largerThanLg = breakpoints.greater('lg')
 
@@ -116,6 +116,10 @@ function resetStore() {
 }
 
 function editDocument(id: string) {
+  if (unsavedChanges.value) {
+    // eslint-disable-next-line no-alert
+    return alert('Tiene cambios sin guardar')
+  }
   if (!id)
     return
   const foundTodo = documents.value.find(todo => todo.id === id)
@@ -159,6 +163,12 @@ function auto_save() {
 watchEffect(() => {
   if (newDocumentContent.value)
     auto_save()
+  if (newDocumentContent.value !== '' && editable_id.value.length === 0) {
+    unsavedChanges.value = true
+  }
+  else {
+    unsavedChanges.value = false
+  }
 })
 
 function toggle_documents() {
