@@ -60,7 +60,7 @@ const editable_id = inject('editable_id') as Ref<string | null>
     >
       <TabsRoot v-model="sidetabTab" class="flex h-[calc(100vh-2.5rem)] flex-col w-full" default-value="tab1">
         <TabsList
-          class="relative shrink-0 flex justify-start border-b border-transparent"
+          class="relative shrink-0 flex justify-start border-b border-secondary"
           aria-label="Secondary sidebar"
         >
           <TabsIndicator
@@ -108,7 +108,9 @@ const editable_id = inject('editable_id') as Ref<string | null>
             @collapse-secondary-sidebar="emit('collapseSecondarySidebar')"
             @focus-mode-on="emit('focusModeOn')"
             @toggle-editable="emit('toggleEditable')"
-          />
+          >
+            <slot />
+          </SidebarSettings>
 
           <DatabaseSettings />
         </TabsContent>

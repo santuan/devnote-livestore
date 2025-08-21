@@ -6,7 +6,6 @@ import { useClientDocument } from 'vue-livestore'
 import { tables } from '@/livestore/schema'
 import DropdownLanguage from './DropdownLanguage.vue'
 import ToggleTheme from './ToggleTheme.vue'
-import WindowsLayout from './WindowsLayout.vue'
 
 const emit = defineEmits<{
   (e: 'collapseSecondarySidebar'): void
@@ -88,7 +87,7 @@ const showPerspective = useStorage('show_perspective', true)
       </span>
     </button>
     <div v-show="showLayouts" class="@xs:pl-5 mt-1 pr-2 pb-4">
-      <WindowsLayout />
+      <slot />
     </div>
   </div>
 

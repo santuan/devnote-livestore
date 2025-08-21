@@ -8,7 +8,7 @@ import {
   useStorage,
   whenever,
 } from '@vueuse/core'
-import { Eye, PanelRightOpen } from 'lucide-vue-next'
+import { Eye, PanelRightOpen, Pencil } from 'lucide-vue-next'
 import { SplitterGroup, SplitterPanel, SplitterResizeHandle } from 'reka-ui'
 import {
   computed,
@@ -48,7 +48,7 @@ const sidebar_documents_splitter_ref = shallowRef()
 const sidebar_secondary_splitter_ref = shallowRef()
 const resize = shallowRef(0)
 const layout = shallowRef<number[]>([0, 0])
-const isShiftPressed = shallowRef(false)
+const isAltPressed = shallowRef(false)
 const isLeftDragging = shallowRef(false)
 const isRightDragging = shallowRef(false)
 
@@ -162,9 +162,6 @@ watchEffect(() => {
 
 function toggle_documents() {
   showDocuments.value = !showDocuments.value
-  if (focus_mode.value === true) {
-    focus_mode.value = false
-  }
 }
 
 watch(
@@ -207,10 +204,10 @@ function focusModeOn() {
   focus_mode.value = true
 }
 
-function handleHoldShiftLayoutChange(newLayout: number[]) {
+function handleHoldAltLayoutChange(newLayout: number[]) {
   layout.value = newLayout
 
-  if (!isShiftPressed.value || newLayout.length < 3) {
+  if (!isAltPressed.value) {
     return
   }
 
@@ -238,41 +235,41 @@ function collapseSecondarySidebar() {
 function expandSecondarySidebar() {
   if (!sidebar_secondary_splitter_ref.value)
     return
-  sidebar_secondary_splitter_ref.value.expand()
+  sidebar_secondary_splitter_ref.value.resize(80)
 }
 
 const keys = useMagicKeys()
 
 const magic_disabled_focus_mode = keys['ctrl+alt+shift+f']
-whenever(magic_disabled_focus_mode, (n) => {
+whenever(magic_disabled_focus_mode!, (n) => {
   if (n === true) {
     focus_mode.value = !focus_mode.value
   }
 })
 
 const magic_show_documents = keys['ctrl+m']
-whenever(magic_show_documents, (n) => {
+whenever(magic_show_documents!, (n) => {
   if (n === true) {
     toggle_documents()
   }
 })
 
 const magic_toggle_editable = keys['ctrl+alt+shift+p']
-whenever(magic_toggle_editable, (n) => {
+whenever(magic_toggle_editable!, (n) => {
   if (n === true) {
     toggle_editable()
   }
 })
 
 const magic_reset_store = keys['ctrl+alt+shift+n']
-whenever(magic_reset_store, (n) => {
+whenever(magic_reset_store!, (n) => {
   if (n === true) {
     resetStore()
   }
 })
 
 const magic_input_title = keys['ctrl+alt+shift+t']
-whenever(magic_input_title, (n) => {
+whenever(magic_input_title!, (n) => {
   if (n === true) {
     if (input_title.value instanceof HTMLElement) {
       input_title.value.focus()
@@ -281,14 +278,14 @@ whenever(magic_input_title, (n) => {
 })
 
 const magic_focus_editor = keys['ctrl+alt+shift+u']
-whenever(magic_focus_editor, (n) => {
+whenever(magic_focus_editor!, (n) => {
   if (n === true) {
     editor_content.value.commands.focus()
   }
 })
 
 const magic_focus_logo = keys['ctrl+alt+shift+ArrowLeft']
-whenever(magic_focus_logo, (n) => {
+whenever(magic_focus_logo!, (n) => {
   if (n === true) {
     if (sidebar_documents_splitter_ref.value.isCollapsed) {
       sidebar_documents_splitter_ref.value.expand()
@@ -304,8 +301,9 @@ whenever(magic_focus_logo, (n) => {
     }
   }
 })
+
 const magic_collapse_secondary_sidebar = keys['ctrl+alt+shift+ArrowRight']
-whenever(magic_collapse_secondary_sidebar, (n) => {
+whenever(magic_collapse_secondary_sidebar!, (n) => {
   if (n === true) {
     if (sidebar_secondary_splitter_ref.value.isCollapsed) {
       expandSecondarySidebar()
@@ -317,16 +315,92 @@ whenever(magic_collapse_secondary_sidebar, (n) => {
 })
 
 const magic_navigate_next_document = keys['ctrl+shift+alt+ArrowDown']
-whenever(magic_navigate_next_document, (n) => {
+whenever(magic_navigate_next_document!, (n) => {
   if (n === true) {
     navigateToNextDocument()
   }
 })
 
 const magic_navigate_previous_document = keys['ctrl+shift+alt+ArrowUp']
-whenever(magic_navigate_previous_document, (n) => {
+whenever(magic_navigate_previous_document!, (n) => {
   if (n === true) {
     navigateToPreviousDocument()
+  }
+})
+
+function windowLayoutOne() {
+  if (!layout.value)
+    return
+  sidebar_documents_splitter_ref.value.resize(30)
+  sidebar_secondary_splitter_ref.value.resize(30)
+}
+
+function windowLayout25() {
+  if (!layout.value)
+    return
+  sidebar_documents_splitter_ref.value.resize(25)
+  sidebar_secondary_splitter_ref.value.resize(25)
+}
+
+const magic_window_layout_one = keys['ctrl+shift+Digit1']
+whenever(magic_window_layout_one!, (n) => {
+  if (n === true) {
+    windowLayoutOne()
+  }
+})
+
+function windowLayoutTwo() {
+  if (!layout.value)
+    return
+  sidebar_documents_splitter_ref.value.resize(5)
+  sidebar_secondary_splitter_ref.value.resize(50)
+}
+
+const magic_window_layout_two = keys['ctrl+shift+Digit2']
+whenever(magic_window_layout_two!, (n) => {
+  if (n === true) {
+    windowLayoutTwo()
+  }
+})
+
+function windowLayoutThree() {
+  if (!layout.value)
+    return
+  sidebar_documents_splitter_ref.value.resize(50)
+  sidebar_secondary_splitter_ref.value.resize(5)
+}
+
+const magic_window_layout_three = keys['ctrl+shift+Digit3']
+whenever(magic_window_layout_three!, (n) => {
+  if (n === true) {
+    windowLayoutThree()
+  }
+})
+
+function windowLayoutFour() {
+  if (!layout.value)
+    return
+  sidebar_documents_splitter_ref.value.resize(15)
+  sidebar_secondary_splitter_ref.value.resize(15)
+}
+const magic_window_layout_four = keys['ctrl+shift+Digit4']
+whenever(magic_window_layout_four!, (n) => {
+  if (n === true) {
+    windowLayoutFour()
+  }
+})
+
+function windowLayoutFive() {
+  if (!layout.value)
+    return
+  sidebar_documents_splitter_ref.value.resize(5)
+  sidebar_secondary_splitter_ref.value.resize(5)
+}
+
+const magic_window_layout_five = keys['ctrl+shift+Digit5']
+whenever(magic_window_layout_five!, (n) => {
+  if (n === true) {
+    windowLayoutFive()
   }
 })
 
@@ -376,14 +450,14 @@ onMounted(() => {
 
   // Detectar cuando se presiona/suelta Shift
   const handleKeyDown = (event: KeyboardEvent) => {
-    if (event.key === 'Shift') {
-      isShiftPressed.value = true
+    if (event.key === 'Alt') {
+      isAltPressed.value = true
     }
   }
 
   const handleKeyUp = (event: KeyboardEvent) => {
-    if (event.key === 'Shift') {
-      isShiftPressed.value = false
+    if (event.key === 'Alt') {
+      isAltPressed.value = false
     }
   }
 
@@ -408,7 +482,7 @@ onMounted(() => {
       id="splitter-group-1"
       direction="horizontal"
       auto-save-id="app-desktop"
-      @layout="handleHoldShiftLayoutChange"
+      @layout="handleHoldAltLayoutChange"
     >
       <SplitterPanel
         id="splitter-group-1-panel-1"
@@ -469,8 +543,8 @@ onMounted(() => {
         class="resize-handle hidden md:flex justify-center relative items-center min-w-1"
         @dragging="isLeftDragging = $event"
       >
-        <p class="message ">
-          Hold shift to move both panels
+        <p class="message">
+          Hold alt to move both panels
         </p>
       </SplitterResizeHandle>
 
@@ -512,7 +586,7 @@ onMounted(() => {
         @dragging="isRightDragging = $event"
       >
         <p class="message">
-          Hold shift to move both panels
+          Hold alt to move both panels
         </p>
       </SplitterResizeHandle>
 
@@ -541,13 +615,114 @@ onMounted(() => {
         >
           <PanelRightOpen class="size-5 pointer-events-none" />
         </button>
+        <button
+          v-if="!focus_mode"
+          class="fixed size-8  flex justify-center items-center  z-50"
+          :class="[
+            !editable
+              ? 'bg-background'
+              : 'bg-primary ring text-primary-foreground ring-secondary',
+            layout[2] === 0 ? 'right-0 top-9' : 'right-1 top-10',
+          ]"
+          @click="toggle_editable"
+        >
+          <Pencil class="size-3.5" />
+          <span class="sr-only"> editable </span>
+        </button>
         <SidebarSecondary
           v-if="layout[2] !== 0"
           :focus-mode="focus_mode"
           @collapse-secondary-sidebar="collapseSecondarySidebar"
           @focus-mode-on="focusModeOn"
           @toggle-editable="toggle_editable"
-        />
+        >
+          <div class="grid gap-2 grid-cols-2 @xs:pl-0 pl-2 @xs:grid-cols-3">
+            <button
+              class="flex gap-px outline-1 outline-primary text-xs items-center justify-center text-center w-full bg-secondary/80"
+              @click="windowLayoutOne()"
+            >
+              <span
+                class="bg-secondary/30 flex justify-center items-center h-6 w-[30%]"
+              />
+              <span
+                class="bg-primary/10 ring-1 ring-primary/40 text-primary flex justify-center items-center h-6 w-[40%]"
+              >40%</span>
+              <span
+                class="bg-secondary/30 flex justify-center items-center h-6 w-[30%]"
+              />
+            </button>
+            <button
+              class="flex gap-px outline-1 outline-primary text-xs items-center justify-center text-center w-full bg-secondary/80"
+              @click="windowLayout25()"
+            >
+              <span
+                class="bg-secondary/30 flex justify-center items-center h-6 w-[30%]"
+              />
+              <span
+                class="bg-primary/10 ring-1 ring-primary/40 text-primary flex justify-center items-center h-6 w-[40%]"
+              >50%</span>
+              <span
+                class="bg-secondary/30 flex justify-center items-center h-6 w-[30%]"
+              />
+            </button>
+            <button
+              class="flex gap-px outline-1 outline-primary text-xs items-center justify-center text-center w-full bg-secondary/80"
+              @click="windowLayoutFour()"
+            >
+              <span
+                class="bg-secondary/30 flex justify-center items-center h-6 w-[15%]"
+              />
+              <span
+                class="bg-primary/10 ring-1 ring-primary/40 text-primary flex justify-center items-center h-6 w-[70%]"
+              >70%</span>
+              <span
+                class="bg-secondary/30 flex justify-center items-center h-6 w-[15%]"
+              />
+            </button>
+            <button
+              class="flex gap-px outline-1 outline-primary text-xs items-center justify-center text-center w-full bg-secondary/80"
+              @click="windowLayoutFive()"
+            >
+              <span
+                class="bg-secondary/30 flex justify-center items-center h-6 w-[5%]"
+              />
+              <span
+                class="bg-primary/10 ring-1 ring-primary/40 text-primary flex justify-center items-center h-6 w-[90%]"
+              >90%</span>
+              <span
+                class="bg-secondary/30 flex justify-center items-center h-6 w-[5%]"
+              />
+            </button>
+            <button
+              class="flex gap-px outline-1 outline-primary text-xs items-center justify-center text-center w-full bg-secondary/80"
+              @click="windowLayoutTwo()"
+            >
+              <span
+                class="bg-secondary/30 flex justify-center items-center h-6 w-[5%]"
+              />
+              <span
+                class="bg-primary/10 ring-1 ring-primary/40 text-primary flex justify-center items-center h-6 w-[65%]"
+              >65%</span>
+              <span
+                class="bg-secondary/30 flex justify-center items-center h-6 w-[30%]"
+              />
+            </button>
+            <button
+              class="flex gap-px outline-1 outline-primary text-xs items-center justify-center text-center w-full bg-secondary/80"
+              @click="windowLayoutThree()"
+            >
+              <span
+                class="bg-secondary/30 flex justify-center items-center h-6 w-[30%]"
+              />
+              <span
+                class="bg-primary/10 ring-1 ring-primary/40 text-primary flex justify-center items-center h-6 w-[65%]"
+              >65%</span>
+              <span
+                class="bg-secondary/30 flex justify-center items-center h-6 w-[5%]"
+              />
+            </button>
+          </div>
+        </SidebarSecondary>
       </SplitterPanel>
     </SplitterGroup>
   </div>

@@ -51,7 +51,7 @@ const showToolbar = useStorage('show_toolbar', true)
         v-if="showToolbar"
         class="toolbar bg-background pt-2 select-none focus-visible:outline! focus-visible:outline-primary/10! grid gap-3 focus-visible:outline-offset-[1.5px]! w-full"
       >
-        <div class="flex gap-2 flex-wrap">
+        <div class="flex gap-2 flex-wrap pr-2">
           <ToolbarToggleGroup class="">
             <span class="text-[10px]!">History</span>
             <div class="flex mt-0.5">
@@ -65,7 +65,6 @@ const showToolbar = useStorage('show_toolbar', true)
             <div class="flex mt-0.5 flex-wrap">
               <ToolbarCharacters />
               <ToolbarInlineCode />
-              <ToolbarQuote />
             </div>
           </ToolbarToggleGroup>
           <ToolbarToggleGroup>
@@ -79,6 +78,7 @@ const showToolbar = useStorage('show_toolbar', true)
             <div class="flex mt-0.5">
               <ToolbarList />
               <ToolbarTaskList />
+              <ToolbarQuote />
               <ToolbarTextSeparator />
             </div>
           </ToolbarToggleGroup>
