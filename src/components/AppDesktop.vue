@@ -112,6 +112,7 @@ function resetStore() {
   newDocumentContent.value = ''
   editable_id.value = ''
   editable.value = true
+  createDocument()
 }
 
 function editDocument(id: string) {
@@ -445,7 +446,6 @@ function navigateToPreviousDocument() {
 
 onMounted(() => {
   useColorMode()
-  resetStore()
   useToggleColorTheme(colorTheme.value)
 
   // Detectar cuando se presiona/suelta Shift
