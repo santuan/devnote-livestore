@@ -18,6 +18,8 @@ export const tables = {
     name: 'uiState',
     schema: Schema.Struct({
       filter: Schema.Literal('all', 'active', 'completed'),
+      sort: Schema.Literal('text'),
+      sortBy: Schema.Literal('asc', 'desc'),
       showDocuments: Schema.Boolean,
       editable: Schema.Boolean,
     }),
@@ -25,6 +27,8 @@ export const tables = {
       id: SessionIdSymbol,
       value: {
         filter: 'active',
+        sort: 'text',
+        sortBy: 'asc',
         showDocuments: true,
         editable: true,
       },

@@ -76,7 +76,7 @@ const filteredOptions = computed(() =>
 </script>
 
 <template>
-  <fieldset class="relative flex flex-col w-full font-mono">
+  <fieldset class="relative flex flex-col w-64 font-mono">
     <PopoverRoot>
       <div class="btn">
         <PopoverTrigger
@@ -85,14 +85,14 @@ const filteredOptions = computed(() =>
         >
           <div
             v-if="selected"
-            class="flex items-center opacity-70 print:scale-75 print:translate-x-1 print:-translate-y-1 justify-between w-full gap-2 text-xs"
+            class="flex items-center opacity-70 h-8 print:scale-75 print:translate-x-1 print:-translate-y-1 justify-between w-full gap-2 text-xs"
           >
             <span class="shrink-0 text-foreground">{{ selected }}</span>
             <ChevronDown class="size-4" />
           </div>
           <div
             v-else
-            class="flex items-center opacity-70 print:scale-75 print:translate-x-1 print:-translate-y-1 justify-between w-full gap-2 text-xs"
+            class="flex items-center opacity-70 h-8 print:scale-75 print:translate-x-1 print:-translate-y-1 justify-between w-full gap-2 text-xs"
           >
             <span>Auto</span>
             <ChevronDown class="size-4" />
@@ -102,7 +102,7 @@ const filteredOptions = computed(() =>
       <PopoverPortal>
         <PopoverContent
           side="bottom"
-          :side-offset="8"
+          :side-offset="10"
           align="end"
           :align-offset="-8"
           class="w-64 lg:max-w-7xl bg-background shadow-md focus:shadow-lg border border-secondary"

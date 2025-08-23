@@ -56,9 +56,9 @@ const editable_id = inject('editable_id') as Ref<string | null>
       </div>
     </div>
     <div
-      class="p-px max-h-[calc(100vh-2.5rem)] bg-background  min-h-[calc(100vh-2.5rem)]"
+      class="p-px max-h-[calc(100vh-2.5rem)] bg-background  min-h-[calc(100vh-2.5rem)] "
     >
-      <TabsRoot v-model="sidetabTab" class="flex h-[calc(100vh-2.5rem)] flex-col w-full" default-value="tab1">
+      <TabsRoot v-model="sidetabTab" class="flex h-[calc(100vh-2.5rem)]  flex-col w-full" default-value="tab1">
         <TabsList
           class="relative shrink-0 flex justify-start border-b border-secondary"
           aria-label="Secondary sidebar"

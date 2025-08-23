@@ -75,10 +75,16 @@ const isEditing = computed(() => editable_id.value.length === 0)
 const visibleDocuments$ = queryDb(
   (get) => {
     const filter = get(uiState$).filter
-    return tables.documents.where({
-      deletedAt: null,
-      completed: filter === 'all' ? undefined : filter === 'completed',
-    })
+    const sort = get(uiState$).sort
+    const sortBy = get(uiState$).sortBy
+    const query = tables.documents
+      .where({
+        deletedAt: null,
+        completed: filter === 'all' ? undefined : filter === 'completed',
+      })
+      .orderBy(sort, sortBy)
+
+    return query
   },
   { label: 'visibleDocuments' },
 )
@@ -118,7 +124,10 @@ function resetStore() {
 function editDocument(id: string) {
   if (unsavedChanges.value) {
     // eslint-disable-next-line no-alert
-    return alert('Tiene cambios sin guardar')
+    const confirmUnsaved = confirm('Tiene cambios sin guardar. ¿Desea perder los cambios?')
+    if (!confirmUnsaved) {
+      return
+    }
   }
   if (!id)
     return
@@ -246,7 +255,7 @@ function collapseSecondarySidebar() {
 function expandSecondarySidebar() {
   if (!sidebar_secondary_splitter_ref.value)
     return
-  sidebar_secondary_splitter_ref.value.resize(80)
+  sidebar_secondary_splitter_ref.value.resize(22)
 }
 
 const keys = useMagicKeys()

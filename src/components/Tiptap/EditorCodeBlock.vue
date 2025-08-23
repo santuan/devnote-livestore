@@ -149,7 +149,7 @@ export default {
     spellcheck="false"
     :class="[
       showFullCode
-        ? 'fixed! pt-10 bg-background z-[90] !my-0 left-0! min-h-screen inset-0!'
+        ? 'fixed! pt-10 z-[90] !my-0 left-0! min-h-screen inset-0!'
         : 'pt-10',
     ]"
   >
@@ -174,36 +174,35 @@ export default {
         />
       </ScrollAreaScrollbar>
     </ScrollAreaRoot>
-    <div class="absolute flex justify-between left-0 top-0 right-0">
+    <div class="absolute grid grid-cols-3 bg-background justify-between w-full left-0 top-0 right-0">
       <!-- Title Section -->
-      <div class="sticky left-0 top-0 font-mono w-64">
-        <div
+      <div class="font-mono h-10 flex items-center p-1 text-left w-full col-span-2 text-xs">
+        <template
           v-if="codeTitle || isEditingTitle"
-          class="flex items-center  w-96 justify-between"
         >
           <!-- Title Display/Edit -->
-          <div class="flex-1 w-full min-w-0 p-1 pr-0">
+          <div class="w-full">
             <input
               v-if="isEditingTitle"
               ref="titleInput"
               v-model="titleInput"
-              class="w-full h-8 bg-background focus:outline-primary font-normal px-1 text-xs border-none outline-1 focus:outline-1 text-primary"
+              class="text-left h-8 w-full truncate block ring-1 outline-none ring-primary px-1"
               placeholder="Filename..."
               @blur="saveTitle"
               @keydown="handleTitleKeydown"
             >
             <button
-              v-if="!isEditingTitle"
-              class="text-xs font-normal h-8 px-1 hover:text-foreground transition-colors  truncate block w-full text-left"
+              v-else
+              class="text-left h-8 max-h-8 leading-8 overflow-y-hidden line-clamp-1 w-full px-1"
               @click="startEditingTitle"
             >
               {{ codeTitle }}
             </button>
           </div>
-        </div>
+        </template>
         <button
           v-else
-          class="absolute top-0 w-96 text-left font-normal left-0 text-xs h-8 min-w-20 m-1 p-1 text-muted-foreground hover:text-foreground transition-colors bg-background py-1 border border-muted z-10"
+          class="text-left w-full text-muted-foreground h-8 px-1"
           @click="startEditingTitle"
         >
           Filename...
@@ -211,7 +210,7 @@ export default {
       </div>
 
       <div
-        class="sticky w-64 codeBlockActions p-1 top-0 right-0 translate-x-0! flex items-center duration-100 justify-end gap-1"
+        class="sticky codeBlockActions p-1 top-0 right-0 translate-x-0! flex items-center duration-100 justify-end gap-1"
         :class="showFullCode ? 'z-[91]' : 'z-30'"
       >
         <Transition mode="out-in">
