@@ -4,6 +4,7 @@ import {
   breakpointsTailwind,
   useBreakpoints,
   useColorMode,
+  useDebounceFn,
   useMagicKeys,
   useStorage,
   whenever,
@@ -169,9 +170,12 @@ function auto_save() {
   updateDocument()
 }
 
+const debouncedAutoSave = useDebounceFn(auto_save, 150)
+
 watchEffect(() => {
   if (newDocumentContent.value)
-    auto_save()
+
+    debouncedAutoSave()
   if (newDocumentContent.value !== '' && editable_id.value.length === 0) {
     unsavedChanges.value = true
   }
@@ -253,8 +257,6 @@ function collapseSecondarySidebar() {
 }
 
 function expandSecondarySidebar() {
-  if (!sidebar_secondary_splitter_ref.value)
-    return
   sidebar_secondary_splitter_ref.value.resize(22)
 }
 
@@ -655,7 +657,7 @@ onMounted(() => {
           @focus-mode-on="focusModeOn"
           @toggle-editable="toggle_editable"
         >
-          <div class="grid gap-2 grid-cols-2 @xs:pl-0 pl-2 @xs:grid-cols-3">
+          <div class="grid gap-2 grid-cols-2 @xs:pl-1 pl-2 @xs:grid-cols-3">
             <button
               class="flex gap-px outline-1 outline-primary text-xs items-center justify-center text-center w-full bg-secondary/80"
               @click="windowLayoutOne()"
