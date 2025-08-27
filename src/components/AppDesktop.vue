@@ -13,6 +13,7 @@ import { Eye, PanelRightOpen, Pencil } from 'lucide-vue-next'
 import { SplitterGroup, SplitterPanel, SplitterResizeHandle } from 'reka-ui'
 import {
   computed,
+  nextTick,
   onBeforeUnmount,
   onMounted,
   provide,
@@ -65,6 +66,7 @@ provide('editable_id', editable_id)
 provide('sidebar_documents_splitter', sidebar_documents_splitter_ref)
 provide('sidebar_secondary_splitter', sidebar_secondary_splitter_ref)
 provide('layout', layout)
+provide('unsaved_changes', unsavedChanges)
 
 const { store } = useStore()
 const uiState$ = queryDb(tables.uiState.get(), { label: 'uiState' })
@@ -120,6 +122,9 @@ function resetStore() {
   editable_id.value = ''
   editable.value = true
   createDocument()
+  nextTick(() => {
+    editor_content.value.commands.focus()
+  })
 }
 
 function editDocument(id: string) {
@@ -174,7 +179,6 @@ const debouncedAutoSave = useDebounceFn(auto_save, 150)
 
 watchEffect(() => {
   if (newDocumentContent.value)
-
     debouncedAutoSave()
   if (newDocumentContent.value !== '' && editable_id.value.length === 0) {
     unsavedChanges.value = true
@@ -257,7 +261,7 @@ function collapseSecondarySidebar() {
 }
 
 function expandSecondarySidebar() {
-  sidebar_secondary_splitter_ref.value.resize(22)
+  sidebar_secondary_splitter_ref.value.resize(20)
 }
 
 const keys = useMagicKeys()

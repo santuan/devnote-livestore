@@ -42,9 +42,18 @@ const editable_id = inject('editable_id') as Ref<string | null>
 const editor = inject('content') as Ref<Editor>
 const newDocumentTitle = inject('new_document_title') as Ref<string>
 const newDocumentContent = inject('new_document_content') as Ref<string>
+const unsavedChanges = inject('unsaved_changes') as Ref<boolean>
+
 const documents = useQuery(visibleDocuments$)
 
 async function select_document(id: any) {
+  if (unsavedChanges.value) {
+    // eslint-disable-next-line no-alert
+    const confirmUnsaved = confirm('Tiene cambios sin guardar. ¿Desea perder los cambios?')
+    if (!confirmUnsaved) {
+      return
+    }
+  }
   const foundTodo = documents.value.find(todo => todo.id === id)
   if (foundTodo) {
     newDocumentTitle.value = foundTodo.text
