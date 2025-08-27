@@ -72,7 +72,7 @@
     "katex": "^0.16.22",
     "lucide-vue-next": "^0.542.0",
     "reka-ui": "^2.4.1",
-    "shiki": "^3.11.0",
+    "shiki": "^3.12.0",
     "tiptap-extension-code-block-shiki": "^0.6.0",
     "vue": "^3.6.0-alpha",
     "vue-i18n": "^11.1.11",
