@@ -45,6 +45,10 @@ export const events = {
     name: 'v1.DocumentUpdated',
     schema: Schema.Struct({ id: Schema.String, text: Schema.String, content: Schema.String }),
   }),
+  documentUpdatedTitle: Events.synced({
+    name: 'v1.documentUpdatedTitle',
+    schema: Schema.Struct({ id: Schema.String, text: Schema.String }),
+  }),
   documentCompleted: Events.synced({
     name: 'v1.DocumentCompleted',
     schema: Schema.Struct({ id: Schema.String }),
@@ -72,6 +76,7 @@ export const events = {
 const materializers = State.SQLite.materializers(events, {
   'v1.DocumentCreated': ({ id, text, content }) => tables.documents.insert({ id, text, content, completed: false }),
   'v1.DocumentUpdated': ({ id, text, content }) => tables.documents.update({ text, content }).where({ id }),
+  'v1.documentUpdatedTitle': ({ id, text }) => tables.documents.update({ text }).where({ id }),
   'v1.DocumentCompleted': ({ id }) => tables.documents.update({ completed: true }).where({ id }),
   'v1.DocumentUncompleted': ({ id }) => tables.documents.update({ completed: false }).where({ id }),
   'v1.DocumentDeleted': ({ id, deletedAt }) => tables.documents.update({ deletedAt }).where({ id }),

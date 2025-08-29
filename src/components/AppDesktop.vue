@@ -158,6 +158,20 @@ function updateDocument() {
   )
 }
 
+function updateDocumentTitle() {
+  store.commit(
+    events.documentUpdatedTitle({
+      id: editable_id.value,
+      text: newDocumentTitle.value,
+    }),
+  )
+}
+
+watchEffect(() => {
+  if (newDocumentTitle.value)
+    updateDocumentTitle()
+})
+
 function toggleCompleted(id: string) {
   if (documents.value.find(item => item.id === id)?.completed) {
     store.commit(events.documentUncompleted({ id }))
@@ -546,11 +560,11 @@ onMounted(() => {
             </template>
             <template #list>
               <DocumentItem
-                v-for="item in documents"
-                :id="item?.id"
+                v-for="item in Array.isArray(documents) ? documents : []"
+                :id="item.id"
                 :key="item.id"
-                :completed="item?.completed"
-                :text="item?.text"
+                :completed="item.completed"
+                :text="item.text"
                 @edit="editDocument"
                 @toggle="toggleCompleted"
               />

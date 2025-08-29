@@ -235,7 +235,7 @@ const { editable } = useClientDocument(tables.uiState)
     class="relative flex my-0 overflow-hidden media-node-view not-prose"
   >
     <div v-if="editable" class="bg-secondary/30 flex justify-between items-center absolute top-0 left-0 right-0 h-9">
-      <div class="flex">
+      <div class="flex ImageResizable">
         <PopoverRoot>
           <PopoverTrigger
             aria-label="Update dimensions"
@@ -348,7 +348,7 @@ const { editable } = useClientDocument(tables.uiState)
         </PopoverRoot>
       </div>
       <div
-        class="focus:ring-primary! DeleteImage z-50 focus:ring-2! print:hidden  text-foreground size-9 bg-secondary  flex justify-center items-center"
+        class="focus:ring-primary! DeleteImage z-50 focus:ring-2! print:hidden text-foreground size-9 bg-secondary  flex justify-center items-center"
       >
         <button
           v-if="isGif"
@@ -466,8 +466,8 @@ const { editable } = useClientDocument(tables.uiState)
                     class="mx-auto"
                   >
                 </div>
-                <DialogClose class="fixed top-0 size-6 flex justify-center items-center m-3 right-3 z-999 text-foreground">
-                  <X class="size-6" />
+                <DialogClose class="fixed top-0 size-6 flex justify-center items-center m-2 right-0 z-[999] text-foreground">
+                  <X class="size-4" />
                   <span class="sr-only">{{ t('verb.close') }}</span>
                 </DialogClose>
               </DialogContent>
@@ -530,6 +530,15 @@ const { editable } = useClientDocument(tables.uiState)
 
 .is-preview .tiptap .ProseMirror-selectednode {
   @apply ring-0;
+}
+
+.ImageResizable, .DeleteImage {
+  opacity: 0;
+}
+
+.media-node-view:hover .ImageResizable,
+.media-node-view:hover .DeleteImage {
+  opacity: 1;
 }
 
 .previewImage .ExpandImageTrigger {

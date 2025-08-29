@@ -319,6 +319,11 @@ html.dark .shiki span {
   cursor: col-resize;
 }
 
+
+.tiptap .media-node-view {
+  @apply border-transparent! border-2! border-dashed;
+}
+
 .tiptap .ProseMirror-selectednode {
   @apply border-primary! border-2! border-dashed;
 }
@@ -327,9 +332,9 @@ html.dark .shiki span {
   @apply border-primary/5 border-2 bg-primary/[0.0005];
 }
 
-.is-editable .tiptap .media-node-view.ProseMirror-selectednode {
-  @apply ring-0! ring-transparent! bg-primary/[0.02] border-2 border-red-600 border-dashed;
-}
+/* .is-editable .tiptap .media-node-view.ProseMirror-selectednode {
+  @apply ring-0! ring-transparent! bg-red-600 border-4! border-red-600 border-dashed;
+} */
 
 .tiptap li p {
   @apply m-0;
