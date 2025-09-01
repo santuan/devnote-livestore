@@ -130,7 +130,9 @@ function resetStore() {
 function editDocument(id: string) {
   if (unsavedChanges.value) {
     // eslint-disable-next-line no-alert
-    const confirmUnsaved = confirm('Tiene cambios sin guardar. ¿Desea perder los cambios?')
+    const confirmUnsaved = confirm(
+      'Tiene cambios sin guardar. ¿Desea perder los cambios?',
+    )
     if (!confirmUnsaved) {
       return
     }
@@ -656,7 +658,7 @@ onMounted(() => {
         </button>
         <button
           v-if="!focus_mode"
-          class="fixed size-8  flex justify-center items-center  z-50"
+          class="fixed size-8 flex justify-center items-center z-50"
           :class="[
             !editable
               ? 'bg-background'

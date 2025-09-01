@@ -6,6 +6,8 @@ import { ChevronRight } from 'lucide-vue-next'
 import { ToolbarButton, ToolbarRoot, ToolbarToggleGroup } from 'reka-ui'
 import { inject } from 'vue'
 import { useI18n } from 'vue-i18n'
+import { useClientDocument } from 'vue-livestore'
+import { tables } from '@/livestore/schema'
 import ToolbarCharacters from './ToolbarCharacters.vue'
 import ToolbarClear from './ToolbarClear.vue'
 import ToolbarCodeBlock from './ToolbarCodeBlock.vue'
@@ -25,11 +27,15 @@ import ToolbarUndo from './ToolbarUndo.vue'
 const { t } = useI18n()
 const editor = inject('content') as Ref<Editor>
 
+const { editable } = useClientDocument(tables.uiState)
 const showToolbar = useStorage('show_toolbar', true)
 </script>
 
 <template>
-  <div v-if="editor" class="z-10 relative bg-background print:hidden">
+  <div
+    v-if="editor" class="z-10 relative bg-background print:hidden"
+    :class="editable ? '' : 'opacity-50 pointer-events-none'"
+  >
     <button
       class="flex pl-1 pr-2 w-full h-8 text-left items-center justify-between gap-2"
       @click="showToolbar = !showToolbar"
@@ -45,7 +51,7 @@ const showToolbar = useStorage('show_toolbar', true)
       </div>
     </button>
     <div
-      class="relative px-2 w-full  mx-auto control-group focus-visible:ring-2 focus-visible:ring-primary"
+      class="relative px-2 w-full mx-auto control-group focus-visible:ring-2 focus-visible:ring-primary"
     >
       <ToolbarRoot
         v-if="showToolbar"
@@ -109,7 +115,14 @@ const showToolbar = useStorage('show_toolbar', true)
               <ToolbarCodeBlock />
               <ToolbarLatex />
               <ToolbarButton
-                type="button" class="px-4 border border-secondary h-8 gap-2" title="Insert LaTeX" :class="editor.can().deleteTable() ? 'pointer-events-none disabled opacity-30' : ''"
+                type="button"
+                class="px-4 border border-secondary h-8 gap-2"
+                title="Insert LaTeX"
+                :class="
+                  editor.can().deleteTable()
+                    ? 'pointer-events-none disabled opacity-30'
+                    : ''
+                "
                 @click="
                   editor
                     .chain()
