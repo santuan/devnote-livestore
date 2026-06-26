@@ -102,6 +102,11 @@ function handleMathCancel() {
 
 onMounted(() => {
   editor.value = new Editor({
+    coreExtensionOptions: {
+      clipboardTextSerializer: {
+        blockSeparator: '\n',
+      },
+    },
     extensions: [
       Blockquote,
       Bold,

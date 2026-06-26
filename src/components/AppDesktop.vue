@@ -28,7 +28,6 @@ import DocumentList from '@/components/PanelLeft/DocumentList.vue'
 import SidebarSecondary from '@/components/PanelRight/index.vue'
 import ButtonLogo from '@/components/Shared/ButtonLogo.vue'
 import ButtonNewDocument from '@/components/Shared/ButtonNewDocument.vue'
-import DialogCommandMenu from '@/components/Shared/DialogCommandMenu.vue'
 import Editor from '@/components/Tiptap/EditorTipTap.vue'
 import { useToggleColorTheme } from '@/composables/useToggleColorTheme'
 import { events, tables } from '@/livestore/schema'
@@ -67,6 +66,7 @@ provide('sidebar_documents_splitter', sidebar_documents_splitter_ref)
 provide('sidebar_secondary_splitter', sidebar_secondary_splitter_ref)
 provide('layout', layout)
 provide('unsaved_changes', unsavedChanges)
+provide('focus_mode', focus_mode.value)
 
 const { store } = useStore()
 const uiState$ = queryDb(tables.uiState.get(), { label: 'uiState' })
@@ -215,11 +215,12 @@ watch(
       sidebar_documents_splitter_ref.value?.collapse()
     }
     else {
-      if (sidebar_documents_splitter_ref.value.isCollapsed) {
+      if (sidebar_documents_splitter_ref.value?.isCollapsed) {
         sidebar_documents_splitter_ref.value.resize(25)
       }
     }
   },
+  { flush: 'post' },
 )
 
 watch(
@@ -515,10 +516,6 @@ onMounted(() => {
 
 <template>
   <div class="font-mono text-foreground">
-    <div v-show="!focus_mode">
-      <DialogCommandMenu />
-    </div>
-
     <SplitterGroup
       id="splitter-group-1"
       direction="horizontal"
@@ -535,7 +532,7 @@ onMounted(() => {
         class="min-w-8 items-start justify-start h-screen bg-secondary/20"
         :class="[
           showDocuments
-            ? 'fixed md:relative min-w-80 md:min-w-auto  flex z-[71]'
+            ? 'fixed md:relative min-w-80 md:min-w-auto  flex z-71'
             : 'hidden lg:flex',
           sidebar_documents_splitter_ref?.isCollapsed ? 'max-w-8!' : '',
           resize === 10 ? ' border-r-2! border-primary!' : '',
@@ -552,7 +549,7 @@ onMounted(() => {
           v-show="!sidebar_documents_splitter_ref?.isCollapsed"
           class="w-full duration-300 transition-opacity bg-background"
           :class="[
-            showDocuments ? 'relative z-[71]' : '',
+            showDocuments ? 'relative z-71' : '',
             focus_mode ? 'opacity-0 pointer-events-none' : '',
           ]"
         >
@@ -575,7 +572,7 @@ onMounted(() => {
         </div>
         <button
           v-if="showDocuments"
-          class="fixed inset-0 z-[70] bg-background/80 !outline-0 md:hidden"
+          class="fixed inset-0 z-70 bg-background/80 outline-0! md:hidden"
           @click="hide_panel_left"
         />
       </SplitterPanel>

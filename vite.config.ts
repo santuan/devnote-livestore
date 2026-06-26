@@ -19,6 +19,13 @@ export default defineConfig({
   optimizeDeps: {
     // TODO remove once fixed https://github.com/vitejs/vite/issues/8427
     exclude: ['@livestore/wa-sqlite'],
+    include: [
+      'vue',
+      'vue-i18n',
+      '@vueuse/core',
+      '@tiptap/vue-3',
+      '@tiptap/core',
+    ],
   },
   server: {
     allowedHosts: true,

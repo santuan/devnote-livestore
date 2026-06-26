@@ -58,9 +58,9 @@ function setMediaActionActiveStates() {
 }
 
 watch(
-  () => props.node.attrs,
+  () => ({ width: props.node.attrs.width, height: props.node.attrs.height, dataAlign: props.node.attrs.dataAlign }),
   () => setMediaActionActiveStates(),
-  { deep: true },
+  { immediate: false },
 )
 
 // Add this watch after the existing watches
@@ -378,8 +378,13 @@ const { editable } = useClientDocument(tables.uiState)
         >
           <img
             v-show="!isPaused"
-            v-bind="node.attrs"
             ref="resizableImg"
+            :src="node.attrs.src"
+            :width="node.attrs.width"
+            :height="node.attrs.height"
+            :data-align="node.attrs.dataAlign"
+            loading="lazy"
+            decoding="async"
             alt=""
           >
           <canvas
@@ -426,7 +431,12 @@ const { editable } = useClientDocument(tables.uiState)
       >
         <img
           v-if="mediaType === 'img'"
-          v-bind="node.attrs"
+          :src="node.attrs.src"
+          :width="node.attrs.width"
+          :height="node.attrs.height"
+          :data-align="node.attrs.dataAlign"
+          loading="lazy"
+          decoding="async"
           alt=""
           draggable="true"
         >

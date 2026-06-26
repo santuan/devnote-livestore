@@ -1,8 +1,10 @@
 <script lang="ts" setup>
+import type { Ref } from 'vue'
 import NumberFlow from '@number-flow/vue'
 import { X } from 'lucide-vue-next'
-import { computed } from 'vue'
+import { computed, inject } from 'vue'
 import { useI18n } from 'vue-i18n'
+import DialogCommandMenu from '../Shared/DialogCommandMenu.vue'
 import Filters from './Filters.vue'
 
 const props = defineProps<{
@@ -13,6 +15,8 @@ const emit = defineEmits<{
   (e: 'open'): void
 }>()
 
+const focus_mode = inject('focus_mode') as Ref<string | null>
+
 const { t } = useI18n()
 
 const documents = computed(() => props.count ?? 0)
@@ -20,12 +24,13 @@ const documents = computed(() => props.count ?? 0)
 
 <template>
   <div class="w-full @container">
-    <div class="flex mb-px gap-2 justify-end items-center">
-      <div class="flex items-center gap-1">
-        <button class="size-8 flex justify-center items-center" @click="emit('open')">
-          <X class="size-4" />
-        </button>
+    <div class="flex mb-px gap-1 justify-end items-center">
+      <div v-show="!focus_mode">
+        <DialogCommandMenu />
       </div>
+      <button class="size-8 flex justify-center items-center" @click="emit('open')">
+        <X class="size-4" />
+      </button>
     </div>
     <slot name="top" />
     <div class="flex justify-between mt-px pl-1 py-px items-center">
