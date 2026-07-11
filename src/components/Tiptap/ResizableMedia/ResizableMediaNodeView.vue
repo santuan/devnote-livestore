@@ -115,7 +115,7 @@ function mediaSetupOnLoad() {
     }
     updateSliderValueFromCurrentWidth()
   }
-  setTimeout(() => setMediaActionActiveStates(), 200)
+  setTimeout(setMediaActionActiveStates, 200)
 }
 
 onMounted(() => mediaSetupOnLoad())
@@ -299,12 +299,12 @@ const { editable } = useClientDocument(tables.uiState)
               <TooltipProvider :delay-duration="0">
                 <SliderRoot
                   v-model="sliderValue"
-                  class="relative flex items-center select-none touch-none w-[150px] h-5 SliderRoot"
+                  class="relative flex items-center select-none touch-none w-37 h-5 SliderRoot"
                   :max="100"
                   :min="10"
                   :step="1"
                 >
-                  <SliderTrack class="bg-background relative grow rounded-full h-[3px]">
+                  <SliderTrack class="bg-background relative grow rounded-full h-0.75">
                     <SliderRange class="absolute h-full rounded-full bg-primary" />
                   </SliderTrack>
 
@@ -458,7 +458,7 @@ const { editable } = useClientDocument(tables.uiState)
             <Expand class="size-5" />
           </DialogTrigger>
           <DialogPortal>
-            <DialogOverlay class="bg-background/80 grid place-items-center fixed inset-0 z-[120] max-h-screen p-2 overflow-y-auto">
+            <DialogOverlay class="bg-background/80 grid place-items-center fixed inset-0 z-120 max-h-screen p-2 overflow-y-auto">
               <DialogContent
                 class=" p-1 focus:outline-hidden"
               >
@@ -476,7 +476,7 @@ const { editable } = useClientDocument(tables.uiState)
                     class="mx-auto"
                   >
                 </div>
-                <DialogClose class="fixed top-0 size-6 flex justify-center items-center m-2 right-0 z-[999] text-foreground">
+                <DialogClose class="fixed top-0 size-6 flex justify-center items-center m-2 right-0 z-999 text-foreground">
                   <X class="size-4" />
                   <span class="sr-only">{{ t('verb.close') }}</span>
                 </DialogClose>

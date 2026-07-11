@@ -28,14 +28,19 @@ const documents = computed(() => props.count ?? 0)
       <div v-show="!focus_mode">
         <DialogCommandMenu />
       </div>
-      <button class="size-8 flex justify-center items-center" @click="emit('open')">
+      <button
+        class="size-8 flex justify-center items-center"
+        @click="emit('open')"
+      >
         <X class="size-4" />
       </button>
     </div>
     <slot name="top" />
     <div class="flex justify-between mt-px pl-1 py-px items-center">
       <div class="flex justify-between items-center">
-        <h1 class="text-xs  mr-2 capitalize sr-only @min-[240px]:not-sr-only text-primary">
+        <h1
+          class="text-xs mr-2 capitalize sr-only @min-[240px]:not-sr-only text-primary"
+        >
           {{ t("commandBar.documents") }}
         </h1>
         <NumberFlow class="text-xs mx-1" :value="documents" />
@@ -43,7 +48,7 @@ const documents = computed(() => props.count ?? 0)
       <Filters />
     </div>
     <div
-      class="max-h-[calc(100vh-8.25rem)] scrollbar-thumb-rounded-full scrollbar-track-rounded-full scrollbar scrollbar-thumb-primary scrollbar-track-transparent h-screen border-t border-secondary overflow-x-hidden overflow-y-auto"
+      class="max-h-[calc(100vh-6.5rem)] scrollbar-thumb-rounded-full scrollbar-track-rounded-full scrollbar scrollbar-thumb-primary scrollbar-track-transparent h-screen border-t border-secondary overflow-x-hidden overflow-y-auto"
     >
       <slot name="list" />
     </div>

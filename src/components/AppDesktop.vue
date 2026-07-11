@@ -5,11 +5,9 @@ import {
   useBreakpoints,
   useColorMode,
   useDebounceFn,
-  useMagicKeys,
   useStorage,
-  whenever,
 } from '@vueuse/core'
-import { Eye, PanelRightOpen, Pencil } from 'lucide-vue-next'
+import { Eye, PanelRightOpen, Pencil, Settings } from 'lucide-vue-next'
 import { SplitterGroup, SplitterPanel, SplitterResizeHandle } from 'reka-ui'
 import {
   computed,
@@ -28,7 +26,9 @@ import DocumentList from '@/components/PanelLeft/DocumentList.vue'
 import SidebarSecondary from '@/components/PanelRight/index.vue'
 import ButtonLogo from '@/components/Shared/ButtonLogo.vue'
 import ButtonNewDocument from '@/components/Shared/ButtonNewDocument.vue'
+import KeybindingPanel from '@/components/Shared/KeybindingPanel.vue'
 import Editor from '@/components/Tiptap/EditorTipTap.vue'
+import { usePrefixMode } from '@/composables/usePrefixMode'
 import { useToggleColorTheme } from '@/composables/useToggleColorTheme'
 import { events, tables } from '@/livestore/schema'
 
@@ -55,6 +55,7 @@ const isRightDragging = shallowRef(false)
 const unsavedChanges = shallowRef(false)
 const breakpoints = useBreakpoints(breakpointsTailwind)
 const largerThanLg = breakpoints.greater('lg')
+const keybindingPanelRef = shallowRef()
 
 provide('new_document_title', newDocumentTitle)
 provide('new_document_content', newDocumentContent)
@@ -94,6 +95,9 @@ const visibleDocuments$ = queryDb(
 
 const documents = useQuery(visibleDocuments$)
 const documents_count = computed(() => documents.value.length)
+
+// Prefix mode
+const { isActive: prefixActive, onCommand, offCommand } = usePrefixMode()
 
 function toggle_editable() {
   editor_content.value?.setEditable(!editable.value)
@@ -281,96 +285,6 @@ function expandSecondarySidebar() {
   sidebar_secondary_splitter_ref.value.resize(20)
 }
 
-const keys = useMagicKeys()
-
-const magic_disabled_focus_mode = keys['ctrl+alt+shift+f']
-whenever(magic_disabled_focus_mode!, (n) => {
-  if (n === true) {
-    focus_mode.value = !focus_mode.value
-  }
-})
-
-const magic_show_documents = keys['ctrl+m']
-whenever(magic_show_documents!, (n) => {
-  if (n === true) {
-    toggle_documents()
-  }
-})
-
-const magic_toggle_editable = keys['ctrl+alt+shift+p']
-whenever(magic_toggle_editable!, (n) => {
-  if (n === true) {
-    toggle_editable()
-  }
-})
-
-const magic_reset_store = keys['ctrl+alt+shift+n']
-whenever(magic_reset_store!, (n) => {
-  if (n === true) {
-    resetStore()
-  }
-})
-
-const magic_input_title = keys['ctrl+alt+shift+t']
-whenever(magic_input_title!, (n) => {
-  if (n === true) {
-    if (input_title.value instanceof HTMLElement) {
-      input_title.value.focus()
-    }
-  }
-})
-
-const magic_focus_editor = keys['ctrl+alt+shift+u']
-whenever(magic_focus_editor!, (n) => {
-  if (n === true) {
-    editor_content.value.commands.focus()
-  }
-})
-
-const magic_focus_logo = keys['ctrl+alt+shift+ArrowLeft']
-whenever(magic_focus_logo!, (n) => {
-  if (n === true) {
-    if (sidebar_documents_splitter_ref.value.isCollapsed) {
-      sidebar_documents_splitter_ref.value.expand()
-      if (focus_logo.value instanceof HTMLElement) {
-        focus_logo.value.focus()
-      }
-    }
-    else {
-      sidebar_documents_splitter_ref.value.collapse()
-      if (focus_logo.value instanceof HTMLElement) {
-        focus_logo.value.focus()
-      }
-    }
-  }
-})
-
-const magic_collapse_secondary_sidebar = keys['ctrl+alt+shift+ArrowRight']
-whenever(magic_collapse_secondary_sidebar!, (n) => {
-  if (n === true) {
-    if (sidebar_secondary_splitter_ref.value.isCollapsed) {
-      expandSecondarySidebar()
-    }
-    else {
-      collapseSecondarySidebar()
-    }
-  }
-})
-
-const magic_navigate_next_document = keys['ctrl+shift+alt+ArrowDown']
-whenever(magic_navigate_next_document!, (n) => {
-  if (n === true) {
-    navigateToNextDocument()
-  }
-})
-
-const magic_navigate_previous_document = keys['ctrl+shift+alt+ArrowUp']
-whenever(magic_navigate_previous_document!, (n) => {
-  if (n === true) {
-    navigateToPreviousDocument()
-  }
-})
-
 function windowLayoutOne() {
   if (!layout.value)
     return
@@ -385,26 +299,12 @@ function windowLayout25() {
   sidebar_secondary_splitter_ref.value.resize(25)
 }
 
-const magic_window_layout_one = keys['ctrl+shift+Digit1']
-whenever(magic_window_layout_one!, (n) => {
-  if (n === true) {
-    windowLayoutOne()
-  }
-})
-
 function windowLayoutTwo() {
   if (!layout.value)
     return
   sidebar_documents_splitter_ref.value.resize(5)
   sidebar_secondary_splitter_ref.value.resize(50)
 }
-
-const magic_window_layout_two = keys['ctrl+shift+Digit2']
-whenever(magic_window_layout_two!, (n) => {
-  if (n === true) {
-    windowLayoutTwo()
-  }
-})
 
 function windowLayoutThree() {
   if (!layout.value)
@@ -413,25 +313,12 @@ function windowLayoutThree() {
   sidebar_secondary_splitter_ref.value.resize(5)
 }
 
-const magic_window_layout_three = keys['ctrl+shift+Digit3']
-whenever(magic_window_layout_three!, (n) => {
-  if (n === true) {
-    windowLayoutThree()
-  }
-})
-
 function windowLayoutFour() {
   if (!layout.value)
     return
   sidebar_documents_splitter_ref.value.resize(15)
   sidebar_secondary_splitter_ref.value.resize(15)
 }
-const magic_window_layout_four = keys['ctrl+shift+Digit4']
-whenever(magic_window_layout_four!, (n) => {
-  if (n === true) {
-    windowLayoutFour()
-  }
-})
 
 function windowLayoutFive() {
   if (!layout.value)
@@ -439,13 +326,6 @@ function windowLayoutFive() {
   sidebar_documents_splitter_ref.value.resize(5)
   sidebar_secondary_splitter_ref.value.resize(5)
 }
-
-const magic_window_layout_five = keys['ctrl+shift+Digit5']
-whenever(magic_window_layout_five!, (n) => {
-  if (n === true) {
-    windowLayoutFive()
-  }
-})
 
 function navigateToNextDocument() {
   if (documents.value.length === 0)
@@ -486,6 +366,51 @@ function navigateToPreviousDocument() {
   }
 }
 
+// Register prefix command handlers
+onCommand('toggleSidebar', toggle_documents)
+onCommand('toggleEditable', toggle_editable)
+onCommand('newDocument', resetStore)
+onCommand('focusTitle', () => {
+  if (input_title.value instanceof HTMLElement) {
+    input_title.value.focus()
+  }
+})
+onCommand('focusEditor', () => {
+  editor_content.value.commands.focus()
+})
+onCommand('focusLogo', () => {
+  if (sidebar_documents_splitter_ref.value.isCollapsed) {
+    sidebar_documents_splitter_ref.value.expand()
+    if (focus_logo.value instanceof HTMLElement) {
+      focus_logo.value.focus()
+    }
+  }
+  else {
+    sidebar_documents_splitter_ref.value.collapse()
+    if (focus_logo.value instanceof HTMLElement) {
+      focus_logo.value.focus()
+    }
+  }
+})
+onCommand('toggleSecondarySidebar', () => {
+  if (sidebar_secondary_splitter_ref.value.isCollapsed) {
+    expandSecondarySidebar()
+  }
+  else {
+    collapseSecondarySidebar()
+  }
+})
+onCommand('navigateNextDocument', navigateToNextDocument)
+onCommand('navigatePreviousDocument', navigateToPreviousDocument)
+onCommand('windowLayout1', windowLayoutOne)
+onCommand('windowLayout2', windowLayout25)
+onCommand('windowLayout3', windowLayoutThree)
+onCommand('windowLayout4', windowLayoutFour)
+onCommand('windowLayout5', windowLayoutFive)
+onCommand('focusMode', () => {
+  focus_mode.value = !focus_mode.value
+})
+
 onMounted(() => {
   useColorMode()
   useToggleColorTheme(colorTheme.value)
@@ -510,12 +435,30 @@ onMounted(() => {
   onBeforeUnmount(() => {
     window.removeEventListener('keydown', handleKeyDown)
     window.removeEventListener('keyup', handleKeyUp)
+    offCommand('toggleSidebar')
+    offCommand('toggleEditable')
+    offCommand('newDocument')
+    offCommand('focusTitle')
+    offCommand('focusEditor')
+    offCommand('focusLogo')
+    offCommand('toggleSecondarySidebar')
+    offCommand('navigateNextDocument')
+    offCommand('navigatePreviousDocument')
+    offCommand('windowLayout1')
+    offCommand('windowLayout2')
+    offCommand('windowLayout3')
+    offCommand('windowLayout4')
+    offCommand('windowLayout5')
+    offCommand('focusMode')
   })
 })
 </script>
 
 <template>
-  <div class="font-mono text-foreground">
+  <div
+    class="font-mono text-foreground"
+    :class="prefixActive ? 'grayscale' : ''"
+  >
     <SplitterGroup
       id="splitter-group-1"
       direction="horizontal"
@@ -529,7 +472,7 @@ onMounted(() => {
         :max-size="30"
         collapsible
         :collapsed-size="5"
-        class="min-w-8 items-start justify-start h-screen bg-secondary/20"
+        class="min-w-8 items-start justify-start h-screen bg-background"
         :class="[
           showDocuments
             ? 'fixed md:relative min-w-80 md:min-w-auto  flex z-71'
@@ -543,6 +486,7 @@ onMounted(() => {
         <ButtonLogo
           v-show="!focus_mode"
           ref="focus_logo"
+          :grayscale="prefixActive"
           @click="toggle_documents"
         />
         <div
@@ -611,7 +555,7 @@ onMounted(() => {
           <button
             v-show="isEditing"
             v-if="editable"
-            class="bg-primary h-12 text-primary-foreground py-2"
+            class="bg-primary h-12 text-primary-foreground py-2 absolute left-0 bottom-0 right-0"
             @click="createDocument"
           >
             {{ t("editor.save") }}
@@ -666,6 +610,13 @@ onMounted(() => {
         >
           <Pencil class="size-3.5" />
           <span class="sr-only"> editable </span>
+        </button>
+        <!-- Keybinding Settings button -->
+        <button
+          class="fixed size-8 flex justify-center items-center z-50 right-0 bottom-0"
+          @click="keybindingPanelRef?.open()"
+        >
+          <Settings class="size-4 pointer-events-none" />
         </button>
         <SidebarSecondary
           v-if="layout[2] !== 0"
@@ -763,5 +714,6 @@ onMounted(() => {
         </SidebarSecondary>
       </SplitterPanel>
     </SplitterGroup>
+    <KeybindingPanel ref="keybindingPanelRef" />
   </div>
 </template>

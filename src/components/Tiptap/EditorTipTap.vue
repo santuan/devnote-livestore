@@ -82,7 +82,11 @@ const mathDialogTitle = ref('')
 const mathDialogInitialValue = ref('')
 const mathDialogCallback = ref<((latex: string) => void) | null>(null)
 
-function openMathDialog(title: string, initialValue: string, callback: (latex: string) => void) {
+function openMathDialog(
+  title: string,
+  initialValue: string,
+  callback: (latex: string) => void,
+) {
   mathDialogTitle.value = title
   mathDialogInitialValue.value = initialValue
   mathDialogCallback.value = callback
@@ -123,28 +127,30 @@ onMounted(() => {
       Mathematics.configure({
         blockOptions: {
           onClick: (node, pos) => {
-            openMathDialog(
-              'Edit Block Math',
-              node.attrs.latex,
-              (latex) => {
-                if (latex.trim()) {
-                  editor.value.chain().setNodeSelection(pos).updateBlockMath({ latex }).focus().run()
-                }
-              },
-            )
+            openMathDialog('Edit Block Math', node.attrs.latex, (latex) => {
+              if (latex.trim()) {
+                editor.value
+                  .chain()
+                  .setNodeSelection(pos)
+                  .updateBlockMath({ latex })
+                  .focus()
+                  .run()
+              }
+            })
           },
         },
         inlineOptions: {
           onClick: (node, pos) => {
-            openMathDialog(
-              'Edit Inline Math',
-              node.attrs.latex,
-              (latex) => {
-                if (latex.trim()) {
-                  editor.value.chain().setNodeSelection(pos).updateInlineMath({ latex }).focus().run()
-                }
-              },
-            )
+            openMathDialog('Edit Inline Math', node.attrs.latex, (latex) => {
+              if (latex.trim()) {
+                editor.value
+                  .chain()
+                  .setNodeSelection(pos)
+                  .updateInlineMath({ latex })
+                  .focus()
+                  .run()
+              }
+            })
           },
         },
         katexOptions: {
@@ -154,7 +160,6 @@ onMounted(() => {
             '\\N': '\\mathbb{N}',
           },
         },
-
       }),
       OrderedList,
       Paragraph,
@@ -172,7 +177,11 @@ onMounted(() => {
       // Custom extensions
       CharacterCount.configure({ limit: 50000 }),
       Placeholder.configure({ placeholder: t('editor.placeholder') }),
-      Table.configure({ resizable: true, allowTableNodeSelection: true, lastColumnResizable: false }),
+      Table.configure({
+        resizable: true,
+        allowTableNodeSelection: true,
+        lastColumnResizable: false,
+      }),
       TaskItem.configure({ nested: false }),
       TextAlign.configure({ types: ['heading', 'paragraph'] }),
       TextStyleKit.configure({
@@ -266,7 +275,7 @@ onBeforeUnmount(() => {
   <div
     v-if="editor"
     class="EditorTiptap @container"
-    :class="[editable ? 'outline outline-primary' : '!outline-0']"
+    :class="[editable ? ' outline outline-primary' : ' outline-0!']"
   >
     <DialogMath
       v-model:open="mathDialogOpen"
@@ -279,23 +288,24 @@ onBeforeUnmount(() => {
 
     <ScrollAreaRoot
       class="ScrollAreaEditor group"
-      :class="[toolbar ? 'with-toolbar' : '', editable ? '' : '']"
+      :class="[
+        toolbar ? 'with-toolbar' : '',
+        editable ? 'is-editable' : 'is-preview',
+      ]"
       style="--scrollbar-size: 10px"
     >
       <ScrollAreaViewport
         id="editorScrollArea"
-        class="w-full h-full border-transparent border outline-hidden "
+        class="w-full h-full border-transparent border outline-hidden"
       >
         <template v-if="!editable">
-          <h1
-            class="text-3xl mt-3 font-serif font-semibold px-5"
-          >
+          <h1 class="text-3xl mt-3 font-serif font-semibold px-5">
             {{ newDocumentTitle }}
           </h1>
         </template>
         <slot />
         <div
-          class="relative  max-w-full mx-auto prose EditorContent dark:prose-invert"
+          class="relative max-w-full mx-auto prose EditorContent dark:prose-invert"
           spellcheck="false"
         >
           <EditorContent :editor="editor" />
@@ -307,7 +317,7 @@ onBeforeUnmount(() => {
         orientation="vertical"
       >
         <ScrollAreaThumb
-          class="flex-1 bg-secondary-foreground/30 ease-out transition-colors hover:bg-primary/90 rounded-[10px] relative before:content-[''] before:absolute before:top-1/2 before:left-1/2 before:-translate-x-1/2 before:-translate-y-1/2 before:w-full before:h-full before:min-w-[44px] before:min-h-[44px]"
+          class="flex-1 bg-secondary-foreground/30 ease-out transition-colors hover:bg-primary/90 rounded-[10px] relative before:content-[''] before:absolute before:top-1/2 before:left-1/2 before:-translate-x-1/2 before:-translate-y-1/2 before:w-full before:h-full before:min-w-11 before:min-h-1"
         />
       </ScrollAreaScrollbar>
     </ScrollAreaRoot>

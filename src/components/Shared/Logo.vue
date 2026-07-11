@@ -1,8 +1,15 @@
+<script setup lang="ts">
+defineProps<{
+  grayscale?: boolean
+}>()
+</script>
+
 <template>
   <svg
     id="a"
     xmlns="http://www.w3.org/2000/svg"
-    class="outline-hidden w-6 size-7"
+    class="outline-hidden w-6 size-7 transition-all duration-200"
+    :class="grayscale ? 'grayscale opacity-60' : ''"
     viewBox="0 0 384 311.02"
   >
     <path

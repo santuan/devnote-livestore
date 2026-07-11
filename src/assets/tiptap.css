@@ -1,7 +1,7 @@
 @reference "@/assets/main.css";
 
 .EditorTiptap {
-  @apply grid w-full min-h-[50vh] relative;
+  @apply grid w-full min-h-[calc(100vh-0.25rem)] relative;
 }
 
 /* .EditorTiptap .prose .tiptap {
@@ -21,17 +21,17 @@
 
   @page {
     @bottom-right {
-      font-family: "JetBrains Mono Variable";
+      font-family: 'JetBrains Mono Variable';
       margin: 0 0 10pt 0;
       font-size: 8pt;
       color: #333;
-      content: counter(page) "-" counter(pages);
+      content: counter(page) '-' counter(pages);
     }
   }
 
-  h1+p,
-  h2+p,
-  h3+p {
+  h1 + p,
+  h2 + p,
+  h3 + p {
     page-break-before: avoid;
   }
 
@@ -234,7 +234,7 @@ html.dark .shiki span {
   @apply pointer-events-none;
 }
 
-.iframeContainer:has(iframe[src*="youtube"]) {
+.iframeContainer:has(iframe[src*='youtube']) {
   @apply pt-0 max-w-5xl mx-auto;
 
   .iframeEditButton {
@@ -295,7 +295,7 @@ html.dark .shiki span {
 
 .tiptap .selectedCell:after {
   @apply bg-primary/20 ring-1 ring-primary/50;
-  content: "";
+  content: '';
   left: 0;
   right: 0;
   top: 0;
@@ -319,7 +319,6 @@ html.dark .shiki span {
   cursor: col-resize;
 }
 
-
 .tiptap .media-node-view {
   @apply border-transparent! border-2! border-dashed;
 }
@@ -340,32 +339,32 @@ html.dark .shiki span {
   @apply m-0;
 }
 
-.tiptap ul[data-type="taskList"] {
+.tiptap ul[data-type='taskList'] {
   list-style: none;
   margin-left: 0;
   padding: 0;
 }
 
-.tiptap ul[data-type="taskList"] li {
+.tiptap ul[data-type='taskList'] li {
   align-items: flex-start;
   display: flex;
 }
 
-.tiptap ul[data-type="taskList"] label {
+.tiptap ul[data-type='taskList'] label {
   flex: 0 0 auto;
   margin-right: 0.5rem;
   user-select: none;
 }
 
-.tiptap ul[data-type="taskList"]>div {
+.tiptap ul[data-type='taskList'] > div {
   flex: 1 1 auto;
 }
 
-.tiptap ul[data-type="taskList"] {
+.tiptap ul[data-type='taskList'] {
   margin: 0;
 }
 
-.tiptap ul[data-type="taskList"] li[data-checked] input[type="checkbox"] {
+.tiptap ul[data-type='taskList'] li[data-checked] input[type='checkbox'] {
   position: absolute;
   opacity: 0;
   /* cursor: pointer; */
@@ -373,11 +372,11 @@ html.dark .shiki span {
   width: 0;
 }
 
-.tiptap ul[data-type="taskList"] li:focus-within span {
+.tiptap ul[data-type='taskList'] li:focus-within span {
   @apply outline-2! border-primary;
 }
 
-.tiptap ul[data-type="taskList"] li[data-checked] label span {
+.tiptap ul[data-type='taskList'] li[data-checked] label span {
   position: relative;
   display: inline-block;
   width: 20px;
@@ -387,20 +386,20 @@ html.dark .shiki span {
   vertical-align: middle;
 }
 
-.tiptap ul[data-type="taskList"] li[data-checked="true"] label span {
+.tiptap ul[data-type='taskList'] li[data-checked='true'] label span {
   @apply bg-primary border-primary;
 }
 
-.ScrollAreaEditor.is-editable ul[data-type="taskList"] li[data-checked]:hover label span {
+.ScrollAreaEditor.is-editable ul[data-type='taskList'] li[data-checked]:hover label span {
   @apply bg-primary border-primary;
 }
 
-.ScrollAreaEditor.is-preview ul[data-type="taskList"] li[data-checked] {
+.ScrollAreaEditor.is-preview ul[data-type='taskList'] li[data-checked] {
   @apply pointer-events-none;
 }
 
-.tiptap ul[data-type="taskList"] li[data-checked="true"] label span::after {
-  content: "";
+.tiptap ul[data-type='taskList'] li[data-checked='true'] label span::after {
+  content: '';
   position: absolute;
   display: block;
   left: 50%;
@@ -414,16 +413,16 @@ html.dark .shiki span {
   background-position: center;
 }
 
-.dark .tiptap ul[data-type="taskList"] li[data-checked="true"] label span::after {
+.dark .tiptap ul[data-type='taskList'] li[data-checked='true'] label span::after {
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='20 6 9 17 4 12'%3E%3C/polyline%3E%3C/svg%3E");
 }
 
-.tiptap ul[data-type="taskList"] li[data-checked] {
+.tiptap ul[data-type='taskList'] li[data-checked] {
   display: flex;
   align-items: flex-start;
   margin-bottom: 8px;
 }
 
-.tiptap ul[data-type="taskList"] li[data-checked] div {
+.tiptap ul[data-type='taskList'] li[data-checked] div {
   flex: 1;
 }
