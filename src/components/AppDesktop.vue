@@ -56,6 +56,7 @@ const unsavedChanges = shallowRef(false)
 const breakpoints = useBreakpoints(breakpointsTailwind)
 const largerThanLg = breakpoints.greater('lg')
 const keybindingPanelRef = shallowRef()
+const sideTab = useStorage('values', 'tab1')
 
 provide('new_document_title', newDocumentTitle)
 provide('new_document_content', newDocumentContent)
@@ -68,6 +69,7 @@ provide('sidebar_secondary_splitter', sidebar_secondary_splitter_ref)
 provide('layout', layout)
 provide('unsaved_changes', unsavedChanges)
 provide('focus_mode', focus_mode.value)
+provide('sideTab', sideTab)
 
 const { store } = useStore()
 const uiState$ = queryDb(tables.uiState.get(), { label: 'uiState' })
@@ -409,6 +411,24 @@ onCommand('windowLayout4', windowLayoutFour)
 onCommand('windowLayout5', windowLayoutFive)
 onCommand('focusMode', () => {
   focus_mode.value = !focus_mode.value
+})
+onCommand('selectSideTab1', () => {
+  sideTab.value = 'tab1'
+  if (sidebar_secondary_splitter_ref.value?.isCollapsed) {
+    expandSecondarySidebar()
+  }
+})
+onCommand('selectSideTab2', () => {
+  sideTab.value = 'tab2'
+  if (sidebar_secondary_splitter_ref.value?.isCollapsed) {
+    expandSecondarySidebar()
+  }
+})
+onCommand('selectSideTab3', () => {
+  sideTab.value = 'tab3'
+  if (sidebar_secondary_splitter_ref.value?.isCollapsed) {
+    expandSecondarySidebar()
+  }
 })
 
 onMounted(() => {

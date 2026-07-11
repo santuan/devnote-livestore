@@ -17,6 +17,9 @@ export type CommandId
     | 'windowLayout4'
     | 'windowLayout5'
     | 'focusMode'
+    | 'selectSideTab1'
+    | 'selectSideTab2'
+    | 'selectSideTab3'
 
 export interface CommandMeta {
   id: CommandId
@@ -40,6 +43,9 @@ export const COMMANDS: CommandMeta[] = [
   { id: 'windowLayout4', label: 'Layout: 15/70/15', category: 'layout' },
   { id: 'windowLayout5', label: 'Layout: 5/90/5', category: 'layout' },
   { id: 'focusMode', label: 'Toggle Focus Mode', category: 'mode' },
+  { id: 'selectSideTab1', label: 'Side Tab: Format', category: 'navigation' },
+  { id: 'selectSideTab2', label: 'Side Tab: Document', category: 'navigation' },
+  { id: 'selectSideTab3', label: 'Side Tab: Settings', category: 'navigation' },
 ]
 
 export interface KeybindingConfig {
@@ -63,6 +69,9 @@ const DEFAULT_BINDINGS: Record<CommandId, string> = {
   windowLayout4: '4',
   windowLayout5: '5',
   focusMode: 'f',
+  selectSideTab1: 'a',
+  selectSideTab2: 's',
+  selectSideTab3: 'd',
 }
 
 const DEFAULT_CONFIG: KeybindingConfig = {

@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import type { Ref } from 'vue'
-import { useStorage } from '@vueuse/core'
 import { X } from 'lucide-vue-next'
 import {
   TabsContent,
@@ -9,7 +8,7 @@ import {
   TabsRoot,
   TabsTrigger,
 } from 'reka-ui'
-import { inject } from 'vue'
+import { inject, ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import EditorToolbar from '../Tiptap/Toolbar/EditorToolbar.vue'
 import ContentAnalysis from './ContentAnalysis.vue'
@@ -28,9 +27,33 @@ const emit = defineEmits<{
 }>()
 const { t } = useI18n()
 
-const sidetabTab = useStorage('values', 'tab1')
+const sidetabTab = inject('sideTab') as Ref<string>
 
 const editable_id = inject('editable_id') as Ref<string | null>
+
+const tab1Content = ref<HTMLElement | null>(null)
+const tab2Content = ref<HTMLElement | null>(null)
+const tab3Content = ref<HTMLElement | null>(null)
+
+function focusRef(el: HTMLElement | null) {
+  if (el)
+    el.focus()
+}
+
+watch([sidetabTab, tab1Content], ([tab, el]) => {
+  if (tab === 'tab1')
+    focusRef(el)
+}, { flush: 'post' })
+
+watch([sidetabTab, tab2Content], ([tab, el]) => {
+  if (tab === 'tab2')
+    focusRef(el)
+}, { flush: 'post' })
+
+watch([sidetabTab, tab3Content], ([tab, el]) => {
+  if (tab === 'tab3')
+    focusRef(el)
+}, { flush: 'post' })
 </script>
 
 <template>
@@ -91,28 +114,34 @@ const editable_id = inject('editable_id') as Ref<string | null>
           class="grow overflow-x-hidden overflow-y-auto scrollbar-thumb-rounded-full scrollbar-track-rounded-full scrollbar scrollbar-thumb-primary scrollbar-track-transparent outline-none pt-0.5 focus:shadow-focus:shadow-primary"
           value="tab1"
         >
-          <EditorToolbar />
+          <div ref="tab1Content" tabindex="-1" class="outline-none">
+            <EditorToolbar />
+          </div>
         </TabsContent>
         <TabsContent
           class="grow overflow-x-hidden overflow-y-auto scrollbar-thumb-rounded-full scrollbar-track-rounded-full scrollbar scrollbar-thumb-primary scrollbar-track-transparent outline-none pt-0.5 focus:shadow-focus:shadow-primary"
           value="tab2"
         >
-          <ContentAnalysis />
-          <TableOfContent />
+          <div ref="tab2Content" tabindex="-1" class="outline-none">
+            <ContentAnalysis />
+            <TableOfContent />
+          </div>
         </TabsContent>
         <TabsContent
           class="grow overflow-x-hidden overflow-y-auto scrollbar-thumb-rounded-full scrollbar-track-rounded-full scrollbar scrollbar-thumb-primary scrollbar-track-transparent outline-none pt-0.5 focus:shadow-focus:shadow-primary"
           value="tab3"
         >
-          <SidebarSettings
-            @collapse-secondary-sidebar="emit('collapseSecondarySidebar')"
-            @focus-mode-on="emit('focusModeOn')"
-            @toggle-editable="emit('toggleEditable')"
-          >
-            <slot />
-          </SidebarSettings>
+          <div ref="tab3Content" tabindex="-1" class="outline-none">
+            <SidebarSettings
+              @collapse-secondary-sidebar="emit('collapseSecondarySidebar')"
+              @focus-mode-on="emit('focusModeOn')"
+              @toggle-editable="emit('toggleEditable')"
+            >
+              <slot />
+            </SidebarSettings>
 
-          <DatabaseSettings />
+            <DatabaseSettings />
+          </div>
         </TabsContent>
       </TabsRoot>
     </div>
