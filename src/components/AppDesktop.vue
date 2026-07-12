@@ -29,6 +29,7 @@ import ButtonNewDocument from '@/components/Shared/ButtonNewDocument.vue'
 import KeybindingPanel from '@/components/Shared/KeybindingPanel.vue'
 import Editor from '@/components/Tiptap/EditorTipTap.vue'
 import { usePrefixMode } from '@/composables/usePrefixMode'
+import { useSplitterPairing } from '@/composables/useSplitterPairing'
 import { useToggleColorTheme } from '@/composables/useToggleColorTheme'
 import { events, tables } from '@/livestore/schema'
 
@@ -47,11 +48,21 @@ const focus_logo = shallowRef<HTMLElement | null>(null)
 const focus_mode = shallowRef(false)
 const sidebar_documents_splitter_ref = shallowRef()
 const sidebar_secondary_splitter_ref = shallowRef()
+
+const {
+  pairingActive,
+  pairingHandle,
+  isAltPressed,
+  layout,
+  onLayoutChange,
+  onContextMenu,
+  onHandlePointerDown,
+  onHandleDragging,
+} = useSplitterPairing({
+  leftSplitter: sidebar_documents_splitter_ref,
+  rightSplitter: sidebar_secondary_splitter_ref,
+})
 const resize = shallowRef(0)
-const layout = shallowRef<number[]>([0, 0])
-const isAltPressed = shallowRef(false)
-const isLeftDragging = shallowRef(false)
-const isRightDragging = shallowRef(false)
 const unsavedChanges = shallowRef(false)
 const breakpoints = useBreakpoints(breakpointsTailwind)
 const largerThanLg = breakpoints.greater('lg')
@@ -255,28 +266,6 @@ function focusModeOn() {
   focus_mode.value = true
 }
 
-function handleHoldAltLayoutChange(newLayout: number[]) {
-  layout.value = newLayout
-
-  if (!isAltPressed.value) {
-    return
-  }
-
-  const leftPanelSize = newLayout[0]
-  const rightPanelSize = newLayout[2]
-
-  if (leftPanelSize === rightPanelSize) {
-    return
-  }
-
-  if (isRightDragging.value === true) {
-    sidebar_documents_splitter_ref.value?.resize(rightPanelSize)
-  }
-  else {
-    sidebar_secondary_splitter_ref.value?.resize(leftPanelSize)
-  }
-}
-
 function collapseSecondarySidebar() {
   if (!sidebar_secondary_splitter_ref.value)
     return
@@ -435,26 +424,10 @@ onMounted(() => {
   useColorMode()
   useToggleColorTheme(colorTheme.value)
 
-  // Detectar cuando se presiona/suelta Shift
-  const handleKeyDown = (event: KeyboardEvent) => {
-    if (event.key === 'Alt') {
-      isAltPressed.value = true
-    }
-  }
+  // Keyboard/click pairing listeners are now inside useSplitterPairing
 
-  const handleKeyUp = (event: KeyboardEvent) => {
-    if (event.key === 'Alt') {
-      isAltPressed.value = false
-    }
-  }
-
-  window.addEventListener('keydown', handleKeyDown)
-  window.addEventListener('keyup', handleKeyUp)
-
-  // Limpiar event listeners al desmontar
+  // Cleanup command handlers on unmount
   onBeforeUnmount(() => {
-    window.removeEventListener('keydown', handleKeyDown)
-    window.removeEventListener('keyup', handleKeyUp)
     offCommand('toggleSidebar')
     offCommand('toggleEditable')
     offCommand('newDocument')
@@ -483,7 +456,7 @@ onMounted(() => {
       id="splitter-group-1"
       direction="horizontal"
       auto-save-id="app-desktop"
-      @layout="handleHoldAltLayoutChange"
+      @layout="onLayoutChange"
     >
       <SplitterPanel
         id="splitter-group-1-panel-1"
@@ -543,10 +516,15 @@ onMounted(() => {
       <SplitterResizeHandle
         id="splitter-group-1-resize-handle-1"
         class="resize-handle hidden md:flex justify-center relative items-center min-w-1"
-        @dragging="isLeftDragging = $event"
+        :class="[
+          (pairingActive && pairingHandle === 'right') || isAltPressed ? 'bg-primary!' : '',
+        ]"
+        @pointerdown="onHandlePointerDown('left')"
+        @dragging="onHandleDragging('left', $event)"
+        @contextmenu="onContextMenu($event, 'left')"
       >
         <p class="message">
-          Hold alt to move both panels
+          {{ pairingActive && pairingHandle === 'left' ? 'Pairing active' : 'Hold alt or right-click to pair' }}
         </p>
       </SplitterResizeHandle>
 
@@ -556,7 +534,7 @@ onMounted(() => {
         :min-size="20"
         :class="editable ? 'bg-secondary/20' : ''"
       >
-        <div class="relative px-2 pt-px flex flex-col gap-2 h-screen">
+        <div class="relative px-4 pt-px flex flex-col gap-2 h-screen">
           <Editor
             :key="editable_id"
             v-model="newDocumentContent"
@@ -585,10 +563,15 @@ onMounted(() => {
       <SplitterResizeHandle
         id="splitter-group-1-resize-handle-2"
         class="resize-handle hidden md:flex justify-center relative items-center min-w-1"
-        @dragging="isRightDragging = $event"
+        :class="[
+          (pairingActive && pairingHandle === 'left') || isAltPressed ? 'bg-primary!' : '',
+        ]"
+        @pointerdown="onHandlePointerDown('right')"
+        @dragging="onHandleDragging('right', $event)"
+        @contextmenu="onContextMenu($event, 'right')"
       >
         <p class="message">
-          Hold alt to move both panels
+          {{ pairingActive && pairingHandle === 'right' ? 'Pairing active' : 'Hold alt or right-click to pair' }}
         </p>
       </SplitterResizeHandle>
 
