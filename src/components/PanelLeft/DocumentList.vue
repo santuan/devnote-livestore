@@ -36,16 +36,17 @@ const documents = computed(() => props.count ?? 0)
       </button>
     </div>
     <slot name="top" />
-    <div class="flex justify-between mt-px pl-1 py-px items-center">
-      <div class="flex justify-between items-center">
-        <h1
-          class="text-xs mr-2 capitalize sr-only @min-[240px]:not-sr-only text-primary"
-        >
-          {{ t("commandBar.documents") }}
-        </h1>
-        <NumberFlow class="text-xs mx-1" :value="documents" />
-      </div>
-      <Filters />
+    <div class="flex justify-between mt-px pl-1 mb-2 py-px items-center">
+      <Filters>
+        <div class="flex justify-start items-center">
+          <h1
+            class="text-sm mr-2 capitalize sr-only @min-[300px]:not-sr-only text-foreground"
+          >
+            {{ t("commandBar.documents") }}
+          </h1>
+          <NumberFlow class="text-xs bg-primary/20 px-3 mx-1" :value="documents" />
+        </div>
+      </Filters>
     </div>
     <div
       class="max-h-[calc(100vh-6.5rem)] scrollbar-thumb-rounded-full scrollbar-track-rounded-full scrollbar scrollbar-thumb-primary scrollbar-track-transparent h-screen border-t border-secondary overflow-x-hidden overflow-y-auto"

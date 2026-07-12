@@ -51,8 +51,7 @@ const sidebar_secondary_splitter_ref = shallowRef()
 
 const {
   pairingActive,
-  pairingHandle,
-  isAltPressed,
+  // pairingHandle,
   layout,
   onLayoutChange,
   onContextMenu,
@@ -67,6 +66,7 @@ const unsavedChanges = shallowRef(false)
 const breakpoints = useBreakpoints(breakpointsTailwind)
 const largerThanLg = breakpoints.greater('lg')
 const keybindingPanelRef = shallowRef()
+const commandMenuRef = shallowRef()
 const sideTab = useStorage('values', 'tab1')
 
 provide('new_document_title', newDocumentTitle)
@@ -81,6 +81,7 @@ provide('layout', layout)
 provide('unsaved_changes', unsavedChanges)
 provide('focus_mode', focus_mode.value)
 provide('sideTab', sideTab)
+provide('commandMenuRef', commandMenuRef)
 
 const { store } = useStore()
 const uiState$ = queryDb(tables.uiState.get(), { label: 'uiState' })
@@ -419,6 +420,12 @@ onCommand('selectSideTab3', () => {
     expandSecondarySidebar()
   }
 })
+onCommand('openKeybindingPanel', () => {
+  keybindingPanelRef.value?.open()
+})
+onCommand('openCommandMenu', () => {
+  commandMenuRef.value?.open()
+})
 
 onMounted(() => {
   useColorMode()
@@ -448,10 +455,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <div
-    class="font-mono text-foreground"
-    :class="prefixActive ? 'grayscale' : ''"
-  >
+  <div class="font-mono text-foreground">
     <SplitterGroup
       id="splitter-group-1"
       direction="horizontal"
@@ -516,15 +520,14 @@ onMounted(() => {
       <SplitterResizeHandle
         id="splitter-group-1-resize-handle-1"
         class="resize-handle hidden md:flex justify-center relative items-center min-w-1"
-        :class="[
-          (pairingActive && pairingHandle === 'right') || isAltPressed ? 'bg-destructive! animate-pulse' : '',
-        ]"
+        :class="[pairingActive ? 'bg-primary! resize-handle-active' : '']"
+        oncontextmenu="return false;"
+        @contextmenu.prevent="onContextMenu($event, 'left')"
         @pointerdown="onHandlePointerDown('left')"
         @dragging="onHandleDragging('left', $event)"
-        @contextmenu="onContextMenu($event, 'left')"
       >
-        <p class="message">
-          {{ pairingActive && pairingHandle === 'left' ? 'Pairing active' : 'Hold alt or right-click to pair' }}
+        <p class="message" oncontextmenu="return false;">
+          {{ pairingActive ? "Pairing active" : "Right-click to pair" }}
         </p>
       </SplitterResizeHandle>
 
@@ -563,15 +566,14 @@ onMounted(() => {
       <SplitterResizeHandle
         id="splitter-group-1-resize-handle-2"
         class="resize-handle hidden md:flex justify-center relative items-center min-w-1"
-        :class="[
-          (pairingActive && pairingHandle === 'left') || isAltPressed ? 'bg-destructive! animate-pulse' : '',
-        ]"
+        :class="[pairingActive ? 'bg-primary! resize-handle-active' : '']"
+        oncontextmenu="return false;"
+        @contextmenu.prevent="onContextMenu($event, 'right')"
         @pointerdown="onHandlePointerDown('right')"
         @dragging="onHandleDragging('right', $event)"
-        @contextmenu="onContextMenu($event, 'right')"
       >
-        <p class="message">
-          {{ pairingActive && pairingHandle === 'right' ? 'Pairing active' : 'Hold alt or right-click to pair' }}
+        <p class="message" oncontextmenu="return false;">
+          {{ pairingActive ? "Pairing active" : "Right-click to pair" }}
         </p>
       </SplitterResizeHandle>
 
@@ -628,7 +630,7 @@ onMounted(() => {
           @focus-mode-on="focusModeOn"
           @toggle-editable="toggle_editable"
         >
-          <div class="grid gap-2 grid-cols-2 @xs:pl-1 pl-2 @xs:grid-cols-2">
+          <div class="grid gap-2 grid-cols-1 @xs:pl-1 pl-2 @md:grid-cols-2">
             <button
               class="flex gap-px outline-1 outline-primary text-xs items-center justify-center text-center w-full bg-secondary/80"
               @click="windowLayoutOne()"
@@ -718,5 +720,17 @@ onMounted(() => {
       </SplitterPanel>
     </SplitterGroup>
     <KeybindingPanel ref="keybindingPanelRef" />
+    <div
+      v-show="prefixActive"
+      class="bottom-0 left-0 gap-1 z-999 p-2 bg-primary flex items-center justify-center fixed"
+    >
+      <span class="relative flex gap-2 size-3">
+        <span
+          class="absolute inline-flex h-full w-full animate-ping rounded-full bg-background opacity-75"
+        />
+        <span class="relative inline-flex size-3 rounded-full bg-background" />
+      </span>
+      <span class="text-xs text-primary-foreground uppercase">Prefix</span>
+    </div>
   </div>
 </template>

@@ -20,6 +20,8 @@ export type CommandId
     | 'selectSideTab1'
     | 'selectSideTab2'
     | 'selectSideTab3'
+    | 'openKeybindingPanel'
+    | 'openCommandMenu'
 
 export interface CommandMeta {
   id: CommandId
@@ -46,6 +48,8 @@ export const COMMANDS: CommandMeta[] = [
   { id: 'selectSideTab1', label: 'Side Tab: Format', category: 'navigation' },
   { id: 'selectSideTab2', label: 'Side Tab: Document', category: 'navigation' },
   { id: 'selectSideTab3', label: 'Side Tab: Settings', category: 'navigation' },
+  { id: 'openKeybindingPanel', label: 'Open Keybinding Settings', category: 'mode' },
+  { id: 'openCommandMenu', label: 'Open Command Menu', category: 'navigation' },
 ]
 
 export interface KeybindingConfig {
@@ -72,6 +76,8 @@ const DEFAULT_BINDINGS: Record<CommandId, string> = {
   selectSideTab1: 'a',
   selectSideTab2: 's',
   selectSideTab3: 'd',
+  openKeybindingPanel: 'k',
+  openCommandMenu: 'o',
 }
 
 const DEFAULT_CONFIG: KeybindingConfig = {

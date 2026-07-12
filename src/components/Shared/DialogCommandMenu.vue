@@ -2,7 +2,6 @@
 import type { Editor } from '@tiptap/core'
 import type { Ref } from 'vue'
 import { queryDb } from '@livestore/livestore'
-import { useMagicKeys, whenever } from '@vueuse/core'
 import { Circle, CircleOff, Search, X } from 'lucide-vue-next'
 import {
   ComboboxContent,
@@ -21,7 +20,7 @@ import {
   DialogTrigger,
   VisuallyHidden,
 } from 'reka-ui'
-import { inject, nextTick, ref } from 'vue'
+import { inject, nextTick, onMounted, onUnmounted, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useQuery } from 'vue-livestore'
 import Tooltip from '@/components/Shared/Tooltip.vue'
@@ -36,10 +35,23 @@ const visibleDocuments$ = queryDb(
 
 const { t } = useI18n()
 const show_commandbar = ref(false)
+const commandMenuRef = inject('commandMenuRef') as Ref<{ open: () => void } | undefined>
+
+function open() {
+  show_commandbar.value = true
+}
 
 function close() {
   show_commandbar.value = false
 }
+
+onMounted(() => {
+  commandMenuRef.value = { open }
+})
+
+onUnmounted(() => {
+  commandMenuRef.value = undefined
+})
 
 const editable_id = inject('editable_id') as Ref<string | null>
 const editor = inject('content') as Ref<Editor>
@@ -70,11 +82,8 @@ async function select_document(id: any) {
   }
 }
 
-const keys = useMagicKeys()
-const magic_command_menu = keys['ctrl+alt+o']
-whenever(magic_command_menu, (n) => {
-  if (n)
-    show_commandbar.value = true
+defineExpose({
+  open,
 })
 </script>
 
@@ -83,7 +92,6 @@ whenever(magic_command_menu, (n) => {
     <Tooltip
       :name="t('commandBar.title')"
       side="bottom"
-      shortcut="ctrl + alt + o"
     >
       <DialogTrigger
         class="relative z-80 left-0 bottom-0 m-0 flex items-center justify-center interactive hover:bg-secondary/80 bg-background size-8"

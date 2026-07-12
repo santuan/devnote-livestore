@@ -7,3 +7,5 @@ export function useToggleColorTheme(theme: string) {
   document.body.classList.add(theme)
   colorTheme.value = theme
 }
+
+export { colorTheme }

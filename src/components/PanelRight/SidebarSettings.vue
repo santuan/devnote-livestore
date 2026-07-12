@@ -12,11 +12,7 @@ const emit = defineEmits<{
 }>()
 
 const { t } = useI18n()
-const { showDocuments, editable } = useClientDocument(tables.uiState)
-
-function toggle_show_documents() {
-  showDocuments.value = !showDocuments.value
-}
+const { editable } = useClientDocument(tables.uiState)
 
 const showLayouts = useStorage('show_layouts', true)
 const showPerspective = useStorage('show_perspective', true)
@@ -38,19 +34,8 @@ const showPerspective = useStorage('show_perspective', true)
     </button>
     <div
       v-show="showPerspective"
-      class="bg-background p-2 @xs:pl-6 pb-4 gap-1 grid grid-cols-2 @xs:grid-cols-3"
+      class="bg-background p-2 @xs:pl-6 pb-4 gap-1 grid grid-cols-1 @xs:grid-cols-2"
     >
-      <button
-        :class="
-          showDocuments
-            ? 'bg-primary text-primary-foreground border-primary'
-            : 'bg-secondary/80'
-        "
-        class="flex gap-2 items-center p-1 justify-center w-full"
-        @click="toggle_show_documents"
-      >
-        <span>{{ t("commandBar.focusSidebar") }}</span>
-      </button>
       <button
         class="flex gap-2 items-center p-1 justify-center w-full"
         :class="

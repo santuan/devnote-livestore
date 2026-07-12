@@ -12,7 +12,6 @@ export function useSplitterPairing({ leftSplitter, rightSplitter }: SplitterPair
   // --- Core state ---
   const pairingActive = shallowRef(false)
   const pairingHandle = shallowRef<'left' | 'right' | null>(null)
-  const isAltPressed = shallowRef(false)
   const isDragging = shallowRef(false)
   const activeDragHandle = shallowRef<'left' | 'right' | null>(null)
   const layout = shallowRef<number[]>([0, 0])
@@ -24,7 +23,7 @@ export function useSplitterPairing({ leftSplitter, rightSplitter }: SplitterPair
   }
 
   // @dragging fires AFTER @layout on first move, but we still track it
-  // for the alt-release-during-drag protection
+  // for the drag-end cleanup
   function onHandleDragging(_handle: 'left' | 'right', dragging: boolean) {
     isDragging.value = dragging
     if (!dragging) {
@@ -36,8 +35,7 @@ export function useSplitterPairing({ leftSplitter, rightSplitter }: SplitterPair
   function onLayoutChange(newLayout: number[]) {
     layout.value = newLayout
 
-    const shouldPair = isAltPressed.value || pairingActive.value
-    if (!shouldPair) {
+    if (!pairingActive.value) {
       return
     }
 
@@ -49,8 +47,7 @@ export function useSplitterPairing({ leftSplitter, rightSplitter }: SplitterPair
     }
 
     // Right-click pairing: use the handle that was right-clicked
-    // Alt-held pairing: use the handle detected by @pointerdown
-    const dragging = pairingActive.value ? pairingHandle.value : activeDragHandle.value
+    const dragging = pairingHandle.value
 
     if (dragging === 'right') {
       // User drags right handle → resize left panel to match
@@ -67,33 +64,19 @@ export function useSplitterPairing({ leftSplitter, rightSplitter }: SplitterPair
     event.preventDefault()
     pairingActive.value = true
     pairingHandle.value = handle
-    isAltPressed.value = true
   }
 
   // --- Deactivation ---
   function deactivatePairing() {
     pairingActive.value = false
     pairingHandle.value = null
-    isAltPressed.value = false
   }
 
   // --- Event listeners ---
   onMounted(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.key === 'Alt') {
-        isAltPressed.value = true
-      }
       if (event.key === 'Escape' && pairingActive.value) {
         deactivatePairing()
-      }
-    }
-
-    const handleKeyUp = (event: KeyboardEvent) => {
-      if (event.key === 'Alt') {
-        // Don't break pairing during an active drag — user didn't intend to stop
-        if (!isDragging.value) {
-          isAltPressed.value = false
-        }
       }
     }
 
@@ -105,23 +88,19 @@ export function useSplitterPairing({ leftSplitter, rightSplitter }: SplitterPair
     }
 
     window.addEventListener('keydown', handleKeyDown)
-    window.addEventListener('keyup', handleKeyUp)
     window.addEventListener('click', handleClickOutside)
 
     onBeforeUnmount(() => {
       window.removeEventListener('keydown', handleKeyDown)
-      window.removeEventListener('keyup', handleKeyUp)
       window.removeEventListener('click', handleClickOutside)
     })
   })
 
   return {
-    /** Whether pairing mode is active (via right-click or alt-held) */
+    /** Whether pairing mode is active (via right-click) */
     pairingActive,
     /** Which handle initiated right-click pairing */
     pairingHandle,
-    /** Whether Alt key is currently held */
-    isAltPressed,
     /** Current splitter layout [left, center, right] */
     layout,
     /** Bind to SplitterGroup @layout */

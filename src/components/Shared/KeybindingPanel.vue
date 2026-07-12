@@ -131,7 +131,7 @@ defineExpose({
     <DialogPortal>
       <DialogOverlay class="bg-background/80 fixed inset-0 z-700" />
       <DialogContent
-        class="fixed top-4 md:top-[10%] left-[50%] w-[90vw] max-w-2xl translate-x-[-50%] text-sm overflow-hidden border bg-background border-muted-foreground/30 focus:outline-hidden z-701"
+        class="fixed top-4 md:top-[10%] left-[50%] w-[90vw] max-w-lg translate-x-[-50%] text-sm overflow-hidden border bg-background border-muted-foreground/30 focus:outline-hidden z-701"
       >
         <VisuallyHidden>
           <DialogTitle class="text-foreground">
@@ -158,7 +158,7 @@ defineExpose({
 
         <div class="p-4 max-h-[70vh] overflow-y-auto font-mono text-xs">
           <!-- Settings moved from SidebarSettings -->
-          <div class="my-6 pt-4 text-foreground border-t border-muted-foreground/30 space-y-3">
+          <div class="mb-3 pt-4 text-foreground space-y-3">
             <div class="flex items-center justify-between">
               <span>{{ t("settings.language") }}</span>
               <DropdownLanguage />
@@ -178,7 +178,7 @@ defineExpose({
             <div class="flex items-center justify-between gap-4">
               <span class="text-muted-foreground">Prefix Key</span>
               <button
-                class="px-3 py-1 border border-muted-foreground/30 hover:border-primary focus:border-primary outline-none min-w-25 text-right"
+                class="px-3 py-1 border border-muted-foreground/30 hover:border-primary focus:border-primary outline-none  min-w-35 text-center"
                 :class="isRecordingPrefix() ? 'border-primary' : ''"
                 @click="startRecordingPrefix"
               >
@@ -208,7 +208,7 @@ defineExpose({
             >
               <span class="text-muted-foreground">{{ command.label }}</span>
               <button
-                class="px-3 py-1 border border-muted-foreground/30 hover:border-primary focus:border-primary outline-none min-w-25 text-right"
+                class="px-3 py-1 border border-muted-foreground/30 hover:border-primary focus:border-primary outline-none min-w-35 text-center"
                 :class="isRecordingCommand(command.id) ? 'border-primary' : ''"
                 @click="startRecordingCommand(command.id)"
               >
