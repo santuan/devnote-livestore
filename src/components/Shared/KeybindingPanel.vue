@@ -11,10 +11,16 @@ import {
   VisuallyHidden,
 } from 'reka-ui'
 import { onUnmounted, ref } from 'vue'
+import { useI18n } from 'vue-i18n'
+import DropdownLanguage from '@/components/PanelRight/DropdownLanguage.vue'
+import ToggleTheme from '@/components/PanelRight/ToggleTheme.vue'
+import ButtonDeleteAllDocument from '@/components/Shared/ButtonDeleteAllDocument.vue'
 import {
   COMMANDS,
   useKeybindingConfig,
 } from '@/composables/useKeybindingConfig'
+
+const { t } = useI18n()
 
 const { prefixKey, bindings, setPrefixKey, setBinding, resetToDefaults }
   = useKeybindingConfig()
@@ -151,10 +157,24 @@ defineExpose({
         </div>
 
         <div class="p-4 max-h-[70vh] overflow-y-auto font-mono text-xs">
+          <!-- Settings moved from SidebarSettings -->
+          <div class="my-6 pt-4 text-foreground border-t border-muted-foreground/30 space-y-3">
+            <div class="flex items-center justify-between">
+              <span>{{ t("settings.language") }}</span>
+              <DropdownLanguage />
+            </div>
+            <div class="flex items-center justify-between">
+              <span>{{ t("settings.theme") }}</span>
+              <ToggleTheme />
+            </div>
+          </div>
           <!-- Prefix Key -->
 
           <!-- Commands -->
           <div class="space-y-3">
+            <div class="flex items-center justify-between">
+              <span class="font-semibold text-foreground">Configure shortcuts</span>
+            </div>
             <div class="flex items-center justify-between gap-4">
               <span class="text-muted-foreground">Prefix Key</span>
               <button
@@ -210,6 +230,19 @@ defineExpose({
                   {{ formatKey(bindings[command.id] || "") }}
                 </span>
               </button>
+            </div>
+          </div>
+
+          <!-- Database Settings -->
+          <div class="mt-6 pt-4 text-foreground border-t border-muted-foreground/30 space-y-3">
+            <div class="flex items-center justify-between">
+              <span class="font-semibold text-primary">{{ t("settings.database") }}</span>
+            </div>
+            <div class="pt-3 space-y-3 text-xs">
+              <div class="flex gap-2 items-center justify-between w-full">
+                <span class="text-destructive">{{ t("editor.deleteAll") }}</span>
+                <ButtonDeleteAllDocument />
+              </div>
             </div>
           </div>
 

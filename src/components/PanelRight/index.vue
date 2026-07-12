@@ -12,7 +12,6 @@ import { inject, ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import EditorToolbar from '../Tiptap/Toolbar/EditorToolbar.vue'
 import ContentAnalysis from './ContentAnalysis.vue'
-import DatabaseSettings from './DatabaseSettings.vue'
 import SidebarSettings from './SidebarSettings.vue'
 import TableOfContent from './TableOfContent.vue'
 
@@ -107,7 +106,7 @@ watch([sidetabTab, tab3Content], ([tab, el]) => {
             class="bg-secondary px-3 h-8 items-center justify-center text-xs leading-none text-primary select-none opacity-50 data-[state=active]:opacity-100 hover:text-primary data-[state=active]:font-bold data-[state=active]:text-primary outline-none cursor-default focus-visible:relative focus-visible:shadow focus-visible:shadow-primary"
             value="tab3"
           >
-            {{ t("leva.settings") }}
+            <!-- {{ t("leva.settings") }} -->UI
           </TabsTrigger>
         </TabsList>
         <TabsContent
@@ -139,8 +138,6 @@ watch([sidetabTab, tab3Content], ([tab, el]) => {
             >
               <slot />
             </SidebarSettings>
-
-            <DatabaseSettings />
           </div>
         </TabsContent>
       </TabsRoot>

@@ -517,7 +517,7 @@ onMounted(() => {
         id="splitter-group-1-resize-handle-1"
         class="resize-handle hidden md:flex justify-center relative items-center min-w-1"
         :class="[
-          (pairingActive && pairingHandle === 'right') || isAltPressed ? 'bg-primary!' : '',
+          (pairingActive && pairingHandle === 'right') || isAltPressed ? 'bg-destructive! animate-pulse' : '',
         ]"
         @pointerdown="onHandlePointerDown('left')"
         @dragging="onHandleDragging('left', $event)"
@@ -564,7 +564,7 @@ onMounted(() => {
         id="splitter-group-1-resize-handle-2"
         class="resize-handle hidden md:flex justify-center relative items-center min-w-1"
         :class="[
-          (pairingActive && pairingHandle === 'left') || isAltPressed ? 'bg-primary!' : '',
+          (pairingActive && pairingHandle === 'left') || isAltPressed ? 'bg-destructive! animate-pulse' : '',
         ]"
         @pointerdown="onHandlePointerDown('right')"
         @dragging="onHandleDragging('right', $event)"
@@ -628,7 +628,7 @@ onMounted(() => {
           @focus-mode-on="focusModeOn"
           @toggle-editable="toggle_editable"
         >
-          <div class="grid gap-2 grid-cols-2 @xs:pl-1 pl-2 @xs:grid-cols-3">
+          <div class="grid gap-2 grid-cols-2 @xs:pl-1 pl-2 @xs:grid-cols-2">
             <button
               class="flex gap-px outline-1 outline-primary text-xs items-center justify-center text-center w-full bg-secondary/80"
               @click="windowLayoutOne()"
