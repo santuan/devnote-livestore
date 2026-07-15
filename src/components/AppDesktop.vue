@@ -87,6 +87,7 @@ const { isActive: prefixActive, onCommand, offCommand } = usePrefixMode()
 const {
   pairingActive,
   onContextMenu,
+  onDoubleClick,
   onHandlePointerDown,
   onHandleDragging,
   onLayoutChange: onPairingLayoutChange,
@@ -124,13 +125,13 @@ onCommand('focusTitle', () => focusTitle(editorPanelRef.value?.inputTitleRef ?? 
 onCommand('focusEditor', focusEditor)
 onCommand('focusLogo', () => {
   if (sidebar_documents_splitter_ref.value?.isCollapsed) {
-    sidebar_documents_splitter_ref.value.expand()
+    // sidebar_documents_splitter_ref.value.expand()
     if (focus_logo.value instanceof HTMLElement) {
       focus_logo.value.focus()
     }
   }
   else {
-    sidebar_documents_splitter_ref.value?.collapse()
+    // sidebar_documents_splitter_ref.value?.collapse()
     if (focus_logo.value instanceof HTMLElement) {
       focus_logo.value.focus()
     }
@@ -280,6 +281,7 @@ onMounted(() => {
         :class="[pairingActive ? 'bg-primary/30! resize-handle-active' : '']"
         oncontextmenu="return false;"
         @contextmenu.prevent="onContextMenu($event, 'left')"
+        @dblclick="onDoubleClick('left')"
         @pointerdown="onHandlePointerDown('left')"
         @dragging="onHandleDragging('left', $event)"
       >
@@ -311,6 +313,7 @@ onMounted(() => {
         :class="[pairingActive ? 'bg-primary/30! resize-handle-active' : '']"
         oncontextmenu="return false;"
         @contextmenu.prevent="onContextMenu($event, 'right')"
+        @dblclick="onDoubleClick('right')"
         @pointerdown="onHandlePointerDown('right')"
         @dragging="onHandleDragging('right', $event)"
       >
@@ -322,7 +325,7 @@ onMounted(() => {
       <SplitterPanel
         id="splitter-group-1-panel-3"
         ref="sidebar_secondary_splitter_ref"
-        class="min-w-8 @container bg-secondary/20"
+        class="min-w-8 @container"
         :min-size="15"
         :max-size="30"
         collapsible

@@ -976,9 +976,10 @@ html:has(.app-font-size-xl) {
 }
 
 .resize-handle {
-  @apply px-4 bg-background;
-  z-index: 100;
-  @apply data-[state=hover]:bg-primary/10;
+  @apply px-4 bg-background outline-0 border border-transparent;
+  @apply focus-visible:bg-primary/10 focus-visible:border-primary focus-visible:border-dashed;
+  /* z-index: 100; */
+  @apply data-[state=hover]:bg-primary/10 data-[state=hover]:border-primary data-[state=hover]:border-dashed;
 }
 
 .resize-handle[data-state="hover"] .message,

@@ -37,7 +37,7 @@ const { t } = useI18n()
           v-model="titleModel"
           :placeholder="t('editor.untitled')"
           type="text"
-          class="outline -outline-offset-1 mb-0.5 outline-primary bg-background rounded-none! px-5 py-1.75 min-h-11.5 w-full text-2xl"
+          class="outline -outline-offset-1 mb-0.5 outline-border bg-secondary rounded-none! px-2 py-1.75 min-h-11.5 w-full text-2xl font-serif"
           @keyup.enter="emit('createDocument')"
         >
       </div>
@@ -45,7 +45,7 @@ const { t } = useI18n()
     <button
       v-show="isEditing"
       v-if="editable"
-      class="bg-primary h-12 text-primary-foreground py-2 absolute left-0 bottom-0 right-0"
+      class="bg-primary h-12 text-primary-foreground py-2 absolute bottom-0 left-4.5  right-4.5"
       @click="emit('createDocument')"
     >
       {{ t("editor.save") }}

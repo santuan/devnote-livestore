@@ -66,6 +66,11 @@ export function useSplitterPairing({ leftSplitter, rightSplitter }: SplitterPair
     pairingHandle.value = handle
   }
 
+  function onDoubleClick(handle: 'left' | 'right') {
+    pairingActive.value = true
+    pairingHandle.value = handle
+  }
+
   // --- Deactivation ---
   function deactivatePairing() {
     pairingActive.value = false
@@ -107,6 +112,7 @@ export function useSplitterPairing({ leftSplitter, rightSplitter }: SplitterPair
     onLayoutChange,
     /** Bind to SplitterResizeHandle @contextmenu */
     onContextMenu,
+    onDoubleClick,
     /** Bind to SplitterResizeHandle @pointerdown — identifies which handle */
     onHandlePointerDown,
     /** Bind to SplitterResizeHandle @dragging — tracks drag state */

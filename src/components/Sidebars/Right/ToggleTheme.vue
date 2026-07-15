@@ -43,7 +43,7 @@ const lightThemes = [
 
 function activeSwatch() {
   if (colorTheme.value === 'theme-foreground')
-    return 'var(--foreground)'
+    return 'hsl(var(--foreground))'
   const all = [...darkThemes, ...lightThemes]
   return all.find(th => th.id === colorTheme.value)?.color ?? 'var(--foreground)'
 }
@@ -70,7 +70,7 @@ function activeSwatch() {
         :side="'bottom'"
       >
         <DropdownMenuLabel
-          class="px-3 flex gap-2 pt-2 justify-center text-xs text-center text-foreground/80"
+          class="px-2 flex gap-2 py-2  text-xs text-left text-foreground/80"
         >
           {{ t("settings.selectPrimaryColor") }}
         </DropdownMenuLabel>

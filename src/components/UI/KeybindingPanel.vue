@@ -131,7 +131,7 @@ defineExpose({
     <DialogPortal>
       <DialogOverlay class="bg-background/80 fixed inset-0 z-700" />
       <DialogContent
-        class="fixed top-4 md:top-[10%] left-[50%] w-[90vw] max-w-lg translate-x-[-50%] text-sm overflow-hidden border bg-background border-muted-foreground/30 focus:outline-hidden z-701"
+        class="fixed top-4 md:top-[10%] left-[50%] w-[90vw] max-w-lg translate-x-[-50%] text-sm overflow-hidden border bg-background border-border focus:outline-hidden z-701"
       >
         <VisuallyHidden>
           <DialogTitle class="text-foreground">
@@ -143,7 +143,7 @@ defineExpose({
         </VisuallyHidden>
 
         <div
-          class="p-4 border-b border-muted-foreground/30 flex items-center justify-between"
+          class="p-4 border-b border-border flex items-center justify-between"
         >
           <h2 class="font-mono text-foreground text-sm font-bold">
             Keybinding Settings
@@ -156,22 +156,18 @@ defineExpose({
           </button>
         </div>
 
-        <div class="p-4 max-h-[70vh] overflow-y-auto font-mono text-xs">
-          <!-- Settings moved from SidebarSettings -->
-          <div class="mb-3 pt-4 text-foreground space-y-3">
+        <div class="p-3 max-h-[70vh] overflow-y-auto font-mono text-xs">
+          <div class="text-foreground grid">
             <div class="flex items-center justify-between">
               <span>{{ t("settings.language") }}</span>
               <DropdownLanguage />
             </div>
-            <div class="flex items-center justify-between">
+            <div class="flex items-center justify-between  border-t border-border pt-3 mt-3">
               <span>{{ t("settings.theme") }}</span>
               <ToggleTheme />
             </div>
           </div>
-          <!-- Prefix Key -->
-
-          <!-- Commands -->
-          <div class="space-y-3">
+          <div class="grid gap-3 border-t border-border pt-3 mt-3">
             <div class="flex items-center justify-between">
               <span class="font-semibold text-foreground">Configure shortcuts</span>
             </div>
@@ -231,6 +227,16 @@ defineExpose({
                 </span>
               </button>
             </div>
+            <!-- Reset -->
+            <div class="mt-3 flex justify-end items-center pt-3">
+              <button
+                class="flex items-center gap-2 text-muted-foreground hover:text-foreground"
+                @click="resetToDefaults"
+              >
+                <RotateCcw class="size-3" />
+                Reset to defaults
+              </button>
+            </div>
           </div>
 
           <!-- Database Settings -->
@@ -244,17 +250,6 @@ defineExpose({
                 <ButtonDeleteAllDocument />
               </div>
             </div>
-          </div>
-
-          <!-- Reset -->
-          <div class="mt-6 pt-4 border-t border-muted-foreground/30">
-            <button
-              class="flex items-center gap-2 text-muted-foreground hover:text-foreground"
-              @click="resetToDefaults"
-            >
-              <RotateCcw class="size-3" />
-              Reset to defaults
-            </button>
           </div>
         </div>
       </DialogContent>
