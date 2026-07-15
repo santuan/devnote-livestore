@@ -121,7 +121,10 @@ function editDocumentResponsive(id: string) {
 onCommand('toggleSidebar', toggle_documents)
 onCommand('toggleEditable', toggle_editable)
 onCommand('newDocument', createAndFocus)
-onCommand('focusTitle', () => focusTitle(editorPanelRef.value?.inputTitleRef ?? null))
+onCommand('focusTitle', () => {
+  editable.value = true
+  nextTick(() => focusTitle(editorPanelRef.value?.inputTitleRef ?? null))
+})
 onCommand('focusEditor', focusEditor)
 onCommand('focusLogo', () => {
   if (sidebar_documents_splitter_ref.value?.isCollapsed) {

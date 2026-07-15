@@ -1,4 +1,5 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest'
+import { shallowRef } from 'vue'
 
 const { useEditor } = await import('../useEditor')
 
@@ -21,7 +22,7 @@ describe('useEditor', () => {
   it('focusEditor calls commands.focus on the editor', () => {
     const { editorRef, focusEditor } = useEditor()
     const mockFocus = vi.fn()
-    editorRef.value = { commands: { focus: mockFocus } }
+    editorRef.value = { commands: { focus: mockFocus }, view: { dom: {} }, isDestroyed: false }
 
     focusEditor()
     expect(mockFocus).toHaveBeenCalled()
@@ -45,17 +46,17 @@ describe('useEditor', () => {
     const { focusTitle } = useEditor()
     const el = document.createElement('textarea')
     const spy = vi.spyOn(el, 'focus')
-    const ref = { value: el }
+    const ref = shallowRef<HTMLElement | null>(el)
 
-    focusTitle(ref as any)
+    focusTitle(ref)
     expect(spy).toHaveBeenCalled()
   })
 
   it('focusTitle does nothing for null ref', () => {
     const { focusTitle } = useEditor()
-    const ref = { value: null }
+    const ref = shallowRef<HTMLElement | null>(null)
 
-    expect(() => focusTitle(ref as any)).not.toThrow()
+    expect(() => focusTitle(ref)).not.toThrow()
   })
 
   it('returns the same singleton across calls', () => {

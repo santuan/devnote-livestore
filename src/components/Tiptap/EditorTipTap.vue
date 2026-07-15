@@ -105,6 +105,18 @@ function handleMathCancel() {
 }
 
 onMounted(() => {
+  // Suppress tiptap/ProseMirror async view tree errors during editor destruction
+  const suppressDestructionErrors = (event: PromiseRejectionEvent) => {
+    if (event.reason?.message?.includes('editor view is not available')) {
+      event.preventDefault()
+    }
+  }
+  window.addEventListener('unhandledrejection', suppressDestructionErrors)
+
+  onBeforeUnmount(() => {
+    window.removeEventListener('unhandledrejection', suppressDestructionErrors)
+  })
+
   editorRef.value = new Editor({
     coreExtensionOptions: {
       clipboardTextSerializer: {
@@ -261,13 +273,20 @@ onMounted(() => {
       migrateMathStrings(currentEditor)
     },
     onUpdate: () => {
-      emit('update:modelValue', editorRef.value.getHTML())
+      if (!editorRef.value?.isDestroyed) {
+        emit('update:modelValue', editorRef.value.getHTML())
+      }
     },
   })
 })
 
 onBeforeUnmount(() => {
-  editorRef.value.destroy()
+  try {
+    editorRef.value.destroy()
+  }
+  catch {
+    // ProseMirror view tree errors during destruction with custom node views
+  }
 })
 </script>
 
