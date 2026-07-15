@@ -27,7 +27,7 @@ const emit = defineEmits<{
 
 <template>
   <ButtonLogo
-    :ref="(el: any) => emit('focusLogo', el as HTMLElement | null)"
+    :ref="(el: any) => emit('focusLogo', el?.$el ?? el as HTMLElement | null)"
     :grayscale="prefixActive"
     :show-documents="showDocuments"
     @click="emit('toggleDocuments')"
