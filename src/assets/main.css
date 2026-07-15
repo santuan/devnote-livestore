@@ -997,3 +997,8 @@ html:has(.app-font-size-xl) {
   @apply absolute pointer-events-none top-1/2 left-0 min-w-40 -translate-y-1/2 -translate-x-16 text-xs text-center text-balance p-2 z-99 ring-primary ring bg-background;
   /* @apply delay-500 duration-150; */
 }
+
+
+.katex {
+  @apply text-foreground;
+}

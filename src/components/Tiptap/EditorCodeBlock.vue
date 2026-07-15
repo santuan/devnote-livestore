@@ -193,7 +193,7 @@ export default {
             >
             <button
               v-else
-              class="text-left h-8 max-h-8 leading-8 overflow-y-hidden line-clamp-1 w-full px-1"
+              class="text-left h-8 max-h-8 text-foreground leading-8 overflow-y-hidden line-clamp-1 w-full px-1"
               @click="startEditingTitle"
             >
               {{ codeTitle }}
@@ -211,7 +211,7 @@ export default {
 
       <div
         class="sticky codeBlockActions p-1 top-0 right-0 translate-x-0! flex items-center duration-100 justify-end gap-1"
-        :class="showFullCode ? 'z-[91]' : 'z-30'"
+        :class="showFullCode ? 'z-91' : 'z-30'"
       >
         <Transition mode="out-in">
           <span
@@ -231,7 +231,7 @@ export default {
             v-show="copyText === 'Copied'"
             class="size-5 text-primary-foreground"
           />
-          <Clipboard v-show="copyText !== 'Copied'" class="size-5" />
+          <Clipboard v-show="copyText !== 'Copied'" class="size-5 text-foreground" />
           <span class="sr-only">Copy to clipboard</span>
         </button>
         <button
