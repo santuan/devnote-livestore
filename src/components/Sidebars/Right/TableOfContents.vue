@@ -1,16 +1,16 @@
 <script setup lang="ts">
-import type { Editor } from '@tiptap/core'
-import type { Ref } from 'vue'
 import { useStorage } from '@vueuse/core'
 import { ChevronRight } from 'lucide-vue-next'
-import { inject } from 'vue'
 import { useI18n } from 'vue-i18n'
-import EditorToc from '../Tiptap/TableOfContents/EditorToc.vue'
+import { useEditor } from '@/composables/useEditor'
+import EditorToc from '../../Tiptap/TableOfContents/EditorToc.vue'
+import { computed } from 'vue'
 
 const { t } = useI18n()
-const editor = inject('content') as Ref<Editor>
-const toc = inject('toc') as Ref<any>
+const { editorRef: editor, toc } = useEditor()
 const showOnlyHeadings = useStorage('show_only_headings', true)
+
+const isEditorReady = computed(() => editor.value && editor.value.view && editor.value.view.dom)
 </script>
 
 <template>
@@ -33,6 +33,6 @@ const showOnlyHeadings = useStorage('show_only_headings', true)
         </span>
       </div>
     </button>
-    <EditorToc v-if="showOnlyHeadings" :editor :items="toc" />
+    <EditorToc v-if="showOnlyHeadings && isEditorReady" :editor :items="toc" />
   </div>
 </template>

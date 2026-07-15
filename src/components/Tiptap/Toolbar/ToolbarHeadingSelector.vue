@@ -1,13 +1,11 @@
 <script setup lang="ts">
-import type { Editor } from '@tiptap/core'
-import type { Ref } from 'vue'
 import { ChevronDown } from 'lucide-vue-next'
 
 import { DropdownMenuContent, DropdownMenuItem, DropdownMenuPortal, DropdownMenuRoot, DropdownMenuTrigger, ToolbarButton } from 'reka-ui'
-import { inject } from 'vue'
 import { useI18n } from 'vue-i18n'
+import { useEditor } from '@/composables/useEditor'
 
-const editor = inject('content') as Ref<Editor>
+const { editorRef: editor } = useEditor()
 const { t } = useI18n()
 </script>
 

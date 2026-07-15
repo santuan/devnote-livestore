@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import type { Ref } from 'vue'
 import { Trash2, X } from 'lucide-vue-next'
 import {
   AlertDialogAction,
@@ -12,9 +11,10 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from 'reka-ui'
-import { inject, ref } from 'vue'
+import { ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useStore } from 'vue-livestore'
+import { useDocumentLifecycle } from '@/composables/useDocumentLifecycle'
 import { events } from '@/livestore/schema'
 
 const props = defineProps<{
@@ -23,9 +23,7 @@ const props = defineProps<{
 }>()
 
 const { store } = useStore()
-const editable_id = inject('editable_id') as Ref<string | null>
-const newDocumentTitle = inject('new_document_title') as Ref<string>
-const newDocumentContent = inject('new_document_content') as Ref<string>
+const { editable_id, newDocumentTitle, newDocumentContent } = useDocumentLifecycle()
 
 const show_delete_document_modal = ref(false)
 

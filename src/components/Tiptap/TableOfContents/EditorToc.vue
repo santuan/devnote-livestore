@@ -1,7 +1,6 @@
 <script lang="ts">
 import type { Document } from '@/livestore/document'
 import { TextSelection } from '@tiptap/pm/state'
-import { Hash } from 'lucide-vue-next'
 
 import { defineComponent } from 'vue'
 import ToCItem from './EditorTocItem.vue'
@@ -9,7 +8,6 @@ import ToCItem from './EditorTocItem.vue'
 export default defineComponent({
   components: {
     ToCItem,
-    Hash,
   },
   props: {
     items: {
@@ -23,10 +21,11 @@ export default defineComponent({
 
   methods: {
     onItemClick(_e: any, id: any) {
-      if (this.editor) {
+      if (this.editor && this.editor.view && this.editor.view.dom) {
         const element = this.editor.view.dom.querySelector(
           `[data-toc-id="${id}"`,
         )
+        if (!element) return
         const pos = this.editor.view.posAtDOM(element, 0)
         // set focus
         const tr = this.editor.view.state.tr
@@ -57,9 +56,13 @@ export default defineComponent({
 </script>
 
 <template>
-  <template v-if="items.length === 0">
-    <div class="w-full justify-center items-center flex text-secondary-foreground border border-secondary min-h-12 p-1">
-      <Hash class="opacity-30 size-4 " />
+  <template v-if="!items || items.length === 0">
+    <div class="w-full justify-center p items-center flex text-secondary-foreground  min-h-12 p-1">
+      <div class="empty-state">
+        <p class=" text-xs">
+          Start editing your document to see the outline.
+        </p>
+      </div>
     </div>
   </template>
   <template v-else>

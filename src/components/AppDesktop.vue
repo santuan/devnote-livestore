@@ -1,13 +1,10 @@
 <script setup lang="ts">
-import { queryDb } from '@livestore/livestore'
 import {
   breakpointsTailwind,
   useBreakpoints,
   useColorMode,
-  useDebounceFn,
   useStorage,
 } from '@vueuse/core'
-import { Eye, PanelRightOpen, Pencil, Settings } from 'lucide-vue-next'
 import { SplitterGroup, SplitterPanel, SplitterResizeHandle } from 'reka-ui'
 import {
   computed,
@@ -17,423 +14,201 @@ import {
   provide,
   shallowRef,
   watch,
-  watchEffect,
 } from 'vue'
-import { useI18n } from 'vue-i18n'
-import { useClientDocument, useQuery, useStore } from 'vue-livestore'
-import DocumentItem from '@/components/PanelLeft/DocumentItem.vue'
-import DocumentList from '@/components/PanelLeft/DocumentList.vue'
-import SidebarSecondary from '@/components/PanelRight/index.vue'
-import ButtonLogo from '@/components/Shared/ButtonLogo.vue'
-import ButtonNewDocument from '@/components/Shared/ButtonNewDocument.vue'
-import KeybindingPanel from '@/components/Shared/KeybindingPanel.vue'
-import Editor from '@/components/Tiptap/EditorTipTap.vue'
+import EditorPanel from '@/components/EditorPanel.vue'
+import DocumentSidebar from '@/components/Sidebars/Left/DocumentSidebar.vue'
+import SidebarSecondary from '@/components/Sidebars/Right/SecondarySidebar.vue'
+import KeybindingPanel from '@/components/UI/KeybindingPanel.vue'
+import { useDocumentLifecycle } from '@/composables/useDocumentLifecycle'
+import { useEditor } from '@/composables/useEditor'
+import { useFocusMode } from '@/composables/useFocusMode'
+import { useLayoutPresets } from '@/composables/useLayoutPresets'
 import { usePrefixMode } from '@/composables/usePrefixMode'
+import { useSidebarCollapse } from '@/composables/useSidebarCollapse'
+import { useSideTabs } from '@/composables/useSideTabs'
 import { useSplitterPairing } from '@/composables/useSplitterPairing'
 import { useToggleColorTheme } from '@/composables/useToggleColorTheme'
-import { events, tables } from '@/livestore/schema'
 
 const colorTheme = useStorage('theme', 'theme-foreground')
 
-const { t } = useI18n()
-
-const editable_id = shallowRef('')
-const editor_content = shallowRef()
-const newDocumentTitle = shallowRef('')
-const newDocumentContent = shallowRef('')
-const editor_toc = shallowRef([])
-
-const input_title = shallowRef<HTMLElement | null>(null)
 const focus_logo = shallowRef<HTMLElement | null>(null)
-const focus_mode = shallowRef(false)
-const sidebar_documents_splitter_ref = shallowRef()
-const sidebar_secondary_splitter_ref = shallowRef()
+const resize = shallowRef(0)
+const keybindingPanelRef = shallowRef()
+const commandMenuRef = shallowRef<{ open: () => void } | undefined>()
+provide('commandMenuRef', commandMenuRef)
+const editorPanelRef = shallowRef<InstanceType<typeof EditorPanel> | null>(null)
+
+const {
+  editable_id,
+  newDocumentTitle,
+  newDocumentContent,
+  showDocuments,
+  editable,
+  documents,
+  documents_count,
+  createDocument,
+  resetStore,
+  editDocument,
+  toggleCompleted,
+} = useDocumentLifecycle()
+
+const {
+  editorRef,
+  focusEditor,
+  focusTitle,
+} = useEditor()
+
+const {
+  focus_mode,
+  focusModeOn,
+  focusModeOff,
+  toggleFocusMode,
+} = useFocusMode()
+
+const {
+  sidebar_documents_splitter_ref,
+  sidebar_secondary_splitter_ref,
+  toggle_documents,
+  hide_panel_left,
+  collapseSecondarySidebar,
+  expandSecondarySidebar,
+} = useSidebarCollapse()
+
+const {
+  layout,
+  applyPreset,
+  onLayoutChange,
+} = useLayoutPresets()
+
+const { selectTab } = useSideTabs()
+
+const { isActive: prefixActive, onCommand, offCommand } = usePrefixMode()
 
 const {
   pairingActive,
-  // pairingHandle,
-  layout,
-  onLayoutChange,
   onContextMenu,
   onHandlePointerDown,
   onHandleDragging,
+  onLayoutChange: onPairingLayoutChange,
 } = useSplitterPairing({
   leftSplitter: sidebar_documents_splitter_ref,
   rightSplitter: sidebar_secondary_splitter_ref,
 })
-const resize = shallowRef(0)
-const unsavedChanges = shallowRef(false)
-const breakpoints = useBreakpoints(breakpointsTailwind)
-const largerThanLg = breakpoints.greater('lg')
-const keybindingPanelRef = shallowRef()
-const commandMenuRef = shallowRef()
-const sideTab = useStorage('values', 'tab1')
-
-provide('new_document_title', newDocumentTitle)
-provide('new_document_content', newDocumentContent)
-provide('content', editor_content)
-provide('toc', editor_toc)
-provide('editable_id', editable_id)
-
-provide('sidebar_documents_splitter', sidebar_documents_splitter_ref)
-provide('sidebar_secondary_splitter', sidebar_secondary_splitter_ref)
-provide('layout', layout)
-provide('unsaved_changes', unsavedChanges)
-provide('focus_mode', focus_mode.value)
-provide('sideTab', sideTab)
-provide('commandMenuRef', commandMenuRef)
-
-const { store } = useStore()
-const uiState$ = queryDb(tables.uiState.get(), { label: 'uiState' })
-
-const { showDocuments, editable } = useClientDocument(tables.uiState)
 
 const isEditing = computed(() => editable_id.value.length === 0)
+const breakpoints = useBreakpoints(breakpointsTailwind)
+const largerThanLg = breakpoints.greater('lg')
 
-const visibleDocuments$ = queryDb(
-  (get) => {
-    const filter = get(uiState$).filter
-    const sort = get(uiState$).sort
-    const sortBy = get(uiState$).sortBy
-    const query = tables.documents
-      .where({
-        deletedAt: null,
-        completed: filter === 'all' ? undefined : filter === 'completed',
-      })
-      .orderBy(sort, sortBy)
-
-    return query
-  },
-  { label: 'visibleDocuments' },
-)
-
-const documents = useQuery(visibleDocuments$)
-const documents_count = computed(() => documents.value.length)
-
-// Prefix mode
-const { isActive: prefixActive, onCommand, offCommand } = usePrefixMode()
-
+// --- Document helpers ---
 function toggle_editable() {
-  editor_content.value?.setEditable(!editable.value)
-  editable.value = editor_content.value?.options?.editable
+  editorRef.value?.setEditable(!editable.value)
+  editable.value = editorRef.value?.options?.editable
 }
 
-function hide_panel_left() {
-  showDocuments.value = false
+function createAndFocus() {
+  resetStore()
+  nextTick(() => focusEditor())
 }
 
-function createDocument() {
-  const id = crypto.randomUUID()
-  store.commit(
-    events.documentCreated({
-      id,
-      text: newDocumentTitle.value,
-      content: newDocumentContent.value,
-    }),
-  )
-  editable_id.value = id
-}
-
-function resetStore() {
-  newDocumentTitle.value = ''
-  newDocumentContent.value = ''
-  editable_id.value = ''
-  editable.value = true
-  createDocument()
-  nextTick(() => {
-    editor_content.value.commands.focus()
-  })
-}
-
-function editDocument(id: string) {
-  if (unsavedChanges.value) {
-    // eslint-disable-next-line no-alert
-    const confirmUnsaved = confirm(
-      'Tiene cambios sin guardar. ¿Desea perder los cambios?',
-    )
-    if (!confirmUnsaved) {
-      return
-    }
-  }
-  if (!id)
-    return
-  const foundTodo = documents.value.find(todo => todo.id === id)
-  if (!foundTodo)
-    return
-  newDocumentTitle.value = foundTodo.text
-  newDocumentContent.value = foundTodo.content
-  editable_id.value = id
+function editDocumentResponsive(id: string) {
+  editDocument(id)
   if (!largerThanLg.value) {
     showDocuments.value = false
   }
 }
 
-function updateDocument() {
-  store.commit(
-    events.documentUpdated({
-      id: editable_id.value,
-      text: newDocumentTitle.value,
-      content: newDocumentContent.value,
-    }),
-  )
-}
-
-function updateDocumentTitle() {
-  store.commit(
-    events.documentUpdatedTitle({
-      id: editable_id.value,
-      text: newDocumentTitle.value,
-    }),
-  )
-}
-
-watchEffect(() => {
-  if (newDocumentTitle.value)
-    updateDocumentTitle()
-})
-
-function toggleCompleted(id: string) {
-  if (documents.value.find(item => item.id === id)?.completed) {
-    store.commit(events.documentUncompleted({ id }))
-  }
-  else {
-    store.commit(events.documentCompleted({ id }))
-  }
-}
-
-function auto_save() {
-  if (!editable_id.value)
-    return
-  if (newDocumentContent.value === '')
-    return
-  updateDocument()
-}
-
-const debouncedAutoSave = useDebounceFn(auto_save, 150)
-
-watchEffect(() => {
-  if (newDocumentContent.value)
-    debouncedAutoSave()
-  if (newDocumentContent.value !== '' && editable_id.value.length === 0) {
-    unsavedChanges.value = true
-  }
-  else {
-    unsavedChanges.value = false
-  }
-})
-
-function toggle_documents() {
-  showDocuments.value = !showDocuments.value
-}
-
-watch(
-  () => showDocuments.value,
-  (showSidebar) => {
-    if (!showSidebar) {
-      sidebar_documents_splitter_ref.value?.collapse()
-    }
-    else {
-      if (sidebar_documents_splitter_ref.value?.isCollapsed) {
-        sidebar_documents_splitter_ref.value.resize(25)
-      }
-    }
-  },
-  { flush: 'post' },
-)
-
-watch(
-  () => resize.value,
-  (resize) => {
-    if (!resize)
-      return
-    if (resize >= 10) {
-      showDocuments.value = true
-      return true
-    }
-    if (resize <= 9) {
-      showDocuments.value = false
-      return true
-    }
-    return false
-  },
-  { immediate: true },
-)
-
-function focusModeOff() {
-  focus_mode.value = false
-}
-
-function focusModeOn() {
-  focus_mode.value = true
-}
-
-function collapseSecondarySidebar() {
-  if (!sidebar_secondary_splitter_ref.value)
-    return
-  sidebar_secondary_splitter_ref.value.collapse()
-}
-
-function expandSecondarySidebar() {
-  sidebar_secondary_splitter_ref.value.resize(20)
-}
-
-function windowLayoutOne() {
-  if (!layout.value)
-    return
-  sidebar_documents_splitter_ref.value.resize(30)
-  sidebar_secondary_splitter_ref.value.resize(30)
-}
-
-function windowLayout25() {
-  if (!layout.value)
-    return
-  sidebar_documents_splitter_ref.value.resize(25)
-  sidebar_secondary_splitter_ref.value.resize(25)
-}
-
-function windowLayoutTwo() {
-  if (!layout.value)
-    return
-  sidebar_documents_splitter_ref.value.resize(5)
-  sidebar_secondary_splitter_ref.value.resize(50)
-}
-
-function windowLayoutThree() {
-  if (!layout.value)
-    return
-  sidebar_documents_splitter_ref.value.resize(50)
-  sidebar_secondary_splitter_ref.value.resize(5)
-}
-
-function windowLayoutFour() {
-  if (!layout.value)
-    return
-  sidebar_documents_splitter_ref.value.resize(15)
-  sidebar_secondary_splitter_ref.value.resize(15)
-}
-
-function windowLayoutFive() {
-  if (!layout.value)
-    return
-  sidebar_documents_splitter_ref.value.resize(5)
-  sidebar_secondary_splitter_ref.value.resize(5)
-}
-
-function navigateToNextDocument() {
-  if (documents.value.length === 0)
-    return
-
-  const currentIndex = documents.value.findIndex(
-    doc => doc.id === editable_id.value,
-  )
-  let nextIndex = 0
-
-  if (currentIndex !== -1) {
-    nextIndex = (currentIndex + 1) % documents.value.length
-  }
-
-  const nextDocument = documents.value[nextIndex]
-  if (nextDocument) {
-    editDocument(nextDocument.id)
-  }
-}
-
-function navigateToPreviousDocument() {
-  if (documents.value.length === 0)
-    return
-
-  const currentIndex = documents.value.findIndex(
-    doc => doc.id === editable_id.value,
-  )
-  let previousIndex = documents.value.length - 1
-
-  if (currentIndex !== -1) {
-    previousIndex
-      = currentIndex === 0 ? documents.value.length - 1 : currentIndex - 1
-  }
-
-  const previousDocument = documents.value[previousIndex]
-  if (previousDocument) {
-    editDocument(previousDocument.id)
-  }
-}
-
-// Register prefix command handlers
 onCommand('toggleSidebar', toggle_documents)
 onCommand('toggleEditable', toggle_editable)
-onCommand('newDocument', resetStore)
-onCommand('focusTitle', () => {
-  if (input_title.value instanceof HTMLElement) {
-    input_title.value.focus()
-  }
-})
-onCommand('focusEditor', () => {
-  editor_content.value.commands.focus()
-})
+onCommand('newDocument', createAndFocus)
+onCommand('focusTitle', () => focusTitle(editorPanelRef.value?.inputTitleRef ?? null))
+onCommand('focusEditor', focusEditor)
 onCommand('focusLogo', () => {
-  if (sidebar_documents_splitter_ref.value.isCollapsed) {
+  if (sidebar_documents_splitter_ref.value?.isCollapsed) {
     sidebar_documents_splitter_ref.value.expand()
     if (focus_logo.value instanceof HTMLElement) {
       focus_logo.value.focus()
     }
   }
   else {
-    sidebar_documents_splitter_ref.value.collapse()
+    sidebar_documents_splitter_ref.value?.collapse()
     if (focus_logo.value instanceof HTMLElement) {
       focus_logo.value.focus()
     }
   }
 })
 onCommand('toggleSecondarySidebar', () => {
-  if (sidebar_secondary_splitter_ref.value.isCollapsed) {
+  if (sidebar_secondary_splitter_ref.value?.isCollapsed) {
     expandSecondarySidebar()
   }
   else {
     collapseSecondarySidebar()
   }
 })
-onCommand('navigateNextDocument', navigateToNextDocument)
-onCommand('navigatePreviousDocument', navigateToPreviousDocument)
-onCommand('windowLayout1', windowLayoutOne)
-onCommand('windowLayout2', windowLayout25)
-onCommand('windowLayout3', windowLayoutThree)
-onCommand('windowLayout4', windowLayoutFour)
-onCommand('windowLayout5', windowLayoutFive)
-onCommand('focusMode', () => {
-  focus_mode.value = !focus_mode.value
+onCommand('navigateNextDocument', () => {
+  if (documents.value.length === 0)
+    return
+  const currentIndex = documents.value.findIndex(doc => doc.id === editable_id.value)
+  const nextIndex = currentIndex !== -1 ? (currentIndex + 1) % documents.value.length : 0
+  editDocument(documents.value[nextIndex]?.id)
 })
+onCommand('navigatePreviousDocument', () => {
+  if (documents.value.length === 0)
+    return
+  const currentIndex = documents.value.findIndex(doc => doc.id === editable_id.value)
+  const prevIndex = currentIndex === 0 ? documents.value.length - 1 : (currentIndex !== -1 ? currentIndex - 1 : 0)
+  editDocument(documents.value[prevIndex]?.id)
+})
+onCommand('windowLayout1', () => applyPreset('layout1'))
+onCommand('windowLayout2', () => applyPreset('layout2'))
+onCommand('windowLayout3', () => applyPreset('layout3'))
+onCommand('windowLayout4', () => applyPreset('layout4'))
+onCommand('windowLayout5', () => applyPreset('layout5'))
+onCommand('focusMode', toggleFocusMode)
 onCommand('selectSideTab1', () => {
-  sideTab.value = 'tab1'
+  selectTab('tab1')
   if (sidebar_secondary_splitter_ref.value?.isCollapsed) {
     expandSecondarySidebar()
   }
 })
 onCommand('selectSideTab2', () => {
-  sideTab.value = 'tab2'
+  selectTab('tab2')
   if (sidebar_secondary_splitter_ref.value?.isCollapsed) {
     expandSecondarySidebar()
   }
 })
 onCommand('selectSideTab3', () => {
-  sideTab.value = 'tab3'
+  selectTab('tab3')
   if (sidebar_secondary_splitter_ref.value?.isCollapsed) {
     expandSecondarySidebar()
   }
 })
-onCommand('openKeybindingPanel', () => {
-  keybindingPanelRef.value?.open()
-})
-onCommand('openCommandMenu', () => {
-  commandMenuRef.value?.open()
-})
+onCommand('openKeybindingPanel', () => keybindingPanelRef.value?.open())
+onCommand('openCommandMenu', () => commandMenuRef.value?.open())
+
+// --- Unified layout handler: presets + pairing ---
+function onSplitterLayoutChange(newLayout: number[]) {
+  onLayoutChange(newLayout)
+  onPairingLayoutChange(newLayout)
+}
+
+// --- Sidebar resize → show/hide documents ---
+watch(
+  () => resize.value,
+  (size) => {
+    if (!size)
+      return
+    const shouldShow = size >= 10
+    if (shouldShow !== showDocuments.value) {
+      showDocuments.value = shouldShow
+    }
+  },
+  { flush: 'post' },
+)
 
 onMounted(() => {
   useColorMode()
   useToggleColorTheme(colorTheme.value)
 
-  // Keyboard/click pairing listeners are now inside useSplitterPairing
-
-  // Cleanup command handlers on unmount
   onBeforeUnmount(() => {
     offCommand('toggleSidebar')
     offCommand('toggleEditable')
@@ -450,6 +225,8 @@ onMounted(() => {
     offCommand('windowLayout4')
     offCommand('windowLayout5')
     offCommand('focusMode')
+    offCommand('openKeybindingPanel')
+    offCommand('openCommandMenu')
   })
 })
 </script>
@@ -460,7 +237,7 @@ onMounted(() => {
       id="splitter-group-1"
       direction="horizontal"
       auto-save-id="app-desktop"
-      @layout="onLayoutChange"
+      @layout="onSplitterLayoutChange"
     >
       <SplitterPanel
         id="splitter-group-1-panel-1"
@@ -480,47 +257,27 @@ onMounted(() => {
         @dblclick="focusModeOff()"
         @resize="resize = $event"
       >
-        <ButtonLogo
-          v-show="!focus_mode"
-          ref="focus_logo"
-          :grayscale="prefixActive"
-          @click="toggle_documents"
-        />
-        <div
-          v-show="!sidebar_documents_splitter_ref?.isCollapsed"
-          class="w-full duration-300 transition-opacity bg-background"
-          :class="[
-            showDocuments ? 'relative z-71' : '',
-            focus_mode ? 'opacity-0 pointer-events-none' : '',
-          ]"
-        >
-          <DocumentList :count="documents_count" @open="toggle_documents">
-            <template #top>
-              <ButtonNewDocument :is-editing @click="resetStore" />
-            </template>
-            <template #list>
-              <DocumentItem
-                v-for="item in Array.isArray(documents) ? documents : []"
-                :id="item.id"
-                :key="item.id"
-                :completed="item.completed"
-                :text="item.text"
-                @edit="editDocument"
-                @toggle="toggleCompleted"
-              />
-            </template>
-          </DocumentList>
-        </div>
-        <button
-          v-if="showDocuments"
-          class="fixed inset-0 z-70 bg-background/80 outline-0! md:hidden"
-          @click="hide_panel_left"
+        <DocumentSidebar
+          :is-editing="isEditing"
+          :focus-mode="focus_mode"
+          :show-documents="showDocuments"
+          :documents="documents"
+          :documents-count="documents_count"
+          :sidebar-documents-splitter-ref="sidebar_documents_splitter_ref"
+          :prefix-active="prefixActive"
+          @toggle-documents="toggle_documents"
+          @hide-panel-left="hide_panel_left"
+          @create-and-focus="createAndFocus"
+          @edit-document="editDocumentResponsive"
+          @toggle-completed="toggleCompleted"
+          @focus-mode-off="focusModeOff"
+          @focus-logo="focus_logo = $event"
         />
       </SplitterPanel>
       <SplitterResizeHandle
         id="splitter-group-1-resize-handle-1"
         class="resize-handle hidden md:flex justify-center relative items-center min-w-1"
-        :class="[pairingActive ? 'bg-primary! resize-handle-active' : '']"
+        :class="[pairingActive ? 'bg-primary/30! resize-handle-active' : '']"
         oncontextmenu="return false;"
         @contextmenu.prevent="onContextMenu($event, 'left')"
         @pointerdown="onHandlePointerDown('left')"
@@ -537,36 +294,21 @@ onMounted(() => {
         :min-size="20"
         :class="editable ? 'bg-secondary/20' : ''"
       >
-        <div class="relative px-4 pt-px flex flex-col gap-2 h-screen">
-          <Editor
-            :key="editable_id"
-            v-model="newDocumentContent"
-            :editor="editor_content"
-          >
-            <input
-              v-if="editable"
-              ref="input_title"
-              v-model="newDocumentTitle"
-              :placeholder="t('editor.untitled')"
-              type="text"
-              class="outline outline-primary bg-background rounded-none! px-2 py-1 min-h-8 w-full"
-              @keyup.enter="createDocument"
-            >
-          </Editor>
-          <button
-            v-show="isEditing"
-            v-if="editable"
-            class="bg-primary h-12 text-primary-foreground py-2 absolute left-0 bottom-0 right-0"
-            @click="createDocument"
-          >
-            {{ t("editor.save") }}
-          </button>
-        </div>
+        <EditorPanel
+          ref="editorPanelRef"
+          v-model:content="newDocumentContent"
+          v-model:title="newDocumentTitle"
+          :editable-id="editable_id"
+          :editable="editable"
+          :is-editing="isEditing"
+          :editor-ref="editorRef"
+          @create-document="createDocument"
+        />
       </SplitterPanel>
       <SplitterResizeHandle
         id="splitter-group-1-resize-handle-2"
         class="resize-handle hidden md:flex justify-center relative items-center min-w-1"
-        :class="[pairingActive ? 'bg-primary! resize-handle-active' : '']"
+        :class="[pairingActive ? 'bg-primary/30! resize-handle-active' : '']"
         oncontextmenu="return false;"
         @contextmenu.prevent="onContextMenu($event, 'right')"
         @pointerdown="onHandlePointerDown('right')"
@@ -587,150 +329,19 @@ onMounted(() => {
         :collapsed-size="0"
         @dblclick="focusModeOff()"
       >
-        <button
-          v-if="focus_mode"
-          class="size-8 fixed top-0 right-0 z-10 flex justify-center items-center"
-          @click="focusModeOff()"
-        >
-          <Eye class="size-4 pointer-events-none" />
-        </button>
-        <button
-          v-if="!focus_mode"
-          v-show="layout[2] === 0"
-          class="size-8 fixed right-0 top-0 flex justify-center items-center"
-          @click="expandSecondarySidebar()"
-        >
-          <PanelRightOpen class="size-5 pointer-events-none" />
-        </button>
-        <button
-          v-if="!focus_mode"
-          class="fixed size-8 flex justify-center items-center z-50"
-          :class="[
-            !editable
-              ? 'bg-background'
-              : 'bg-primary ring text-primary-foreground ring-secondary',
-            layout[2] === 0 ? 'right-0 top-9' : 'right-1 top-10',
-          ]"
-          @click="toggle_editable"
-        >
-          <Pencil class="size-3.5" />
-          <span class="sr-only"> editable </span>
-        </button>
-        <!-- Keybinding Settings button -->
-        <button
-          class="fixed size-8 flex justify-center items-center z-50 right-0 bottom-0"
-          @click="keybindingPanelRef?.open()"
-        >
-          <Settings class="size-4 pointer-events-none" />
-        </button>
         <SidebarSecondary
-          v-if="layout[2] !== 0"
           :focus-mode="focus_mode"
+          :layout="layout"
+          :editable="editable"
           @collapse-secondary-sidebar="collapseSecondarySidebar"
+          @expand-secondary-sidebar="expandSecondarySidebar"
           @focus-mode-on="focusModeOn"
+          @focus-mode-off="focusModeOff"
           @toggle-editable="toggle_editable"
-        >
-          <div class="grid gap-2 grid-cols-1 @xs:pl-1 pl-2 @md:grid-cols-2">
-            <button
-              class="flex gap-px outline-1 outline-primary text-xs items-center justify-center text-center w-full bg-secondary/80"
-              @click="windowLayoutOne()"
-            >
-              <span
-                class="bg-secondary/30 flex justify-center items-center h-6 w-[30%]"
-              />
-              <span
-                class="bg-primary/10 ring-1 ring-primary/40 text-primary flex justify-center items-center h-6 w-[40%]"
-              >40%</span>
-              <span
-                class="bg-secondary/30 flex justify-center items-center h-6 w-[30%]"
-              />
-            </button>
-            <button
-              class="flex gap-px outline-1 outline-primary text-xs items-center justify-center text-center w-full bg-secondary/80"
-              @click="windowLayout25()"
-            >
-              <span
-                class="bg-secondary/30 flex justify-center items-center h-6 w-[30%]"
-              />
-              <span
-                class="bg-primary/10 ring-1 ring-primary/40 text-primary flex justify-center items-center h-6 w-[40%]"
-              >50%</span>
-              <span
-                class="bg-secondary/30 flex justify-center items-center h-6 w-[30%]"
-              />
-            </button>
-            <button
-              class="flex gap-px outline-1 outline-primary text-xs items-center justify-center text-center w-full bg-secondary/80"
-              @click="windowLayoutFour()"
-            >
-              <span
-                class="bg-secondary/30 flex justify-center items-center h-6 w-[15%]"
-              />
-              <span
-                class="bg-primary/10 ring-1 ring-primary/40 text-primary flex justify-center items-center h-6 w-[70%]"
-              >70%</span>
-              <span
-                class="bg-secondary/30 flex justify-center items-center h-6 w-[15%]"
-              />
-            </button>
-            <button
-              class="flex gap-px outline-1 outline-primary text-xs items-center justify-center text-center w-full bg-secondary/80"
-              @click="windowLayoutFive()"
-            >
-              <span
-                class="bg-secondary/30 flex justify-center items-center h-6 w-[5%]"
-              />
-              <span
-                class="bg-primary/10 ring-1 ring-primary/40 text-primary flex justify-center items-center h-6 w-[90%]"
-              >90%</span>
-              <span
-                class="bg-secondary/30 flex justify-center items-center h-6 w-[5%]"
-              />
-            </button>
-            <button
-              class="flex gap-px outline-1 outline-primary text-xs items-center justify-center text-center w-full bg-secondary/80"
-              @click="windowLayoutTwo()"
-            >
-              <span
-                class="bg-secondary/30 flex justify-center items-center h-6 w-[5%]"
-              />
-              <span
-                class="bg-primary/10 ring-1 ring-primary/40 text-primary flex justify-center items-center h-6 w-[65%]"
-              >65%</span>
-              <span
-                class="bg-secondary/30 flex justify-center items-center h-6 w-[30%]"
-              />
-            </button>
-            <button
-              class="flex gap-px outline-1 outline-primary text-xs items-center justify-center text-center w-full bg-secondary/80"
-              @click="windowLayoutThree()"
-            >
-              <span
-                class="bg-secondary/30 flex justify-center items-center h-6 w-[30%]"
-              />
-              <span
-                class="bg-primary/10 ring-1 ring-primary/40 text-primary flex justify-center items-center h-6 w-[65%]"
-              >65%</span>
-              <span
-                class="bg-secondary/30 flex justify-center items-center h-6 w-[5%]"
-              />
-            </button>
-          </div>
-        </SidebarSecondary>
+          @open-keybindings="keybindingPanelRef?.open()"
+        />
       </SplitterPanel>
     </SplitterGroup>
     <KeybindingPanel ref="keybindingPanelRef" />
-    <div
-      v-show="prefixActive"
-      class="bottom-0 left-0 gap-1 z-999 p-2 bg-primary flex items-center justify-center fixed"
-    >
-      <span class="relative flex gap-2 size-3">
-        <span
-          class="absolute inline-flex h-full w-full animate-ping rounded-full bg-background opacity-75"
-        />
-        <span class="relative inline-flex size-3 rounded-full bg-background" />
-      </span>
-      <span class="text-xs text-primary-foreground uppercase">Prefix</span>
-    </div>
   </div>
 </template>

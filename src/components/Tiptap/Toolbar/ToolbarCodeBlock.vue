@@ -1,14 +1,11 @@
 <script setup lang="ts">
-import type { Editor } from '@tiptap/core'
-
-import type { Ref } from 'vue'
 import { Code } from 'lucide-vue-next'
 import { ToolbarButton } from 'reka-ui'
-import { inject } from 'vue'
 import { useI18n } from 'vue-i18n'
-import Tooltip from '@/components/Shared/Tooltip.vue'
+import Tooltip from '@/components/UI/Tooltip.vue'
+import { useEditor } from '@/composables/useEditor'
 
-const editor = inject('content') as Ref<Editor>
+const { editorRef: editor } = useEditor()
 const { t } = useI18n()
 </script>
 
@@ -16,14 +13,14 @@ const { t } = useI18n()
   <Tooltip :name="t('toolbar.codeBlock')" shortcut="Ctrl Alt C" side="bottom">
     <ToolbarButton
       :class="{ 'is-active': editor.isActive('codeBlock') }"
-      class="interactive gap-1 min-w-20!"
+      class="flex justify-center items-center min-w-20! px-4 border border-secondary bg-secondary/80 h-8 gap-2"
       :value="t('toolbar.codeBlock')"
       @click="editor.chain().focus().toggleCodeBlock().run()"
     >
-      <p class="text-xs">
+      <span class="text-xs">
         Code
-      </p>
-      <Code />
+      </span>
+      <Code class="size-4" />
       <span class="sr-only">{{ t("toolbar.codeBlock") }}</span>
     </ToolbarButton>
   </Tooltip>

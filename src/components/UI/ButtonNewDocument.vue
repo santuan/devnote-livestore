@@ -1,8 +1,7 @@
 <script setup lang="ts">
-import type { Ref } from 'vue'
 import { Plus } from 'lucide-vue-next'
-import { inject } from 'vue'
 import { useI18n } from 'vue-i18n'
+import { useDocumentLifecycle } from '@/composables/useDocumentLifecycle'
 
 const props = defineProps<{
   isEditing?: boolean
@@ -12,8 +11,7 @@ const emit = defineEmits<{
   (e: 'click'): void
 }>()
 
-const editable_id = inject('editable_id') as Ref<string | null>
-
+const { editable_id } = useDocumentLifecycle()
 const { t } = useI18n()
 </script>
 

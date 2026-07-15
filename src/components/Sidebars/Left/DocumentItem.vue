@@ -1,10 +1,7 @@
 <script setup lang="ts">
-import type { Ref } from 'vue'
-
-// import type { Document } from '@/livestore/document'
 import { Circle, CircleOff } from 'lucide-vue-next'
-import { inject } from 'vue'
-import ButtonDeleteDocument from '@/components/Shared/ButtonDeleteDocument.vue'
+import ButtonDeleteDocument from '@/components/UI/ButtonDeleteDocument.vue'
+import { useDocumentLifecycle } from '@/composables/useDocumentLifecycle'
 
 const props = defineProps<{
   id: string
@@ -17,7 +14,7 @@ const emit = defineEmits<{
   (e: 'toggle', id: string): void
 }>()
 
-const editable_id = inject('editable_id') as Ref<string | null>
+const { editable_id } = useDocumentLifecycle()
 </script>
 
 <template>
@@ -37,7 +34,10 @@ const editable_id = inject('editable_id') as Ref<string | null>
       <div
         class="flex gap-1 bg-secondary gap-x-px pl-px justify-end"
       >
-        <div class="group-hover:inline-flex group-focus-within:inline-flex hidden" :class="props.id === editable_id ? 'inline-flex' : ''">
+        <div
+          class="group-hover:inline-flex group-focus-within:inline-flex hidden"
+          :class="props.id === editable_id ? 'inline-flex' : ''"
+        >
           <ButtonDeleteDocument :id="props.id" :title="props.text" />
         </div>
         <button

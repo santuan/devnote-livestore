@@ -1,6 +1,4 @@
 <script setup lang="ts">
-import type { Editor } from '@tiptap/core'
-import type { Ref } from 'vue'
 import { queryDb } from '@livestore/livestore'
 import { Circle, CircleOff, Search, X } from 'lucide-vue-next'
 import {
@@ -20,10 +18,12 @@ import {
   DialogTrigger,
   VisuallyHidden,
 } from 'reka-ui'
-import { inject, nextTick, onMounted, onUnmounted, ref } from 'vue'
+import { nextTick, inject, onMounted, onUnmounted, ref, type ShallowRef } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useQuery } from 'vue-livestore'
-import Tooltip from '@/components/Shared/Tooltip.vue'
+import Tooltip from '@/components/UI/Tooltip.vue'
+import { useDocumentLifecycle } from '@/composables/useDocumentLifecycle'
+import { useEditor } from '@/composables/useEditor'
 import { tables } from '@/livestore/schema'
 
 const visibleDocuments$ = queryDb(
@@ -35,7 +35,7 @@ const visibleDocuments$ = queryDb(
 
 const { t } = useI18n()
 const show_commandbar = ref(false)
-const commandMenuRef = inject('commandMenuRef') as Ref<{ open: () => void } | undefined>
+const commandMenuRef = inject<ShallowRef<{ open: () => void } | undefined>>('commandMenuRef')
 
 function open() {
   show_commandbar.value = true
@@ -46,40 +46,30 @@ function close() {
 }
 
 onMounted(() => {
-  commandMenuRef.value = { open }
+  if (commandMenuRef) {
+    commandMenuRef.value = { open }
+  }
 })
 
 onUnmounted(() => {
-  commandMenuRef.value = undefined
+  if (commandMenuRef) {
+    commandMenuRef.value = undefined
+  }
 })
 
-const editable_id = inject('editable_id') as Ref<string | null>
-const editor = inject('content') as Ref<Editor>
-const newDocumentTitle = inject('new_document_title') as Ref<string>
-const newDocumentContent = inject('new_document_content') as Ref<string>
-const unsavedChanges = inject('unsaved_changes') as Ref<boolean>
+const {
+  editable_id,
+  selectDocument,
+} = useDocumentLifecycle()
 
+const { focusEditor } = useEditor()
 const documents = useQuery(visibleDocuments$)
 
-async function select_document(id: any) {
-  if (unsavedChanges.value) {
-    // eslint-disable-next-line no-alert
-    const confirmUnsaved = confirm(
-      'Tiene cambios sin guardar. ¿Desea perder los cambios?',
-    )
-    if (!confirmUnsaved) {
-      return
-    }
-  }
-  const foundTodo = documents.value.find(todo => todo.id === id)
-  if (foundTodo) {
-    newDocumentTitle.value = foundTodo.text
-    newDocumentContent.value = foundTodo.content
-    editable_id.value = id
-    show_commandbar.value = false
-    await nextTick()
-    editor.value.commands.focus()
-  }
+async function select_document(id: string) {
+  selectDocument(id)
+  show_commandbar.value = false
+  await nextTick()
+  focusEditor()
 }
 
 defineExpose({

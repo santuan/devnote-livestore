@@ -1,8 +1,4 @@
 <script setup lang="ts">
-import type { Editor } from '@tiptap/core'
-
-import type { Ref } from 'vue'
-
 import {
   AlignCenter,
   AlignJustify,
@@ -12,12 +8,12 @@ import {
 import {
   ToolbarButton,
 } from 'reka-ui'
-import { inject } from 'vue'
+import { useEditor } from '@/composables/useEditor'
 
 // import { useI18n } from 'vue-i18n'
 // const { t } = useI18n()
 
-const editor = inject('content') as Ref<Editor>
+const { editorRef: editor } = useEditor()
 </script>
 
 <template>

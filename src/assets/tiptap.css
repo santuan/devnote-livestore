@@ -76,7 +76,7 @@
 
   &.is-preview {
     /* height: calc(100dvh); */
-    @apply max-h-screen bg-background min-h-[90dvh];
+    @apply max-h-screen bg-background min-h-[90dvh] border border-transparent;
 
     .tiptap td,
     .tiptap th {

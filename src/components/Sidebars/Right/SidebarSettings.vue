@@ -4,6 +4,7 @@ import { ChevronRight } from 'lucide-vue-next'
 import { useI18n } from 'vue-i18n'
 import { useClientDocument } from 'vue-livestore'
 import { tables } from '@/livestore/schema'
+import LayoutPresetGrid from './LayoutPresetGrid.vue'
 
 const emit = defineEmits<{
   (e: 'collapseSecondarySidebar'): void
@@ -34,7 +35,7 @@ const showPerspective = useStorage('show_perspective', true)
     </button>
     <div
       v-show="showPerspective"
-      class="bg-background p-2 @xs:pl-6 pb-4 gap-1 grid grid-cols-1 @xs:grid-cols-2"
+      class="bg-background p-2  pb-4 gap-1 grid grid-cols-1 @xs:grid-cols-3"
     >
       <button
         class="flex gap-2 items-center p-1 justify-center w-full"
@@ -68,8 +69,8 @@ const showPerspective = useStorage('show_perspective', true)
         Layout
       </span>
     </button>
-    <div v-show="showLayouts" class="@xs:pl-5 mt-1 pr-2 pb-4">
-      <slot />
+    <div v-show="showLayouts" class="mt-1 pr-2 pb-4">
+      <LayoutPresetGrid />
     </div>
   </div>
 </template>

@@ -1,17 +1,13 @@
 <script setup lang="ts">
-import type { Editor } from '@tiptap/core'
-
-import type { Ref } from 'vue'
-
 import { AlignCenter, AlignJustify, AlignLeft, AlignRight } from 'lucide-vue-next'
 import { DropdownMenuContent, DropdownMenuItem, DropdownMenuPortal, DropdownMenuRoot, DropdownMenuTrigger, ToolbarButton } from 'reka-ui'
-import { inject } from 'vue'
-
 import { useI18n } from 'vue-i18n'
 
-import Tooltip from '@/components/Shared/Tooltip.vue'
+import Tooltip from '@/components/UI/Tooltip.vue'
 
-const editor = inject('content') as Ref<Editor>
+import { useEditor } from '@/composables/useEditor'
+
+const { editorRef: editor } = useEditor()
 const { t } = useI18n()
 </script>
 

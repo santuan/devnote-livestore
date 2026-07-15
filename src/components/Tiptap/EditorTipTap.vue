@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import type { Ref } from 'vue'
 import Blockquote from '@tiptap/extension-blockquote'
 
 import Bold from '@tiptap/extension-bold'
@@ -47,10 +46,12 @@ import {
   ScrollAreaViewport,
 } from 'reka-ui'
 import CodeBlockShiki from 'tiptap-extension-code-block-shiki'
-import { inject, onBeforeUnmount, onMounted, ref } from 'vue'
+import { onBeforeUnmount, onMounted, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useClientDocument } from 'vue-livestore'
-import DialogMath from '@/components/Shared/DialogMath.vue'
+import DialogMath from '@/components/UI/DialogMath.vue'
+import { useDocumentLifecycle } from '@/composables/useDocumentLifecycle'
+import { useEditor } from '@/composables/useEditor'
 import { tables } from '@/livestore/schema'
 import WebFrame from './EditorAddIframe'
 import Video from './EditorAddVideo'
@@ -71,9 +72,8 @@ const props = defineProps({
 const emit = defineEmits(['update:modelValue'])
 const { editable } = useClientDocument(tables.uiState)
 
-const newDocumentTitle = inject('new_document_title') as Ref<Editor>
-const editor = inject('content') as Ref<Editor>
-const toc = inject('toc') as Ref<object | null>
+const { newDocumentTitle } = useDocumentLifecycle()
+const { editorRef, toc } = useEditor()
 const { t } = useI18n()
 
 // Math dialog state
@@ -105,7 +105,7 @@ function handleMathCancel() {
 }
 
 onMounted(() => {
-  editor.value = new Editor({
+  editorRef.value = new Editor({
     coreExtensionOptions: {
       clipboardTextSerializer: {
         blockSeparator: '\n',
@@ -129,7 +129,7 @@ onMounted(() => {
           onClick: (node, pos) => {
             openMathDialog('Edit Block Math', node.attrs.latex, (latex) => {
               if (latex.trim()) {
-                editor.value
+                editorRef.value
                   .chain()
                   .setNodeSelection(pos)
                   .updateBlockMath({ latex })
@@ -143,7 +143,7 @@ onMounted(() => {
           onClick: (node, pos) => {
             openMathDialog('Edit Inline Math', node.attrs.latex, (latex) => {
               if (latex.trim()) {
-                editor.value
+                editorRef.value
                   .chain()
                   .setNodeSelection(pos)
                   .updateInlineMath({ latex })
@@ -261,21 +261,20 @@ onMounted(() => {
       migrateMathStrings(currentEditor)
     },
     onUpdate: () => {
-      emit('update:modelValue', editor.value.getHTML())
+      emit('update:modelValue', editorRef.value.getHTML())
     },
   })
 })
 
 onBeforeUnmount(() => {
-  editor.value.destroy()
+  editorRef.value.destroy()
 })
 </script>
 
 <template>
   <div
-    v-if="editor"
+    v-if="editorRef"
     class="EditorTiptap @container"
-    :class="[editable ? ' outline outline-primary' : ' outline-0!']"
   >
     <DialogMath
       v-model:open="mathDialogOpen"
@@ -308,7 +307,7 @@ onBeforeUnmount(() => {
           class="relative max-w-full mx-auto prose EditorContent dark:prose-invert"
           spellcheck="false"
         >
-          <EditorContent :editor="editor" />
+          <EditorContent :editor="editorRef" />
         </div>
       </ScrollAreaViewport>
 

@@ -15,7 +15,7 @@ import {
 } from 'reka-ui'
 import { bundledLanguages } from 'shiki/bundle/full'
 import { shallowRef } from 'vue'
-import ListboxVirtual from '../Shared/ListboxVirtual.vue'
+import ListboxVirtual from '../UI/ListboxVirtual.vue'
 
 export default {
   components: {

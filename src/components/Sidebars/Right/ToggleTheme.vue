@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { SunMedium } from 'lucide-vue-next'
+import { Check } from 'lucide-vue-next'
 import {
   DropdownMenuContent,
   DropdownMenuItem,
@@ -10,7 +10,6 @@ import {
   DropdownMenuTrigger,
 } from 'reka-ui'
 import { useI18n } from 'vue-i18n'
-import { Check } from 'lucide-vue-next'
 import {
   colorTheme,
   useToggleColorTheme,
@@ -42,10 +41,11 @@ const lightThemes = [
   { id: 'theme-rose-pine-dawn', label: 'Rose Pine Dawn', color: '#907AA9' },
 ]
 
-const activeSwatch = () => {
-  if (colorTheme.value === 'theme-foreground') return 'var(--foreground)'
+function activeSwatch() {
+  if (colorTheme.value === 'theme-foreground')
+    return 'var(--foreground)'
   const all = [...darkThemes, ...lightThemes]
-  return all.find((th) => th.id === colorTheme.value)?.color ?? 'var(--foreground)'
+  return all.find(th => th.id === colorTheme.value)?.color ?? 'var(--foreground)'
 }
 </script>
 

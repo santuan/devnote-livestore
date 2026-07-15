@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import type { Ref } from 'vue'
 import { Check, ChevronDown, Minus, Plus } from 'lucide-vue-next'
 import {
   DropdownMenuArrow,
@@ -15,9 +14,10 @@ import {
   NumberFieldRoot,
   ToolbarButton,
 } from 'reka-ui'
-import { inject, ref, watch } from 'vue'
+import { ref, watch } from 'vue'
+import { useEditor } from '@/composables/useEditor'
 
-const editor = inject('content') as Ref<any>
+const { editorRef: editor } = useEditor()
 
 // Current font size value - this is our single source of truth
 const fontSize = ref(16)

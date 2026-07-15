@@ -1,17 +1,16 @@
 <script setup lang="ts">
-import type { Editor } from '@tiptap/core'
-import type { Ref } from 'vue'
 import { useStorage } from '@vueuse/core'
 import { ChevronRight } from 'lucide-vue-next'
 import { ToolbarButton, ToolbarRoot, ToolbarToggleGroup } from 'reka-ui'
-import { inject } from 'vue'
+import { } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useClientDocument } from 'vue-livestore'
+import { useEditor } from '@/composables/useEditor'
 import { tables } from '@/livestore/schema'
 import ToolbarCharacters from './ToolbarCharacters.vue'
 import ToolbarClear from './ToolbarClear.vue'
 import ToolbarCodeBlock from './ToolbarCodeBlock.vue'
-import ToolbarFontsize from './ToolbarFontsize.vue'
+import ToolbarFontSize from './ToolbarFontSize.vue'
 import ToolbarHeadingSelector from './ToolbarHeadingSelector.vue'
 import ToolbarInlineCode from './ToolbarInlineCode.vue'
 import ToolbarLatex from './ToolbarLatex.vue'
@@ -25,7 +24,7 @@ import ToolbarTextAlign from './ToolbarTextAlign.vue'
 import ToolbarUndo from './ToolbarUndo.vue'
 
 const { t } = useI18n()
-const editor = inject('content') as Ref<Editor>
+const { editorRef: editor } = useEditor()
 
 const { editable } = useClientDocument(tables.uiState)
 const showToolbar = useStorage('show_toolbar', true)
@@ -57,7 +56,7 @@ const showToolbar = useStorage('show_toolbar', true)
         v-if="showToolbar"
         class="toolbar bg-background pt-2 select-none focus-visible:outline! focus-visible:outline-primary/10! grid gap-3 focus-visible:outline-offset-[1.5px]! w-full"
       >
-        <div class="flex gap-2 flex-wrap pr-2">
+        <div class="grid gap-2  pr-2">
           <ToolbarToggleGroup class="">
             <span class="text-[10px]!">History</span>
             <div class="flex mt-0.5">
@@ -65,7 +64,6 @@ const showToolbar = useStorage('show_toolbar', true)
               <ToolbarRedo />
             </div>
           </ToolbarToggleGroup>
-
           <ToolbarToggleGroup class="">
             <span class="text-[10px]!">Inline</span>
             <div class="flex mt-0.5 flex-wrap">
@@ -97,7 +95,7 @@ const showToolbar = useStorage('show_toolbar', true)
           <ToolbarToggleGroup>
             <span class="text-[10px]!">Font size</span>
             <div class="flex mt-0.5">
-              <ToolbarFontsize />
+              <ToolbarFontSize />
             </div>
           </ToolbarToggleGroup>
         </div>
@@ -111,12 +109,12 @@ const showToolbar = useStorage('show_toolbar', true)
         <div class="flex gap-2 flex-wrap">
           <ToolbarToggleGroup class="w-full">
             <span class="text-[10px]!">Component</span>
-            <div class="flex w-full mt-0.5 flex-wrap gap-1 mb-2">
+            <div class="grid @md:grid-cols-3 w-full mt-0.5  gap-1 mb-2">
               <ToolbarCodeBlock />
               <ToolbarLatex />
               <ToolbarButton
                 type="button"
-                class="px-4 border border-secondary h-8 gap-2"
+                class="px-4 border border-secondary h-8 gap-2 bg-secondary/80"
                 title="Insert LaTeX"
                 :class="
                   editor.can().deleteTable()

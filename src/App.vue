@@ -3,7 +3,7 @@ import { makePersistedAdapter } from '@livestore/adapter-web'
 import LiveStoreSharedWorker from '@livestore/adapter-web/shared-worker?sharedworker'
 import { LiveStoreProvider } from 'vue-livestore'
 import AppDesktop from './components/AppDesktop.vue'
-import Loading from './components/Shared/Loading.vue'
+import Loading from './components/UI/Loading.vue'
 import LiveStoreWorker from './livestore/livestore.worker?worker'
 import { schema } from './livestore/schema'
 

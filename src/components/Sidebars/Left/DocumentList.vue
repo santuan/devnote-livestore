@@ -1,11 +1,11 @@
 <script lang="ts" setup>
-import type { Ref } from 'vue'
 import NumberFlow from '@number-flow/vue'
 import { X } from 'lucide-vue-next'
-import { computed, inject } from 'vue'
+import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
-import DialogCommandMenu from '../Shared/DialogCommandMenu.vue'
-import Filters from './Filters.vue'
+import { useFocusMode } from '@/composables/useFocusMode'
+import DialogCommandMenu from '../../UI/DialogCommandMenu.vue'
+import DocumentFilters from './DocumentFilters.vue'
 
 const props = defineProps<{
   count: number
@@ -15,8 +15,7 @@ const emit = defineEmits<{
   (e: 'open'): void
 }>()
 
-const focus_mode = inject('focus_mode') as Ref<string | null>
-
+const { focus_mode } = useFocusMode()
 const { t } = useI18n()
 
 const documents = computed(() => props.count ?? 0)
@@ -37,7 +36,7 @@ const documents = computed(() => props.count ?? 0)
     </div>
     <slot name="top" />
     <div class="flex justify-between mt-px pl-1 mb-2 py-px items-center">
-      <Filters>
+      <DocumentFilters>
         <div class="flex justify-start items-center">
           <h1
             class="text-sm mr-2 capitalize sr-only @min-[300px]:not-sr-only text-foreground"
@@ -46,7 +45,7 @@ const documents = computed(() => props.count ?? 0)
           </h1>
           <NumberFlow class="text-xs bg-primary/20 px-3 mx-1" :value="documents" />
         </div>
-      </Filters>
+      </DocumentFilters>
     </div>
     <div
       class="max-h-[calc(100vh-6.5rem)] scrollbar-thumb-rounded-full scrollbar-track-rounded-full scrollbar scrollbar-thumb-primary scrollbar-track-transparent h-screen border-t border-secondary overflow-x-hidden overflow-y-auto"

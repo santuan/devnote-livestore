@@ -1,15 +1,14 @@
 <script setup lang="ts">
-import type { Editor } from '@tiptap/vue-3'
-import type { Ref } from 'vue'
 import NumberFlow from '@number-flow/vue'
 import { useStorage } from '@vueuse/core'
 import { ChevronRight } from 'lucide-vue-next'
-import { computed, inject } from 'vue'
+import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
+import { useEditor } from '@/composables/useEditor'
 
 const { t } = useI18n()
 
-const editor = inject('content') as Ref<Editor>
+const { editorRef: editor } = useEditor()
 
 const showContentAnalysis = useStorage('show_content_analysis', true)
 

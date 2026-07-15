@@ -1,15 +1,11 @@
 <script setup lang="ts">
-import type { Editor } from '@tiptap/core'
-
-import type { Ref } from 'vue'
-
 import { Bold, Italic, Strikethrough } from 'lucide-vue-next'
 import { ToolbarButton } from 'reka-ui'
-import { inject } from 'vue'
 import { useI18n } from 'vue-i18n'
-import Tooltip from '@/components/Shared/Tooltip.vue'
+import Tooltip from '@/components/UI/Tooltip.vue'
+import { useEditor } from '@/composables/useEditor'
 
-const editor = inject('content') as Ref<Editor>
+const { editorRef: editor } = useEditor()
 
 const { t } = useI18n()
 </script>

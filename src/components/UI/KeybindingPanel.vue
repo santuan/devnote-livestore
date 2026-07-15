@@ -12,9 +12,9 @@ import {
 } from 'reka-ui'
 import { onUnmounted, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
-import DropdownLanguage from '@/components/PanelRight/DropdownLanguage.vue'
-import ToggleTheme from '@/components/PanelRight/ToggleTheme.vue'
-import ButtonDeleteAllDocument from '@/components/Shared/ButtonDeleteAllDocument.vue'
+import DropdownLanguage from '@/components/Sidebars/Right/DropdownLanguage.vue'
+import ToggleTheme from '@/components/Sidebars/Right/ToggleTheme.vue'
+import ButtonDeleteAllDocument from '@/components/UI/ButtonDeleteAllDocument.vue'
 import {
   COMMANDS,
   useKeybindingConfig,
