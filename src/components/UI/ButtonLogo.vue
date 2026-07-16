@@ -18,8 +18,5 @@ const emit = defineEmits<{
     @click="emit('click')"
   >
     <Logo :grayscale="grayscale" />
-    <template v-if="grayscale && showDocuments">
-      <span class="text-xs text-primary-foreground uppercase">Prefix mode</span>
-    </template>
   </button>
 </template>

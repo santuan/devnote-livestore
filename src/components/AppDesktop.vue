@@ -15,6 +15,7 @@ import {
   shallowRef,
   watch,
 } from 'vue'
+import { useI18n } from 'vue-i18n'
 import EditorPanel from '@/components/EditorPanel.vue'
 import DocumentSidebar from '@/components/Sidebars/Left/DocumentSidebar.vue'
 import SidebarSecondary from '@/components/Sidebars/Right/SecondarySidebar.vue'
@@ -22,6 +23,7 @@ import KeybindingPanel from '@/components/UI/KeybindingPanel.vue'
 import { useDocumentLifecycle } from '@/composables/useDocumentLifecycle'
 import { useEditor } from '@/composables/useEditor'
 import { useFocusMode } from '@/composables/useFocusMode'
+import { useKeybindingConfig } from '@/composables/useKeybindingConfig'
 import { useLayoutPresets } from '@/composables/useLayoutPresets'
 import { usePrefixMode } from '@/composables/usePrefixMode'
 import { useSidebarCollapse } from '@/composables/useSidebarCollapse'
@@ -29,6 +31,7 @@ import { useSideTabs } from '@/composables/useSideTabs'
 import { useSplitterPairing } from '@/composables/useSplitterPairing'
 import { useToggleColorTheme } from '@/composables/useToggleColorTheme'
 
+const { t } = useI18n()
 const colorTheme = useStorage('theme', 'theme-foreground')
 
 const focus_logo = shallowRef<HTMLElement | null>(null)
@@ -83,6 +86,33 @@ const {
 const { selectTab } = useSideTabs()
 
 const { isActive: prefixActive, onCommand, offCommand } = usePrefixMode()
+const { bindings } = useKeybindingConfig()
+
+// Prefix mode shortcuts display
+const prefixShortcuts = computed(() => {
+  const commandLabels: Record<string, string> = {
+    toggleSidebar: t('keybindings.commands.toggleSidebar'),
+    toggleEditable: t('keybindings.commands.toggleEditable'),
+    newDocument: t('keybindings.commands.newDocument'),
+    focusTitle: t('keybindings.commands.focusTitle'),
+    focusEditor: t('keybindings.commands.focusEditor'),
+    focusMode: t('keybindings.commands.focusMode'),
+    openKeybindingPanel: t('keybindings.commands.openKeybindingPanel'),
+    openCommandMenu: t('keybindings.commands.openCommandMenu'),
+  }
+
+  const curated = [
+    { key: 'esc', label: 'cancel' },
+    ...Object.entries(bindings.value)
+      .filter(([id]) => id in commandLabels)
+      .map(([commandId, key]) => ({
+        key,
+        label: commandLabels[commandId],
+      })),
+  ]
+
+  return curated
+})
 
 const {
   pairingActive,
@@ -349,5 +379,14 @@ onMounted(() => {
       </SplitterPanel>
     </SplitterGroup>
     <KeybindingPanel ref="keybindingPanelRef" />
+    <div v-show="prefixActive" class="fixed bottom-0 z-80 left-0 right-0 flex items-center bg-secondary h-8 overflow-x-auto">
+      <span class="text-xs text-primary-foreground h-8 flex justify-center items-center px-2 bg-primary uppercase shrink-0">Prefix mode</span>
+      <div class="flex items-center gap-6 ml-3 px-3">
+        <div v-for="shortcut in prefixShortcuts" :key="shortcut.key" class="flex items-center gap-1 text-xs">
+          <span class="text-primary font-mono font-bold">{{ shortcut.key }}</span>
+          <span class="text-muted-foreground lowercase">{{ shortcut.label }}</span>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
