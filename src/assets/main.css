@@ -976,16 +976,15 @@ html:has(.app-font-size-xl) {
 }
 
 .resize-handle {
-  @apply px-4 bg-background outline-0 border border-transparent;
+  @apply px-4 bg-background outline-0  duration-300 border border-transparent;
   @apply focus-visible:bg-primary/10 focus-visible:border-primary focus-visible:border-dashed;
   /* z-index: 100; */
-  @apply data-[state=hover]:bg-primary/10 data-[state=hover]:border-primary data-[state=hover]:border-dashed;
+  @apply data-[state=hover]:bg-primary/10 data-[state=hover]:delay-1000 data-[state=hover]:border-primary data-[state=hover]:border-dashed;
 }
 
 .resize-handle[data-state="hover"] .message,
 .resize-handle-active .message {
   opacity: 1 !important;
-
 }
 
 .resize-handle[data-state="drag"]  {
@@ -994,7 +993,7 @@ html:has(.app-font-size-xl) {
 
 .resize-handle .message {
   opacity: 0;
-  @apply absolute pointer-events-none top-1/2 left-0 min-w-40 -translate-y-1/2 -translate-x-16 text-xs text-center text-balance p-2 z-99 ring-primary ring bg-background;
+  @apply absolute pointer-events-none duration-300 delay-1000 top-1/2 left-0 min-w-40 -translate-y-1/2 -translate-x-16 text-xs text-center text-balance p-2 z-99 ring-primary ring bg-background;
   /* @apply delay-500 duration-150; */
 }
 
