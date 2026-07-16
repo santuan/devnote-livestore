@@ -93,7 +93,9 @@
     "contentPreview": "Vorschaumodus",
     "markAsDone": "Als erledigt markieren",
     "markAsUndone": "Als unerledigt markieren",
-    "showPinned": "Nur angeheftete anzeigen"
+    "showPinned": "Nur angeheftete anzeigen",
+    "filterAll": "Alle",
+    "format": "Format"
   },
   "settings": {
     "title": "Einstellungen",
@@ -134,7 +136,9 @@
     "perspective": "Perspektive",
     "deleteDB": "Datenbank aus IndexedDB löschen",
     "showIcons": "Symbole anzeigen",
-    "showIconsDescription": "Symbole in der Seitenleiste anzeigen, wenn sie eingeklappt ist."
+    "showIconsDescription": "Symbole in der Seitenleiste anzeigen, wenn sie eingeklappt ist.",
+    "layout": "Anordnung",
+    "focus": "Fokus"
   },
   "importDB": {
     "description": "Wählen Sie eine JSON-Datei aus oder ziehen Sie sie hierher.",
@@ -224,5 +228,35 @@
     "hour": "Stunde | Stunden",
     "minute": "Minute | Minuten",
     "second": "Sekunde | Sekunden"
+  },
+  "keybindings": {
+    "title": "Tastenkürzel-Einstellungen",
+    "description": "Präfixtaste und Befehlstastenkürzel konfigurieren",
+    "shortcuts": "Tastenkürzel konfigurieren",
+    "prefixKey": "Präfixtaste",
+    "pressKeys": "Tasten drücken…",
+    "resetToDefaults": "Auf Standardwerte zurücksetzen",
+    "commands": {
+      "toggleSidebar": "Seitenleiste ein/aus",
+      "toggleEditable": "Bearbeitungsmodus umschalten",
+      "newDocument": "Neues Dokument",
+      "focusTitle": "Fokus auf Titel",
+      "focusEditor": "Fokus auf Editor",
+      "focusFirstDocument": "Fokus auf erstes Dokument",
+      "toggleSecondarySidebar": "Sekundäre Seitenleiste ein/aus",
+      "navigateNextDocument": "Nächstes Dokument",
+      "navigatePreviousDocument": "Vorheriges Dokument",
+      "windowLayout1": "Anordnung: 40/20/40",
+      "windowLayout2": "Anordnung: 5/65/30",
+      "windowLayout3": "Anordnung: 30/65/5",
+      "windowLayout4": "Anordnung: 15/70/15",
+      "windowLayout5": "Anordnung: 5/90/5",
+      "focusMode": "Fokusmodus umschalten",
+      "selectSideTab1": "Seitenregister: Format",
+      "selectSideTab2": "Seitenregister: Dokument",
+      "selectSideTab3": "Seitenregister: Einstellungen",
+      "openKeybindingPanel": "Tastenkürzel-Einstellungen öffnen",
+      "openCommandMenu": "Befehlsmenü öffnen"
+    }
   }
 }

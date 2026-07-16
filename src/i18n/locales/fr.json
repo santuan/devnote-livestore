@@ -9,6 +9,7 @@
     "CtrlEnterCreate": "ctrl entrée pour créer",
     "save": "Créer document",
     "delete": "Supprimer document",
+    "deleteAll": "Tout supprimer",
     "deleteConfirm": "Cette action ne peut pas être annulée",
     "copyToClipboard": "Copier le code dans le presse-papiers"
   },
@@ -92,7 +93,9 @@
     "contentPreview": "Mode aperçu",
     "markAsDone": "Marquer comme terminé",
     "markAsUndone": "Marquer comme non terminé",
-    "showPinned": "Afficher uniquement les épinglés"
+    "showPinned": "Afficher uniquement les épinglés",
+    "filterAll": "Tous",
+    "format": "Format"
   },
   "settings": {
     "title": "Paramètres",
@@ -133,7 +136,9 @@
     "perspective": "Perspective",
     "deleteDB": "Supprimer la base de données de l'indexedDB",
     "showIcons": "Afficher les icônes",
-    "showIconsDescription": "Afficher les icônes dans la barre latérale lorsqu'elle est réduite."
+    "showIconsDescription": "Afficher les icônes dans la barre latérale lorsqu'elle est réduite.",
+    "layout": "Disposition",
+    "focus": "Focus"
   },
   "importDB": {
     "description": "Sélectionnez ou glissez-déposez un fichier JSON exporté depuis cette application.",
@@ -223,5 +228,35 @@
     "hour": "heure | heures",
     "minute": "minute | minutes",
     "second": "seconde | secondes"
+  },
+  "keybindings": {
+    "title": "Paramètres des raccourcis",
+    "description": "Configurer la touche préfixe et les raccourcis des commandes",
+    "shortcuts": "Configurer les raccourcis",
+    "prefixKey": "Touche préfixe",
+    "pressKeys": "Appuyez sur les touches…",
+    "resetToDefaults": "Restaurer les valeurs par défaut",
+    "commands": {
+      "toggleSidebar": "Afficher/Masquer la barre latérale",
+      "toggleEditable": "Basculer le mode édition",
+      "newDocument": "Nouveau document",
+      "focusTitle": "Focus sur le titre",
+      "focusEditor": "Focus sur l'éditeur",
+      "focusFirstDocument": "Focus sur le premier document",
+      "toggleSecondarySidebar": "Afficher/Masquer la barre latérale secondaire",
+      "navigateNextDocument": "Document suivant",
+      "navigatePreviousDocument": "Document précédent",
+      "windowLayout1": "Disposition : 40/20/40",
+      "windowLayout2": "Disposition : 5/65/30",
+      "windowLayout3": "Disposition : 30/65/5",
+      "windowLayout4": "Disposition : 15/70/15",
+      "windowLayout5": "Disposition : 5/90/5",
+      "focusMode": "Basculer le mode focus",
+      "selectSideTab1": "Onglet latéral : Format",
+      "selectSideTab2": "Onglet latéral : Document",
+      "selectSideTab3": "Onglet latéral : Paramètres",
+      "openKeybindingPanel": "Ouvrir les paramètres des raccourcis",
+      "openCommandMenu": "Ouvrir le menu des commandes"
+    }
   }
 }

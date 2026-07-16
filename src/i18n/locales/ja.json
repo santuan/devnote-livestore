@@ -9,6 +9,7 @@
     "CtrlEnterCreate": "Ctrl + Enter で作成",
     "save": "ドキュメントを作成",
     "delete": "ドキュメントを削除",
+    "deleteAll": "すべて削除",
     "deleteConfirm": "この操作は元に戻せません",
     "copyToClipboard": "コードをクリップボードにコピー"
   },
@@ -92,7 +93,9 @@
     "contentPreview": "プレビューモード",
     "markAsDone": "完了としてマーク",
     "markAsUndone": "未完了としてマーク",
-    "showPinned": "固定されたもののみ表示"
+    "showPinned": "固定されたもののみ表示",
+    "filterAll": "すべて",
+    "format": "フォーマット"
   },
   "settings": {
     "title": "設定",
@@ -133,7 +136,9 @@
     "perspective": "視点",
     "deleteDB": "IndexedDBからデータベースを削除",
     "showIcons": "アイコンを表示",
-    "showIconsDescription": "サイドバーが折りたたまれているときにアイコンを表示します。"
+    "showIconsDescription": "サイドバーが折りたたまれているときにアイコンを表示します。",
+    "layout": "レイアウト",
+    "focus": "フォーカス"
   },
   "importDB": {
     "description": "JSONファイルを選択するか、ここにドラッグしてください。",
@@ -223,5 +228,35 @@
     "hour": "時間",
     "minute": "分",
     "second": "秒"
+  },
+  "keybindings": {
+    "title": "キーバインド設定",
+    "description": "プリフィックスキーとコマンドのバインドを設定",
+    "shortcuts": "ショートカットを設定",
+    "prefixKey": "プリフィックスキー",
+    "pressKeys": "キーを押してください…",
+    "resetToDefaults": "デフォルトにリセット",
+    "commands": {
+      "toggleSidebar": "サイドバーの切り替え",
+      "toggleEditable": "編集モードの切り替え",
+      "newDocument": "新しいドキュメント",
+      "focusTitle": "タイトルにフォーカス",
+      "focusEditor": "エディタにフォーカス",
+      "focusFirstDocument": "最初のドキュメントにフォーカス",
+      "toggleSecondarySidebar": "セカンダリサイドバーの切り替え",
+      "navigateNextDocument": "次のドキュメント",
+      "navigatePreviousDocument": "前のドキュメント",
+      "windowLayout1": "レイアウト: 40/20/40",
+      "windowLayout2": "レイアウト: 5/65/30",
+      "windowLayout3": "レイアウト: 30/65/5",
+      "windowLayout4": "レイアウト: 15/70/15",
+      "windowLayout5": "レイアウト: 5/90/5",
+      "focusMode": "フォーカスモードの切り替え",
+      "selectSideTab1": "サイドタブ: フォーマット",
+      "selectSideTab2": "サイドタブ: ドキュメント",
+      "selectSideTab3": "サイドタブ: 設定",
+      "openKeybindingPanel": "キーバインド設定を開く",
+      "openCommandMenu": "コマンドメニューを開く"
+    }
   }
 }

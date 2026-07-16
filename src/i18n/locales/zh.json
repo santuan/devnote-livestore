@@ -9,6 +9,7 @@
     "CtrlEnterCreate": "按 Ctrl + Enter 创建",
     "save": "创建文档",
     "delete": "删除文档",
+    "deleteAll": "全部删除",
     "deleteConfirm": "此操作无法撤销",
     "copyToClipboard": "复制代码到剪贴板"
   },
@@ -92,7 +93,9 @@
     "contentPreview": "预览模式",
     "markAsDone": "标记为完成",
     "markAsUndone": "标记为未完成",
-    "showPinned": "仅显示置顶"
+    "showPinned": "仅显示置顶",
+    "filterAll": "全部",
+    "format": "格式"
   },
   "settings": {
     "title": "设置",
@@ -133,7 +136,9 @@
     "perspective": "视图",
     "deleteDB": "从 IndexedDB 删除数据库",
     "showIcons": "显示图标",
-    "showIconsDescription": "在侧边栏折叠时显示图标。"
+    "showIconsDescription": "在侧边栏折叠时显示图标。",
+    "layout": "布局",
+    "focus": "聚焦"
   },
   "importDB": {
     "description": "选择或拖放从此应用导出的 JSON 文件。",
@@ -231,8 +236,8 @@
   },
   "timeAgo": {
     "just-now": "刚刚",
-    "ago": "{0} 前",
-    "in": "在 {0} 后",
+    "ago": "{0}前",
+    "in": "{0}后",
     "last-month": "上个月",
     "next-month": "下个月",
     "month": "个月",
@@ -248,5 +253,35 @@
     "hour": "小时",
     "minute": "分钟",
     "second": "秒"
+  },
+  "keybindings": {
+    "title": "快捷键设置",
+    "description": "配置前缀键和命令绑定",
+    "shortcuts": "配置快捷键",
+    "prefixKey": "前缀键",
+    "pressKeys": "按下按键…",
+    "resetToDefaults": "恢复默认设置",
+    "commands": {
+      "toggleSidebar": "切换侧边栏",
+      "toggleEditable": "切换编辑模式",
+      "newDocument": "新建文档",
+      "focusTitle": "聚焦标题",
+      "focusEditor": "聚焦编辑器",
+      "focusFirstDocument": "聚焦第一个文档",
+      "toggleSecondarySidebar": "切换辅助侧边栏",
+      "navigateNextDocument": "下一个文档",
+      "navigatePreviousDocument": "上一个文档",
+      "windowLayout1": "布局: 40/20/40",
+      "windowLayout2": "布局: 5/65/30",
+      "windowLayout3": "布局: 30/65/5",
+      "windowLayout4": "布局: 15/70/15",
+      "windowLayout5": "布局: 5/90/5",
+      "focusMode": "切换专注模式",
+      "selectSideTab1": "侧边标签: 格式",
+      "selectSideTab2": "侧边标签: 文档",
+      "selectSideTab3": "侧边标签: 设置",
+      "openKeybindingPanel": "打开快捷键设置",
+      "openCommandMenu": "打开命令菜单"
+    }
   }
 }

@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import NumberFlow from '@number-flow/vue'
-import { X } from 'lucide-vue-next'
+import { Settings, X } from 'lucide-vue-next'
 import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useFocusMode } from '@/composables/useFocusMode'
@@ -13,6 +13,7 @@ const props = defineProps<{
 
 const emit = defineEmits<{
   (e: 'open'): void
+  (e: 'openKeybindings'): void
 }>()
 
 const { focus_mode } = useFocusMode()
@@ -24,9 +25,13 @@ const documents = computed(() => props.count ?? 0)
 <template>
   <div class="w-full @container">
     <div class="flex mb-px gap-1 justify-end items-center">
-      <div v-show="!focus_mode">
-        <DialogCommandMenu />
-      </div>
+      <DialogCommandMenu v-show="!focus_mode" />
+      <button
+        class="size-8 flex justify-center items-center"
+        @click="emit('openKeybindings')"
+      >
+        <Settings class="size-4" />
+      </button>
       <button
         class="size-8 flex justify-center items-center"
         @click="emit('open')"

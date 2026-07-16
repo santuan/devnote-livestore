@@ -25,31 +25,31 @@ export type CommandId
 
 export interface CommandMeta {
   id: CommandId
-  label: string
+  i18nKey: string
   category: 'navigation' | 'editor' | 'layout' | 'mode'
 }
 
 export const COMMANDS: CommandMeta[] = [
-  { id: 'toggleSidebar', label: 'Toggle Sidebar', category: 'navigation' },
-  { id: 'toggleEditable', label: 'Toggle Edit Mode', category: 'mode' },
-  { id: 'newDocument', label: 'New Document', category: 'editor' },
-  { id: 'focusTitle', label: 'Focus Title', category: 'editor' },
-  { id: 'focusEditor', label: 'Focus Editor', category: 'editor' },
-  { id: 'focusLogo', label: 'Focus Logo', category: 'navigation' },
-  { id: 'toggleSecondarySidebar', label: 'Toggle Secondary Sidebar', category: 'navigation' },
-  { id: 'navigateNextDocument', label: 'Next Document', category: 'navigation' },
-  { id: 'navigatePreviousDocument', label: 'Previous Document', category: 'navigation' },
-  { id: 'windowLayout1', label: 'Layout: 40/20/40', category: 'layout' },
-  { id: 'windowLayout2', label: 'Layout: 5/65/30', category: 'layout' },
-  { id: 'windowLayout3', label: 'Layout: 30/65/5', category: 'layout' },
-  { id: 'windowLayout4', label: 'Layout: 15/70/15', category: 'layout' },
-  { id: 'windowLayout5', label: 'Layout: 5/90/5', category: 'layout' },
-  { id: 'focusMode', label: 'Toggle Focus Mode', category: 'mode' },
-  { id: 'selectSideTab1', label: 'Side Tab: Format', category: 'navigation' },
-  { id: 'selectSideTab2', label: 'Side Tab: Document', category: 'navigation' },
-  { id: 'selectSideTab3', label: 'Side Tab: Settings', category: 'navigation' },
-  { id: 'openKeybindingPanel', label: 'Open Keybinding Settings', category: 'mode' },
-  { id: 'openCommandMenu', label: 'Open Command Menu', category: 'navigation' },
+  { id: 'toggleSidebar', i18nKey: 'keybindings.commands.toggleSidebar', category: 'navigation' },
+  { id: 'toggleEditable', i18nKey: 'keybindings.commands.toggleEditable', category: 'mode' },
+  { id: 'newDocument', i18nKey: 'keybindings.commands.newDocument', category: 'editor' },
+  { id: 'focusTitle', i18nKey: 'keybindings.commands.focusTitle', category: 'editor' },
+  { id: 'focusEditor', i18nKey: 'keybindings.commands.focusEditor', category: 'editor' },
+  { id: 'focusLogo', i18nKey: 'keybindings.commands.focusFirstDocument', category: 'navigation' },
+  { id: 'toggleSecondarySidebar', i18nKey: 'keybindings.commands.toggleSecondarySidebar', category: 'navigation' },
+  { id: 'navigateNextDocument', i18nKey: 'keybindings.commands.navigateNextDocument', category: 'navigation' },
+  { id: 'navigatePreviousDocument', i18nKey: 'keybindings.commands.navigatePreviousDocument', category: 'navigation' },
+  { id: 'windowLayout1', i18nKey: 'keybindings.commands.windowLayout1', category: 'layout' },
+  { id: 'windowLayout2', i18nKey: 'keybindings.commands.windowLayout2', category: 'layout' },
+  { id: 'windowLayout3', i18nKey: 'keybindings.commands.windowLayout3', category: 'layout' },
+  { id: 'windowLayout4', i18nKey: 'keybindings.commands.windowLayout4', category: 'layout' },
+  { id: 'windowLayout5', i18nKey: 'keybindings.commands.windowLayout5', category: 'layout' },
+  { id: 'focusMode', i18nKey: 'keybindings.commands.focusMode', category: 'mode' },
+  { id: 'selectSideTab1', i18nKey: 'keybindings.commands.selectSideTab1', category: 'navigation' },
+  { id: 'selectSideTab2', i18nKey: 'keybindings.commands.selectSideTab2', category: 'navigation' },
+  { id: 'selectSideTab3', i18nKey: 'keybindings.commands.selectSideTab3', category: 'navigation' },
+  { id: 'openKeybindingPanel', i18nKey: 'keybindings.commands.openKeybindingPanel', category: 'mode' },
+  { id: 'openCommandMenu', i18nKey: 'keybindings.commands.openCommandMenu', category: 'navigation' },
 ]
 
 export interface KeybindingConfig {

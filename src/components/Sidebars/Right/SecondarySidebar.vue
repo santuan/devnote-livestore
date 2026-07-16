@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { PanelRightOpen, Pencil, Settings, X } from 'lucide-vue-next'
+import { PanelRightOpen, Pencil, X } from 'lucide-vue-next'
 import {
   TabsContent,
   TabsIndicator,
@@ -28,7 +28,6 @@ const emit = defineEmits<{
   (e: 'focusModeOn'): void
   (e: 'focusModeOff'): void
   (e: 'expandSecondarySidebar'): void
-  (e: 'openKeybindings'): void
 }>()
 
 const { t } = useI18n()
@@ -81,23 +80,16 @@ watch([sideTab, tab3Content], ([tab, el]) => {
     </button>
     <button
       v-if="!props.focusMode"
-      class="fixed size-8 flex justify-center items-center z-50"
+      class="fixed size-8 flex justify-center right-0 top-8 items-center z-50"
       :class="[
         !props.editable
           ? 'bg-background'
           : 'bg-primary ring text-primary-foreground ring-secondary',
-        props.layout[2] === 0 ? 'right-0 top-9' : 'right-1 top-10',
       ]"
       @click="emit('toggleEditable')"
     >
       <Pencil class="size-3.5" />
       <span class="sr-only"> editable </span>
-    </button>
-    <button
-      class="fixed size-8 flex justify-center items-center z-50 right-0 bottom-0"
-      @click="emit('openKeybindings')"
-    >
-      <Settings class="size-4 pointer-events-none" />
     </button>
 
     <!-- Main sidebar content -->
@@ -107,7 +99,7 @@ watch([sideTab, tab3Content], ([tab, el]) => {
       :class="props.focusMode ? 'opacity-0 pointer-events-none' : ''"
     >
       <div
-        class="p-1 pr-1 flex sticky top-0 right-0 z-10 bg-background justify-between items-center text-xs gap-1"
+        class="flex sticky top-0 right-0 z-10 bg-background justify-between items-center text-xs gap-1"
       >
         <div class="flex justify-start items-center">
           <strong class="font-bold mr-1">ID:</strong>
@@ -140,7 +132,7 @@ watch([sideTab, tab3Content], ([tab, el]) => {
               class="bg-secondary px-3 h-8 items-center justify-center text-xs leading-none text-primary select-none opacity-50 data-[state=active]:opacity-100 hover:text-primary data-[state=active]:font-bold data-[state=active]:text-primary outline-none cursor-default focus-visible:relative focus-visible:shadow focus-visible:shadow-primary"
               value="tab1"
             >
-              Format
+              {{ t("sidebar.format") }}
             </TabsTrigger>
             <TabsTrigger
               class="bg-secondary px-3 h-8 items-center justify-center text-xs leading-none text-primary select-none opacity-50 data-[state=active]:opacity-100 hover:text-primary data-[state=active]:font-bold data-[state=active]:text-primary outline-none cursor-default focus-visible:relative focus-visible:shadow focus-visible:shadow-primary"
@@ -148,23 +140,18 @@ watch([sideTab, tab3Content], ([tab, el]) => {
             >
               {{ t("leva.document") }}
             </TabsTrigger>
-            <!-- <TabsTrigger
+            <TabsTrigger
               class="bg-secondary px-3 h-8 items-center justify-center text-xs leading-none text-primary select-none opacity-50 data-[state=active]:opacity-100 hover:text-primary data-[state=active]:font-bold data-[state=active]:text-primary outline-none cursor-default focus-visible:relative focus-visible:shadow focus-visible:shadow-primary"
               value="tab3"
             >
               UI
-            </TabsTrigger> -->
+            </TabsTrigger>
           </TabsList>
           <TabsContent
             class="grow overflow-x-hidden overflow-y-auto scrollbar-thumb-rounded-full scrollbar-track-rounded-full scrollbar scrollbar-thumb-primary scrollbar-track-transparent outline-none pt-0.5 focus:shadow-focus:shadow-primary"
             value="tab1"
           >
             <div ref="tab1Content" tabindex="-1" class="outline-none">
-              <SidebarSettings
-                @collapse-secondary-sidebar="emit('collapseSecondarySidebar')"
-                @focus-mode-on="emit('focusModeOn')"
-                @toggle-editable="emit('toggleEditable')"
-              />
               <MainToolbar />
             </div>
           </TabsContent>
@@ -177,7 +164,7 @@ watch([sideTab, tab3Content], ([tab, el]) => {
               <TableOfContents />
             </div>
           </TabsContent>
-          <!-- <TabsContent
+          <TabsContent
             class="grow overflow-x-hidden overflow-y-auto scrollbar-thumb-rounded-full scrollbar-track-rounded-full scrollbar scrollbar-thumb-primary scrollbar-track-transparent outline-none pt-0.5 focus:shadow-focus:shadow-primary"
             value="tab3"
           >
@@ -188,7 +175,7 @@ watch([sideTab, tab3Content], ([tab, el]) => {
                 @toggle-editable="emit('toggleEditable')"
               />
             </div>
-          </TabsContent> -->
+          </TabsContent>
         </TabsRoot>
       </div>
     </div>

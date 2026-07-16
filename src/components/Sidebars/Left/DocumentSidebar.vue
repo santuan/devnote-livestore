@@ -22,6 +22,7 @@ const emit = defineEmits<{
   (e: 'toggleCompleted', id: string): void
   (e: 'focusModeOff'): void
   (e: 'focusLogo', el: HTMLElement | null): void
+  (e: 'openKeybindings'): void
 }>()
 </script>
 
@@ -41,7 +42,7 @@ const emit = defineEmits<{
       focusMode ? 'opacity-0 pointer-events-none' : '',
     ]"
   >
-    <DocumentList :count="documentsCount" @open="emit('toggleDocuments')">
+    <DocumentList :count="documentsCount" @open="emit('toggleDocuments')" @open-keybindings="emit('openKeybindings')">
       <template #top>
         <ButtonNewDocument :is-editing="isEditing" @click="emit('createAndFocus')" />
       </template>

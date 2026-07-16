@@ -12,8 +12,6 @@ import {
 } from 'reka-ui'
 import { onUnmounted, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
-import DropdownLanguage from '@/components/Sidebars/Right/DropdownLanguage.vue'
-import ToggleTheme from '@/components/Sidebars/Right/ToggleTheme.vue'
 import ButtonDeleteAllDocument from '@/components/UI/ButtonDeleteAllDocument.vue'
 import {
   COMMANDS,
@@ -135,10 +133,10 @@ defineExpose({
       >
         <VisuallyHidden>
           <DialogTitle class="text-foreground">
-            Keybinding Settings
+            {{ t("keybindings.title") }}
           </DialogTitle>
           <DialogDescription>
-            Configure prefix key and command bindings
+            {{ t("keybindings.description") }}
           </DialogDescription>
         </VisuallyHidden>
 
@@ -146,7 +144,7 @@ defineExpose({
           class="p-4 border-b border-border flex items-center justify-between"
         >
           <h2 class="font-mono text-foreground text-sm font-bold">
-            Keybinding Settings
+            {{ t("keybindings.title") }}
           </h2>
           <button
             class="text-muted-foreground hover:text-foreground"
@@ -157,22 +155,12 @@ defineExpose({
         </div>
 
         <div class="p-3 max-h-[70vh] overflow-y-auto font-mono text-xs">
-          <div class="text-foreground grid">
-            <div class="flex items-center justify-between">
-              <span>{{ t("settings.language") }}</span>
-              <DropdownLanguage />
-            </div>
-            <div class="flex items-center justify-between  border-t border-border pt-3 mt-3">
-              <span>{{ t("settings.theme") }}</span>
-              <ToggleTheme />
-            </div>
-          </div>
           <div class="grid gap-3 border-t border-border pt-3 mt-3">
             <div class="flex items-center justify-between">
-              <span class="font-semibold text-foreground">Configure shortcuts</span>
+              <span class="font-semibold text-foreground">{{ t("keybindings.shortcuts") }}</span>
             </div>
             <div class="flex items-center justify-between gap-4">
-              <span class="text-muted-foreground">Prefix Key</span>
+              <span class="text-muted-foreground">{{ t("keybindings.prefixKey") }}</span>
               <button
                 class="px-3 py-1 border border-muted-foreground/30 hover:border-primary focus:border-primary outline-none  min-w-35 text-center"
                 :class="isRecordingPrefix() ? 'border-primary' : ''"
@@ -182,7 +170,7 @@ defineExpose({
                   v-if="isRecordingPrefix()"
                   class="text-primary flex gap-2 items-center"
                 >
-                  Press keys...
+                  {{ t("keybindings.pressKeys") }}
                   <span class="relative flex size-3">
                     <span
                       class="absolute inline-flex h-full w-full animate-ping rounded-full bg-primary opacity-75"
@@ -202,7 +190,7 @@ defineExpose({
               :key="command.id"
               class="flex items-center justify-between gap-4"
             >
-              <span class="text-muted-foreground">{{ command.label }}</span>
+              <span class="text-muted-foreground">{{ t(command.i18nKey) }}</span>
               <button
                 class="px-3 py-1 border border-muted-foreground/30 hover:border-primary focus:border-primary outline-none min-w-35 text-center"
                 :class="isRecordingCommand(command.id) ? 'border-primary' : ''"
@@ -212,7 +200,7 @@ defineExpose({
                   v-if="isRecordingCommand(command.id)"
                   class="text-primary flex gap-2 items-center"
                 >
-                  Press keys...
+                  {{ t("keybindings.pressKeys") }}
                   <span class="relative flex size-3">
                     <span
                       class="absolute inline-flex h-full w-full animate-ping rounded-full bg-primary opacity-75"
@@ -234,7 +222,7 @@ defineExpose({
                 @click="resetToDefaults"
               >
                 <RotateCcw class="size-3" />
-                Reset to defaults
+                {{ t("keybindings.resetToDefaults") }}
               </button>
             </div>
           </div>

@@ -254,8 +254,8 @@ onMounted(() => {
         :class="[
           showDocuments
             ? 'fixed md:relative min-w-80 md:min-w-auto  flex z-71'
-            : 'hidden lg:flex',
-          sidebar_documents_splitter_ref?.isCollapsed ? 'max-w-8!' : '',
+            : 'hidden lg:flex ',
+          sidebar_documents_splitter_ref?.isCollapsed ? 'max-w-8!' : ' mr-4',
           resize === 10 ? ' border-r-2! border-primary!' : '',
         ]"
         @dblclick="focusModeOff()"
@@ -276,6 +276,7 @@ onMounted(() => {
           @toggle-completed="toggleCompleted"
           @focus-mode-off="focusModeOff"
           @focus-logo="focus_logo = $event"
+          @open-keybindings="keybindingPanelRef?.open()"
         />
       </SplitterPanel>
       <SplitterResizeHandle
@@ -328,7 +329,7 @@ onMounted(() => {
       <SplitterPanel
         id="splitter-group-1-panel-3"
         ref="sidebar_secondary_splitter_ref"
-        class="min-w-8 @container"
+        class="min-w-8 ml-3 @container"
         :min-size="15"
         :max-size="30"
         collapsible
@@ -344,7 +345,6 @@ onMounted(() => {
           @focus-mode-on="focusModeOn"
           @focus-mode-off="focusModeOff"
           @toggle-editable="toggle_editable"
-          @open-keybindings="keybindingPanelRef?.open()"
         />
       </SplitterPanel>
     </SplitterGroup>

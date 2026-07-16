@@ -93,7 +93,9 @@
     "contentPreview": "Cambiar a previsualizar",
     "markAsDone": "Marcar como completo",
     "markAsUndone": "Descarmar",
-    "showPinned": "Mostrar solo fijados"
+    "showPinned": "Mostrar solo fijados",
+    "filterAll": "Todos",
+    "format": "Formato"
   },
   "settings": {
     "title": "Configuraciones",
@@ -134,7 +136,9 @@
     "perspective": "Perspectiva",
     "deleteDB": "Eliminar base de datos de indexdedDB",
     "showIcons": "Mostrar iconos",
-    "showIconsDescription": "Mostrar iconos en la barra lateral cuando está colapsada."
+    "showIconsDescription": "Mostrar iconos en la barra lateral cuando está colapsada.",
+    "layout": "Distribución",
+    "focus": "Enfoque"
   },
   "importDB": {
     "description": "Selecciona o arrastrar un archivo JSON exportado desde esta app.",
@@ -249,5 +253,35 @@
     "hour": "hora | horas",
     "minute": "minuto | minutos",
     "second": "segundo | segundos"
+  },
+  "keybindings": {
+    "title": "Configuración de atajos",
+    "description": "Configurar tecla prefijo y atajos de comandos",
+    "shortcuts": "Configurar atajos",
+    "prefixKey": "Tecla prefijo",
+    "pressKeys": "Presioná las teclas…",
+    "resetToDefaults": "Restablecer valores predeterminados",
+    "commands": {
+      "toggleSidebar": "Mostrar/ocultar barra lateral",
+      "toggleEditable": "Alternar modo edición",
+      "newDocument": "Nuevo documento",
+      "focusTitle": "Enfocar título",
+      "focusEditor": "Enfocar editor",
+      "focusFirstDocument": "Enfocar primer documento",
+      "toggleSecondarySidebar": "Mostrar/ocultar barra secundaria",
+      "navigateNextDocument": "Siguiente documento",
+      "navigatePreviousDocument": "Documento anterior",
+      "windowLayout1": "Distribución: 40/20/40",
+      "windowLayout2": "Distribución: 5/65/30",
+      "windowLayout3": "Distribución: 30/65/5",
+      "windowLayout4": "Distribución: 15/70/15",
+      "windowLayout5": "Distribución: 5/90/5",
+      "focusMode": "Alternar modo enfoque",
+      "selectSideTab1": "Pestaña lateral: Formato",
+      "selectSideTab2": "Pestaña lateral: Documento",
+      "selectSideTab3": "Pestaña lateral: Configuración",
+      "openKeybindingPanel": "Abrir configuración de atajos",
+      "openCommandMenu": "Abrir menú de comandos"
+    }
   }
 }

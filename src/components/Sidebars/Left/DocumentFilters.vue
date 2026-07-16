@@ -1,8 +1,10 @@
 <script setup lang="ts">
 import { ArrowDownAZ, ArrowDownZA, Circle, CircleOff } from 'lucide-vue-next'
+import { useI18n } from 'vue-i18n'
 import { useClientDocument } from 'vue-livestore'
 import { tables } from '@/livestore/schema'
 
+const { t } = useI18n()
 const { filter, sortBy } = useClientDocument(tables.uiState)
 </script>
 
@@ -24,7 +26,7 @@ const { filter, sortBy } = useClientDocument(tables.uiState)
         :class="filter === 'all' ? ' text-primary' : ''"
         @click="filter = 'all'"
       >
-        All
+        {{ t("sidebar.filterAll") }}
       </button>
       <button
         class="px-3 bg-secondary font-bold h-8 flex justify-center items-center gap-1"

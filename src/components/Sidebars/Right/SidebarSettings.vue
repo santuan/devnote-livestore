@@ -4,7 +4,9 @@ import { ChevronRight } from 'lucide-vue-next'
 import { useI18n } from 'vue-i18n'
 import { useClientDocument } from 'vue-livestore'
 import { tables } from '@/livestore/schema'
+import DropdownLanguage from './DropdownLanguage.vue'
 import LayoutPresetGrid from './LayoutPresetGrid.vue'
+import ToggleTheme from './ToggleTheme.vue'
 
 const emit = defineEmits<{
   (e: 'collapseSecondarySidebar'): void
@@ -35,7 +37,7 @@ const showPerspective = useStorage('show_perspective', true)
     </button>
     <div
       v-show="showPerspective"
-      class="bg-background p-2  pb-4 gap-1 grid grid-cols-1 @xs:grid-cols-3"
+      class="bg-background p-2  gap-1 grid grid-cols-1 @xs:grid-cols-3"
     >
       <button
         class="flex gap-2 items-center p-1 justify-center w-full"
@@ -52,7 +54,7 @@ const showPerspective = useStorage('show_perspective', true)
         class="flex gap-2 items-center p-1 justify-center text-center w-full bg-secondary/80"
         @click="emit('focusModeOn')"
       >
-        <span>Focus</span>
+        <span>{{ t("settings.focus") }}</span>
       </button>
     </div>
   </div>
@@ -66,11 +68,19 @@ const showPerspective = useStorage('show_perspective', true)
         :class="showLayouts ? 'rotate-90' : ''"
       />
       <span class="font-semibold text-primary">
-        Layout
+        {{ t("settings.layout") }}
       </span>
     </button>
     <div v-show="showLayouts" class="mt-1 pr-2 pb-4">
       <LayoutPresetGrid />
+    </div>
+    <div class="flex items-center justify-between py-1 px-2">
+      <span>{{ t("settings.language") }}</span>
+      <DropdownLanguage />
+    </div>
+    <div class="flex items-center justify-between py-1 px-2">
+      <span>{{ t("settings.theme") }}</span>
+      <ToggleTheme />
     </div>
   </div>
 </template>

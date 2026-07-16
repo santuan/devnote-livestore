@@ -93,7 +93,9 @@
     "contentPreview": "Preview mode",
     "markAsDone": "Mark as done",
     "markAsUndone": "Mark as undone",
-    "showPinned": "Show pinned only"
+    "showPinned": "Show pinned only",
+    "filterAll": "All",
+    "format": "Format"
   },
   "settings": {
     "title": "Settings",
@@ -134,7 +136,9 @@
     "perspective": "Perspective",
     "deleteDB": "Delete database from indexedDB",
     "showIcons": "Show icons",
-    "showIconsDescription": "Show icons in the sidebar when collapsed."
+    "showIconsDescription": "Show icons in the sidebar when collapsed.",
+    "layout": "Layout",
+    "focus": "Focus"
   },
   "importDB": {
     "description": "Select or drag and drop a json exported from this app.",
@@ -249,5 +253,35 @@
     "hour": "hour | hours",
     "minute": "minute | minutes",
     "second": "second | seconds"
+  },
+  "keybindings": {
+    "title": "Keybinding Settings",
+    "description": "Configure prefix key and command bindings",
+    "shortcuts": "Configure shortcuts",
+    "prefixKey": "Prefix Key",
+    "pressKeys": "Press keys…",
+    "resetToDefaults": "Reset to defaults",
+    "commands": {
+      "toggleSidebar": "Toggle Sidebar",
+      "toggleEditable": "Toggle Edit Mode",
+      "newDocument": "New Document",
+      "focusTitle": "Focus Title",
+      "focusEditor": "Focus Editor",
+      "focusFirstDocument": "Focus First Document",
+      "toggleSecondarySidebar": "Toggle Secondary Sidebar",
+      "navigateNextDocument": "Next Document",
+      "navigatePreviousDocument": "Previous Document",
+      "windowLayout1": "Layout: 40/20/40",
+      "windowLayout2": "Layout: 5/65/30",
+      "windowLayout3": "Layout: 30/65/5",
+      "windowLayout4": "Layout: 15/70/15",
+      "windowLayout5": "Layout: 5/90/5",
+      "focusMode": "Toggle Focus Mode",
+      "selectSideTab1": "Side Tab: Format",
+      "selectSideTab2": "Side Tab: Document",
+      "selectSideTab3": "Side Tab: Settings",
+      "openKeybindingPanel": "Open Keybinding Settings",
+      "openCommandMenu": "Open Command Menu"
+    }
   }
 }

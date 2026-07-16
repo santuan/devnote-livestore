@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import type { ShallowRef } from 'vue'
 import { queryDb } from '@livestore/livestore'
 import { Circle, CircleOff, Search, X } from 'lucide-vue-next'
 import {
@@ -18,7 +19,7 @@ import {
   DialogTrigger,
   VisuallyHidden,
 } from 'reka-ui'
-import { nextTick, inject, onMounted, onUnmounted, ref, type ShallowRef } from 'vue'
+import { inject, nextTick, onMounted, onUnmounted, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useQuery } from 'vue-livestore'
 import Tooltip from '@/components/UI/Tooltip.vue'
@@ -84,7 +85,7 @@ defineExpose({
       side="bottom"
     >
       <DialogTrigger
-        class="relative z-80 left-0 bottom-0 m-0 flex items-center justify-center interactive hover:bg-secondary/80 bg-background size-8"
+        class="size-8 flex justify-center items-center"
       >
         <Search class="size-4" />
         <span class="sr-only">{{ t("commandBar.title") }}</span>
